@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Shopping Cart | Weverse Online Shop</title>
+  <meta name="description" content="Review the items in your shopping cart before checking out.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BFHnnn3M.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-XLaEvqbL-DEyIhb6U.js">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,Y29uc3Qgbj1bXSxzPU9iamVjdC5mcmVlemUoT2JqZWN0LmRlZmluZVByb3BlcnR5KHtfX3Byb3RvX186bnVsbCxQUk9EVUNUX0xJU1RJTkdTOm59LFN5bWJvbC50b1N0cmluZ1RhZyx7dmFsdWU6Ik1vZHVsZSJ9KSksYz1bXSxfPU9iamVjdC5mcmVlemUoT2JqZWN0LmRlZmluZVByb3BlcnR5KHtfX3Byb3RvX186bnVsbCxQUk9EVUNUX0VYVFJBX0xJU1RJTkdTOmN9LFN5bWJvbC50b1N0cmluZ1RhZyx7dmFsdWU6Ik1vZHVsZSJ9KSksbz1bXTtmdW5jdGlvbiBhKHQpe3JldHVybiBvLmZpbmQoZT0+ZS5wcm9wZXJ0eV9pZD09PXQpfHxudWxsfWZ1bmN0aW9uIHUodCl7Y29uc3QgZT10JiZ0eXBlb2YgdD09Im9iamVjdCI/dC5wcmljZTp0O3JldHVybiBOdW1iZXIoZXx8MCkudG9Mb2NhbGVTdHJpbmcoImVuLVVTIix7c3R5bGU6ImN1cnJlbmN5IixjdXJyZW5jeToiVVNEIixtYXhpbXVtRnJhY3Rpb25EaWdpdHM6MH0pfWNvbnN0IGk9T2JqZWN0LmZyZWV6ZShPYmplY3QuZGVmaW5lUHJvcGVydHkoe19fcHJvdG9fXzpudWxsLFRSVUNLX0xJU1RJTkdTOm8sZm9ybWF0VHJ1Y2tQcmljZTp1LGdldFRydWNrQnlJZDphfSxTeW1ib2wudG9TdHJpbmdUYWcse3ZhbHVlOiJNb2R1bGUifSkpLHI9W107ZnVuY3Rpb24gbCh0KXtyZXR1cm4gci5maW5kKGU9PmUucHJvcGVydHlfaWQ9PT10KXx8bnVsbH1jb25zdCBTPU9iamVjdC5mcmVlemUoT2JqZWN0LmRlZmluZVByb3BlcnR5KHtfX3Byb3RvX186bnVsbCxNT1RPUkhPTUVfTElTVElOR1M6cixnZXRNb3RvcmhvbWVCeUlkOmx9LFN5bWJvbC50b1N0cmluZ1RhZyx7dmFsdWU6Ik1vZHVsZSJ9KSk7ZXhwb3J0e3IgYXMgTSxuIGFzIFAsbyBhcyBULGMgYXMgYSxsIGFzIGIsXyBhcyBjLHUgYXMgZixhIGFzIGcsUyBhcyBtLHMgYXMgcCxpIGFzIHR9Owo=">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,Y29uc3Qgcj1bXTtmdW5jdGlvbiBvKG4pe3JldHVybiByLmZpbmQodD0+dC5wcm9wZXJ0eV9pZD09PW4pfHxudWxsfWNvbnN0IGU9W107ZnVuY3Rpb24gYShuKXtyZXR1cm4gZS5maW5kKHQ9PnQucHJvcGVydHlfaWQ9PT1uKXx8bnVsbH1leHBvcnR7ciBhcyBDLGUgYXMgUCxhLG8gYXMgZ307Cg==">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e3MgYXMgZSxiIGFzIGMsQSBhcyBoLFMgYXMgZH1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBmPSJodHRwczovL3dldmVyc2VvbmxpbmVzaG9wLmNvbSI7ZnVuY3Rpb24gbygpe3RyeXtpZih3aW5kb3cuQ2FwYWNpdG9yPy5pc05hdGl2ZVBsYXRmb3JtPy4oKSlyZXR1cm4gZn1jYXRjaHt9cmV0dXJuIHdpbmRvdy5sb2NhdGlvbi5vcmlnaW59YXN5bmMgZnVuY3Rpb24gbCgpe2NvbnN0e2RhdGE6e3Nlc3Npb246dH19PWF3YWl0IGUuYXV0aC5nZXRTZXNzaW9uKCk7cmV0dXJuIHQ/LnVzZXJ8fG51bGx9YXN5bmMgZnVuY3Rpb24gcCgpe2lmKCFhd2FpdCBsKCkpcmV0dXJuITE7Y29uc3R7ZGF0YTpufT1hd2FpdCBlLnJwYygiaXNfY3VycmVudF91c2VyX2FkbWluIik7cmV0dXJuISFufWFzeW5jIGZ1bmN0aW9uIG0odCxuKXtjb25zdCByPWAke28oKX0vYXV0aC5odG1sYDtyZXR1cm4gZS5hdXRoLnNpZ25VcCh7ZW1haWw6dCxwYXNzd29yZDpuLG9wdGlvbnM6e2VtYWlsUmVkaXJlY3RUbzpyfX0pfWFzeW5jIGZ1bmN0aW9uIEEodCxuKXtyZXR1cm4gZS5hdXRoLnNpZ25JbldpdGhQYXNzd29yZCh7ZW1haWw6dCxwYXNzd29yZDpufSl9YXN5bmMgZnVuY3Rpb24gdygpe3JldHVybiBlLmF1dGguc2lnbk91dCgpfWFzeW5jIGZ1bmN0aW9uIHkodCl7cmV0dXJuIGUuYXV0aC5yZXNldFBhc3N3b3JkRm9yRW1haWwodCx7cmVkaXJlY3RUbzpgJHtvKCl9L2F1dGguaHRtbD9yZXNldD0xYH0pfWFzeW5jIGZ1bmN0aW9uIF8odCl7cmV0dXJuIGUuYXV0aC51cGRhdGVVc2VyKHtwYXNzd29yZDp0fSl9YXN5bmMgZnVuY3Rpb24gUyh0KXtyZXR1cm4gZS5hdXRoLnJlc2VuZCh7dHlwZToic2lnbnVwIixlbWFpbDp0fSl9ZnVuY3Rpb24gayh0KXtyZXR1cm4gZS5hdXRoLm9uQXV0aFN0YXRlQ2hhbmdlKChuLHIpPT57dChyPy51c2VyfHxudWxsKX0pfWZ1bmN0aW9uIFAoKXtyZXR1cm4gc2Vzc2lvblN0b3JhZ2UuZ2V0SXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKXx8bnVsbH1mdW5jdGlvbiBJKHQpe3Nlc3Npb25TdG9yYWdlLnNldEl0ZW0oImtjb19hdXRoX3JlZGlyZWN0Iix0KX1mdW5jdGlvbiBVKCl7c2Vzc2lvblN0b3JhZ2UucmVtb3ZlSXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKX1hc3luYyBmdW5jdGlvbiBPKHQsbil7aWYoIWMpcmV0dXJue29rOiExLGVycm9yOiJTdXBhYmFzZSBjcmVkZW50aWFscyBhcmUgbWlzc2luZy4ifTtjb25zdCByPWAke2R9L2Z1bmN0aW9ucy92MS9zZW5kLWF1dGgtZW1haWxgO3RyeXtjb25zdHtkYXRhOntzZXNzaW9uOmF9fT1hd2FpdCBlLmF1dGguZ2V0U2Vzc2lvbigpLHU9YT8uYWNjZXNzX3Rva2VufHxoLGk9YXdhaXQgZmV0Y2gocix7bWV0aG9kOiJQT1NUIixoZWFkZXJzOntBdXRob3JpemF0aW9uOmBCZWFyZXIgJHt1fWAsIkNvbnRlbnQtVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24ifSxib2R5OkpTT04uc3RyaW5naWZ5KHt0eXBlOnQsLi4ubn0pfSk7bGV0IHM9e307dHJ5e3M9YXdhaXQgaS5qc29uKCl9Y2F0Y2h7cz17fX1yZXR1cm57b2s6aS5vayYmIXMuZXJyb3IsZXJyb3I6cy5lcnJvcn19Y2F0Y2goYSl7cmV0dXJue29rOiExLGVycm9yOlN0cmluZyhhKX19fWV4cG9ydHtvIGFzIGFwcE9yaWdpbixVIGFzIGNsZWFyUmVkaXJlY3RBZnRlckF1dGgsbCBhcyBnZXRDdXJyZW50VXNlcixQIGFzIGdldFJlZGlyZWN0QWZ0ZXJBdXRoLHAgYXMgaXNBZG1pbixrIGFzIG9uQXV0aENoYW5nZSxTIGFzIHJlc2VuZFZlcmlmaWNhdGlvbix5IGFzIHJlc2V0UGFzc3dvcmQsTyBhcyBzZW5kQXV0aEVtYWlsLEkgYXMgc2V0UmVkaXJlY3RBZnRlckF1dGgsQSBhcyBzaWduSW4sdyBhcyBzaWduT3V0LG0gYXMgc2lnblVwLF8gYXMgdXBkYXRlVXNlclBhc3N3b3JkfTsK">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,Y29uc3Qgbz0ia2NvX2NhcnQiO2Z1bmN0aW9uIGEoKXt0cnl7Y29uc3QgdD1KU09OLnBhcnNlKGxvY2FsU3RvcmFnZS5nZXRJdGVtKG8pfHwiW10iKTtpZighQXJyYXkuaXNBcnJheSh0KSlyZXR1cm5bXTtjb25zdCBlPVtdO2Zvcihjb25zdCBuIG9mIHQpdHlwZW9mIG49PSJzdHJpbmciP2UucHVzaCh7aWQ6bixxdHk6MX0pOm4mJnR5cGVvZiBuPT0ib2JqZWN0IiYmbi5pZCYmZS5wdXNoKHtpZDpuLmlkLHF0eTpNYXRoLm1heCgxLHBhcnNlSW50KG4ucXR5LDEwKXx8MSl9KTtyZXR1cm4gZX1jYXRjaHtyZXR1cm5bXX19ZnVuY3Rpb24gaSh0KXt0cnl7bG9jYWxTdG9yYWdlLnNldEl0ZW0obyxKU09OLnN0cmluZ2lmeSh0KSl9Y2F0Y2h7fWMoKX1mdW5jdGlvbiBjKCl7d2luZG93LmRpc3BhdGNoRXZlbnQobmV3IEN1c3RvbUV2ZW50KCJrY28tY2FydC1jaGFuZ2VkIix7ZGV0YWlsOntjb3VudDpmKCl9fSkpfWZ1bmN0aW9uIGYoKXtyZXR1cm4gYSgpLnJlZHVjZSgodCxlKT0+dCtlLnF0eSwwKX1mdW5jdGlvbiB1KHQsZT0xKXtpZighdClyZXR1cm47Y29uc3Qgbj1hKCkscj1uLmZpbmQocz0+cy5pZD09PXQpO3I/ci5xdHk9TWF0aC5taW4oOTksci5xdHkrZSk6bi5wdXNoKHtpZDp0LHF0eTplfSksaShuKX1mdW5jdGlvbiBkKHQsZSl7Y29uc3Qgbj1hKCkscj1uLmZpbmQocz0+cy5pZD09PXQpO3ImJihyLnF0eT1NYXRoLm1heCgxLE1hdGgubWluKDk5LHBhcnNlSW50KGUsMTApfHwxKSksaShuKSl9ZnVuY3Rpb24geSh0KXtpKGEoKS5maWx0ZXIoZT0+ZS5pZCE9PXQpKX1mdW5jdGlvbiBtKCl7aShbXSl9ZXhwb3J0e3kgYXMgYSx1IGFzIGIsbSBhcyBjLGMgYXMgZSxhIGFzIHIsZCBhcyBzfTsK">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e18gYXMgaX1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBvPXR5cGVvZiB3aW5kb3c8InUiJiYhIXdpbmRvdy5DYXBhY2l0b3I/LmlzTmF0aXZlUGxhdGZvcm0/LigpO28mJndpbmRvdy5DYXBhY2l0b3I/LmdldFBsYXRmb3JtPy4oKTthc3luYyBmdW5jdGlvbiB1KCl7aWYobyl7dHJ5e2NvbnN0e1N0YXR1c0JhcjphLFN0eWxlOmV9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1N0YXR1c0Jhcjp0LFN0eWxlOm59PWF3YWl0IGltcG9ydCgiQGNhcGFjaXRvci9zdGF0dXMtYmFyIik7cmV0dXJue1N0YXR1c0Jhcjp0LFN0eWxlOm59fSxbXSk7YXdhaXQgYS5zZXRTdHlsZSh7c3R5bGU6ZS5EYXJrfSksYXdhaXQgYS5zZXRCYWNrZ3JvdW5kQ29sb3Ioe2NvbG9yOiIjZmZmZmZmIn0pfWNhdGNoe310cnl7Y29uc3R7U3BsYXNoU2NyZWVuOmF9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1NwbGFzaFNjcmVlbjplfT1hd2FpdCBpbXBvcnQoIkBjYXBhY2l0b3Ivc3BsYXNoLXNjcmVlbiIpO3JldHVybntTcGxhc2hTY3JlZW46ZX19LFtdKTthd2FpdCBhLmhpZGUoKX1jYXRjaHt9dHJ5e2NvbnN0e0FwcDphfT1hd2FpdCBpKGFzeW5jKCk9Pntjb25zdHtBcHA6ZX09YXdhaXQgaW1wb3J0KCJAY2FwYWNpdG9yL2FwcCIpO3JldHVybntBcHA6ZX19LFtdKTthLmFkZExpc3RlbmVyKCJhcHBVcmxPcGVuIiwoe3VybDplfSk9PntpZihlKXtjb25zdCB0PWUucmVwbGFjZSgvXmh0dHBzPzpcL1wvW14vXSsvLCIiKS5yZXBsYWNlKC9ea2NvOlwvXC9tYXJrZXRwbGFjZS8sIiIpO3QmJnQhPT0iLyImJndpbmRvdy5sb2NhdGlvbi5wYXRobmFtZSE9PXQmJih3aW5kb3cubG9jYXRpb24uaHJlZj10KX19KX1jYXRjaHt9dHJ5e2NvbnN0e1B1c2hOb3RpZmljYXRpb25zOmF9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1B1c2hOb3RpZmljYXRpb25zOm59PWF3YWl0IGltcG9ydCgiQGNhcGFjaXRvci9wdXNoLW5vdGlmaWNhdGlvbnMiKTtyZXR1cm57UHVzaE5vdGlmaWNhdGlvbnM6bn19LFtdKSx7UHJlZmVyZW5jZXM6ZX09YXdhaXQgaShhc3luYygpPT57Y29uc3R7UHJlZmVyZW5jZXM6bn09YXdhaXQgaW1wb3J0KCJAY2FwYWNpdG9yL3ByZWZlcmVuY2VzIik7cmV0dXJue1ByZWZlcmVuY2VzOm59fSxbXSk7bGV0IHQ9ITE7dHJ5e3Q9KGF3YWl0IGEucmVxdWVzdFBlcm1pc3Npb25zKCkpLnJlY2VpdmU9PT0iZ3JhbnRlZCJ9Y2F0Y2h7fXQmJihhd2FpdCBhLnJlZ2lzdGVyKCksYS5hZGRMaXN0ZW5lcigicmVnaXN0cmF0aW9uIixhc3luYyBuPT57dHJ5e2lmKChhd2FpdCBlLmdldCh7a2V5OiJmY21fdG9rZW4ifSkpLnZhbHVlPT09bi52YWx1ZSlyZXR1cm47YXdhaXQgZS5zZXQoe2tleToiZmNtX3Rva2VuIix2YWx1ZTpuLnZhbHVlfSk7Y29uc3R7c3VwYWJhc2U6cn09YXdhaXQgaShhc3luYygpPT57Y29uc3R7c3VwYWJhc2U6Zn09YXdhaXQgaW1wb3J0KCIuL3N1cGFiYXNlLWNsaWVudC1EdkNtTmtwSS5qcyIpLnRoZW4ocD0+cC56KTtyZXR1cm57c3VwYWJhc2U6Zn19LFtdKSx7ZGF0YTpkfT1hd2FpdCByLmF1dGguZ2V0U2Vzc2lvbigpLHM9ZD8uc2Vzc2lvbj8udXNlcj8uaWQ7cyYmYXdhaXQgci5mcm9tKCJkZXZpY2VfdG9rZW5zIikudXBzZXJ0KHt1c2VyX2lkOnMsdG9rZW46bi52YWx1ZSxwbGF0Zm9ybToiYW5kcm9pZCJ9LHtvbkNvbmZsaWN0OiJ1c2VyX2lkLHRva2VuIn0pfWNhdGNoe319KSxhLmFkZExpc3RlbmVyKCJwdXNoTm90aWZpY2F0aW9uQWN0aW9uUGVyZm9ybWVkIixuPT57bj8ubm90aWZpY2F0aW9uPy5kYXRhPy5vcmRlcl9udW1iZXImJih3aW5kb3cubG9jYXRpb24uaHJlZj0iL2FjY291bnQiKX0pKX1jYXRjaHt9dHJ5e2NvbnN0e05ldHdvcms6YX09YXdhaXQgaShhc3luYygpPT57Y29uc3R7TmV0d29yazplfT1hd2FpdCBpbXBvcnQoIkBjYXBhY2l0b3IvbmV0d29yayIpO3JldHVybntOZXR3b3JrOmV9fSxbXSk7YS5hZGRMaXN0ZW5lcigibmV0d29ya1N0YXR1c0NoYW5nZSIsZT0+e2lmKHdpbmRvdy5kaXNwYXRjaEV2ZW50KG5ldyBDdXN0b21FdmVudCgibmV0d29yay1jaGFuZ2UiLHtkZXRhaWw6ZX0pKSxlLmNvbm5lY3RlZCl7Y29uc3QgdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib2ZmbGluZS1iYW5uZXIiKTt0JiZ0LnJlbW92ZSgpfWVsc2V7Y29uc3QgdD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTt0LmlkPSJvZmZsaW5lLWJhbm5lciIsdC5zdHlsZS5jc3NUZXh0PSJwb3NpdGlvbjpmaXhlZDt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDt6LWluZGV4Ojk5OTk7YmFja2dyb3VuZDojZWY0NDQ0O2NvbG9yOiNmZmY7dGV4dC1hbGlnbjpjZW50ZXI7cGFkZGluZzo4cHg7Zm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6NzAwO2ZvbnQtZmFtaWx5OkludGVyLHNhbnMtc2VyaWYiLHQudGV4dENvbnRlbnQ9IllvdSBhcmUgb2ZmbGluZS4gU29tZSBmZWF0dXJlcyBtYXkgYmUgdW5hdmFpbGFibGUuIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib2ZmbGluZS1iYW5uZXIiKXx8ZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZCh0KX19KX1jYXRjaHt9fX1vJiZ1KCk7Cg==">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-BZ_21NL6.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-1NxFCIXH.js">
+  <link rel="modulepreload" crossorigin href="/assets/ai-chat-U-IZQEoO-BfojXIY1.js">
+  <script type="module" crossorigin src="/assets/cart-BkmIXHbv.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BBtcpOs0.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-B_HxL1KQ-Do35V_4n.js">
+  <link rel="modulepreload" crossorigin href="/assets/motorhome-data-CupbOvk0--c7gbSNU.js">
+  <link rel="modulepreload" crossorigin href="/assets/phone-data-Of7KtnOV-OoM3wJJD.js">
+  <link rel="modulepreload" crossorigin href="/assets/auth-iMacRl0l-DlcadYa5.js">
+  <link rel="modulepreload" crossorigin href="/assets/cart-DNy8CJA3-Oz5JpZDi.js">
+  <link rel="modulepreload" crossorigin href="/assets/native-bridge-z1PkSgfH-CV6U1YtG.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-CYE5uVRZ.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-CiDTzVNv.js">
+  <link rel="modulepreload" crossorigin href="/assets/ai-chat-U-IZQEoO-DrOtSYGJ.js">
+  <link rel="stylesheet" crossorigin href="/assets/localization-B_HxL1KQ-B_HxL1KQ.css">
+</head>
+<body class="bg-white text-gray-900 font-sans antialiased min-h-screen">
+  <header class="fixed top-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <button onclick="window.kcoGoBack?window.kcoGoBack(event):history.back()" class="p-2 hover:bg-gray-100 rounded-lg transition" aria-label="Back">
+          <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </button>
+        <a href="/" class="flex items-center gap-2 no-underline">
+          <div class="shrink-0 w-9 h-9 bg-black rounded-xl flex items-center justify-center overflow-hidden">
+            <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" aria-hidden="true"><path d="M3 5l4.5 14L12 8l4.5 11L21 5" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="brand-name text-lg font-black tracking-wider text-gray-900 whitespace-nowrap">Weverse Online Shop</span>
+          <svg viewBox="0 0 24 24" class="w-4 h-4 shrink-0" aria-label="Verified" role="img" data-weverse-badge="true"><circle cx="12" cy="12" r="11" fill="#3b82f6"/><path d="M10.8 15.6 7.4 12.2l1.5-1.5 1.9 1.9 3.9-3.9 1.5 1.5-5.4 5.4z" fill="#fff"/></svg>
+        </a>
+      </div>
+      <a href="/" class="text-xs text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Continue Shopping</a>
+    </div>
+  </header>
+
+  <main class="pt-16 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 py-8">
+    <div id="cart-content" class="min-h-[400px]">
+      <div class="flex items-center justify-center py-20">
+        <div class="flex items-center gap-3 text-gray-500 text-sm">
+          <i data-lucide="loader-2" class="w-5 h-5 animate-spin text-blue-600"></i>
+          Loading cart...
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-[100] transform translate-y-20 opacity-0 bg-gray-900 border border-blue-500/30 text-white px-5 py-3 rounded-xl shadow-xl text-xs flex items-center gap-2 font-medium transition-all duration-300 pointer-events-none">
+    <i data-lucide="info" class="w-4 h-4 text-blue-600"></i><span id="toast-msg">Action</span>
+  </div>
+
+  <script src="/back-button.js" defer></script>
+  <!-- APP PROMOTION BANNER + LIVE PRODUCT PROMOTIONS -->
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+  <div id="live-promo-alerts" class="fixed bottom-4 right-4 z-50 w-[340px] max-w-[90vw] space-y-3 pointer-events-none" aria-live="polite"></div>
+</body>
+</html>

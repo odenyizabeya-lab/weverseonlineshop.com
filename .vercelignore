@@ -1,0 +1,15 @@
+node_modules
+.git
+supabase
+*.sql
+.env
+.env.*
+!.env.example
+
+# Local working artifacts — never uploaded to Vercel
+*.apk
+*.log
+bad-products.json
+renamed-products-report.csv
+fix-results.json
+polish-results.json

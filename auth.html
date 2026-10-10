@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sign In | Weverse Online Shop</title>
+  <meta name="description" content="Sign in to your Weverse Online Shop account to manage orders, track shipments, and shop premium products.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Weverse Online Shop">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Weverse Online Shop">
+  <meta property="og:title" content="Sign In | Weverse Online Shop">
+  <meta property="og:description" content="Sign in to your Weverse Online Shop account to manage orders, track shipments, and shop premium products.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Sign In | Weverse Online Shop">
+  <meta name="twitter:description" content="Sign in to your Weverse Online Shop account to manage orders, track shipments, and shop premium products.">
+  <link rel="canonical" href="https://weverseonlineshop.com/auth">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <style>
+    * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { -webkit-font-smoothing: antialiased; }
+    @keyframes fade-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fade-in .5s cubic-bezier(.16,1,.3,1) forwards}
+    @keyframes fade-in-delay{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in-d1{animation:fade-in-delay .5s cubic-bezier(.16,1,.3,1) .05s both}
+    .fade-in-d2{animation:fade-in-delay .5s cubic-bezier(.16,1,.3,1) .1s both}
+    .fade-in-d3{animation:fade-in-delay .5s cubic-bezier(.16,1,.3,1) .15s both}
+    .fade-in-d4{animation:fade-in-delay .5s cubic-bezier(.16,1,.3,1) .2s both}
+    .glass{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+    .glass-soft{background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .input-field{transition:border-color .2s,box-shadow .2s,background .2s}
+    .btn-press{transition:transform .15s cubic-bezier(.4,0,.2,1)}
+    .btn-press:active{transform:scale(.97)}
+    .strength-bar{transition:width .3s ease,background-color .3s ease}
+    ::-webkit-scrollbar{width:0}
+    /* Animated particles */
+    @keyframes float-up{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:.5}90%{opacity:.3}100%{transform:translateY(-100vh) translateX(20px);opacity:0}}
+    .particle{position:absolute;border-radius:50%;pointer-events:none;animation:float-up linear infinite}
+    /* Ripple */
+    .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:ripple-anim .6s ease-out;pointer-events:none}
+    @keyframes ripple-anim{to{transform:scale(4);opacity:0}}
+    /* Sliding tab indicator */
+    .tab-indicator{position:absolute;top:4px;bottom:4px;border-radius:8px;background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(59,130,246,.1));border:1px solid rgba(59,130,246,.3);box-shadow:0 0 16px rgba(59,130,246,.2);transition:transform .35s cubic-bezier(.16,1,.3,1),width .35s cubic-bezier(.16,1,.3,1);pointer-events:none}
+    /* Input focus glow */
+    .input-field:focus{box-shadow:0 0 0 3px rgba(59,130,246,.18),0 0 20px rgba(59,130,246,.08)}
+    /* Back to Top button */
+    #back-to-top{position:fixed;bottom:1.75rem;right:1.75rem;z-index:50;width:3rem;height:3rem;border-radius:9999px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;outline:none;opacity:0;visibility:hidden;transform:translateY(1rem) scale(.85);transition:opacity .35s ease,visibility .35s ease,transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,background .3s ease;-webkit-tap-highlight-color:transparent;background:linear-gradient(135deg,rgba(59,130,246,.9),rgba(37,99,235,.95));box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 0 1px rgba(59,130,246,.3),0 0 20px rgba(59,130,246,.15);color:#fff}
+    #back-to-top.visible{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+    #back-to-top:hover{background:linear-gradient(135deg,rgba(96,165,250,1),rgba(59,130,246,1));box-shadow:0 10px 30px rgba(0,0,0,.5),0 0 0 1px rgba(96,165,250,.4),0 0 28px rgba(59,130,246,.25);transform:translateY(-2px) scale(1.05)}
+    #back-to-top:active{transform:translateY(0) scale(.95)}
+    #back-to-top:focus-visible{outline:2px solid rgba(96,165,250,.6);outline-offset:3px}
+    #back-to-top svg{transition:transform .3s ease}
+    #back-to-top:hover svg{transform:translateY(-2px)}
+    @media(max-width:640px){#back-to-top{bottom:1.25rem;right:1.25rem;width:2.75rem;height:2.75rem}}
+    /* Fixed Back button — always visible, top-left */
+    #back-to-home{position:fixed;top:1.25rem;left:1.25rem;z-index:50;display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border-radius:9999px;border:1px solid rgba(59,130,246,.25);background:rgba(255,255,255,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#2563eb;font-size:.8rem;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 16px rgba(59,130,246,.15);transition:background .25s ease,color .25s ease,border-color .25s ease,transform .2s ease,box-shadow .25s ease;-webkit-tap-highlight-color:transparent}
+    #back-to-home:hover{background:rgba(59,130,246,.1);border-color:rgba(96,165,250,.5);color:#1d4ed8;box-shadow:0 6px 22px rgba(59,130,246,.25);transform:translateX(-2px)}
+    #back-to-home:active{transform:scale(.96)}
+    #back-to-home:focus-visible{outline:2px solid rgba(96,165,250,.6);outline-offset:3px}
+    #back-to-home svg{transition:transform .25s ease}
+    #back-to-home:hover svg{transform:translateX(-3px)}
+    @media(max-width:640px){#back-to-home{top:.85rem;left:.85rem;padding:.45rem .7rem;font-size:.75rem}}
+  </style>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BFHnnn3M.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-XLaEvqbL-DEyIhb6U.js">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e3MgYXMgZSxiIGFzIGMsQSBhcyBoLFMgYXMgZH1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBmPSJodHRwczovL3dldmVyc2VvbmxpbmVzaG9wLmNvbSI7ZnVuY3Rpb24gbygpe3RyeXtpZih3aW5kb3cuQ2FwYWNpdG9yPy5pc05hdGl2ZVBsYXRmb3JtPy4oKSlyZXR1cm4gZn1jYXRjaHt9cmV0dXJuIHdpbmRvdy5sb2NhdGlvbi5vcmlnaW59YXN5bmMgZnVuY3Rpb24gbCgpe2NvbnN0e2RhdGE6e3Nlc3Npb246dH19PWF3YWl0IGUuYXV0aC5nZXRTZXNzaW9uKCk7cmV0dXJuIHQ/LnVzZXJ8fG51bGx9YXN5bmMgZnVuY3Rpb24gcCgpe2lmKCFhd2FpdCBsKCkpcmV0dXJuITE7Y29uc3R7ZGF0YTpufT1hd2FpdCBlLnJwYygiaXNfY3VycmVudF91c2VyX2FkbWluIik7cmV0dXJuISFufWFzeW5jIGZ1bmN0aW9uIG0odCxuKXtjb25zdCByPWAke28oKX0vYXV0aC5odG1sYDtyZXR1cm4gZS5hdXRoLnNpZ25VcCh7ZW1haWw6dCxwYXNzd29yZDpuLG9wdGlvbnM6e2VtYWlsUmVkaXJlY3RUbzpyfX0pfWFzeW5jIGZ1bmN0aW9uIEEodCxuKXtyZXR1cm4gZS5hdXRoLnNpZ25JbldpdGhQYXNzd29yZCh7ZW1haWw6dCxwYXNzd29yZDpufSl9YXN5bmMgZnVuY3Rpb24gdygpe3JldHVybiBlLmF1dGguc2lnbk91dCgpfWFzeW5jIGZ1bmN0aW9uIHkodCl7cmV0dXJuIGUuYXV0aC5yZXNldFBhc3N3b3JkRm9yRW1haWwodCx7cmVkaXJlY3RUbzpgJHtvKCl9L2F1dGguaHRtbD9yZXNldD0xYH0pfWFzeW5jIGZ1bmN0aW9uIF8odCl7cmV0dXJuIGUuYXV0aC51cGRhdGVVc2VyKHtwYXNzd29yZDp0fSl9YXN5bmMgZnVuY3Rpb24gUyh0KXtyZXR1cm4gZS5hdXRoLnJlc2VuZCh7dHlwZToic2lnbnVwIixlbWFpbDp0fSl9ZnVuY3Rpb24gayh0KXtyZXR1cm4gZS5hdXRoLm9uQXV0aFN0YXRlQ2hhbmdlKChuLHIpPT57dChyPy51c2VyfHxudWxsKX0pfWZ1bmN0aW9uIFAoKXtyZXR1cm4gc2Vzc2lvblN0b3JhZ2UuZ2V0SXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKXx8bnVsbH1mdW5jdGlvbiBJKHQpe3Nlc3Npb25TdG9yYWdlLnNldEl0ZW0oImtjb19hdXRoX3JlZGlyZWN0Iix0KX1mdW5jdGlvbiBVKCl7c2Vzc2lvblN0b3JhZ2UucmVtb3ZlSXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKX1hc3luYyBmdW5jdGlvbiBPKHQsbil7aWYoIWMpcmV0dXJue29rOiExLGVycm9yOiJTdXBhYmFzZSBjcmVkZW50aWFscyBhcmUgbWlzc2luZy4ifTtjb25zdCByPWAke2R9L2Z1bmN0aW9ucy92MS9zZW5kLWF1dGgtZW1haWxgO3RyeXtjb25zdHtkYXRhOntzZXNzaW9uOmF9fT1hd2FpdCBlLmF1dGguZ2V0U2Vzc2lvbigpLHU9YT8uYWNjZXNzX3Rva2VufHxoLGk9YXdhaXQgZmV0Y2gocix7bWV0aG9kOiJQT1NUIixoZWFkZXJzOntBdXRob3JpemF0aW9uOmBCZWFyZXIgJHt1fWAsIkNvbnRlbnQtVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24ifSxib2R5OkpTT04uc3RyaW5naWZ5KHt0eXBlOnQsLi4ubn0pfSk7bGV0IHM9e307dHJ5e3M9YXdhaXQgaS5qc29uKCl9Y2F0Y2h7cz17fX1yZXR1cm57b2s6aS5vayYmIXMuZXJyb3IsZXJyb3I6cy5lcnJvcn19Y2F0Y2goYSl7cmV0dXJue29rOiExLGVycm9yOlN0cmluZyhhKX19fWV4cG9ydHtvIGFzIGFwcE9yaWdpbixVIGFzIGNsZWFyUmVkaXJlY3RBZnRlckF1dGgsbCBhcyBnZXRDdXJyZW50VXNlcixQIGFzIGdldFJlZGlyZWN0QWZ0ZXJBdXRoLHAgYXMgaXNBZG1pbixrIGFzIG9uQXV0aENoYW5nZSxTIGFzIHJlc2VuZFZlcmlmaWNhdGlvbix5IGFzIHJlc2V0UGFzc3dvcmQsTyBhcyBzZW5kQXV0aEVtYWlsLEkgYXMgc2V0UmVkaXJlY3RBZnRlckF1dGgsQSBhcyBzaWduSW4sdyBhcyBzaWduT3V0LG0gYXMgc2lnblVwLF8gYXMgdXBkYXRlVXNlclBhc3N3b3JkfTsK">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e18gYXMgaX1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBvPXR5cGVvZiB3aW5kb3c8InUiJiYhIXdpbmRvdy5DYXBhY2l0b3I/LmlzTmF0aXZlUGxhdGZvcm0/LigpO28mJndpbmRvdy5DYXBhY2l0b3I/LmdldFBsYXRmb3JtPy4oKTthc3luYyBmdW5jdGlvbiB1KCl7aWYobyl7dHJ5e2NvbnN0e1N0YXR1c0JhcjphLFN0eWxlOmV9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1N0YXR1c0Jhcjp0LFN0eWxlOm59PWF3YWl0IGltcG9ydCgiQGNhcGFjaXRvci9zdGF0dXMtYmFyIik7cmV0dXJue1N0YXR1c0Jhcjp0LFN0eWxlOm59fSxbXSk7YXdhaXQgYS5zZXRTdHlsZSh7c3R5bGU6ZS5EYXJrfSksYXdhaXQgYS5zZXRCYWNrZ3JvdW5kQ29sb3Ioe2NvbG9yOiIjZmZmZmZmIn0pfWNhdGNoe310cnl7Y29uc3R7U3BsYXNoU2NyZWVuOmF9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1NwbGFzaFNjcmVlbjplfT1hd2FpdCBpbXBvcnQoIkBjYXBhY2l0b3Ivc3BsYXNoLXNjcmVlbiIpO3JldHVybntTcGxhc2hTY3JlZW46ZX19LFtdKTthd2FpdCBhLmhpZGUoKX1jYXRjaHt9dHJ5e2NvbnN0e0FwcDphfT1hd2FpdCBpKGFzeW5jKCk9Pntjb25zdHtBcHA6ZX09YXdhaXQgaW1wb3J0KCJAY2FwYWNpdG9yL2FwcCIpO3JldHVybntBcHA6ZX19LFtdKTthLmFkZExpc3RlbmVyKCJhcHBVcmxPcGVuIiwoe3VybDplfSk9PntpZihlKXtjb25zdCB0PWUucmVwbGFjZSgvXmh0dHBzPzpcL1wvW14vXSsvLCIiKS5yZXBsYWNlKC9ea2NvOlwvXC9tYXJrZXRwbGFjZS8sIiIpO3QmJnQhPT0iLyImJndpbmRvdy5sb2NhdGlvbi5wYXRobmFtZSE9PXQmJih3aW5kb3cubG9jYXRpb24uaHJlZj10KX19KX1jYXRjaHt9dHJ5e2NvbnN0e1B1c2hOb3RpZmljYXRpb25zOmF9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1B1c2hOb3RpZmljYXRpb25zOm59PWF3YWl0IGltcG9ydCgiQGNhcGFjaXRvci9wdXNoLW5vdGlmaWNhdGlvbnMiKTtyZXR1cm57UHVzaE5vdGlmaWNhdGlvbnM6bn19LFtdKSx7UHJlZmVyZW5jZXM6ZX09YXdhaXQgaShhc3luYygpPT57Y29uc3R7UHJlZmVyZW5jZXM6bn09YXdhaXQgaW1wb3J0KCJAY2FwYWNpdG9yL3ByZWZlcmVuY2VzIik7cmV0dXJue1ByZWZlcmVuY2VzOm59fSxbXSk7bGV0IHQ9ITE7dHJ5e3Q9KGF3YWl0IGEucmVxdWVzdFBlcm1pc3Npb25zKCkpLnJlY2VpdmU9PT0iZ3JhbnRlZCJ9Y2F0Y2h7fXQmJihhd2FpdCBhLnJlZ2lzdGVyKCksYS5hZGRMaXN0ZW5lcigicmVnaXN0cmF0aW9uIixhc3luYyBuPT57dHJ5e2lmKChhd2FpdCBlLmdldCh7a2V5OiJmY21fdG9rZW4ifSkpLnZhbHVlPT09bi52YWx1ZSlyZXR1cm47YXdhaXQgZS5zZXQoe2tleToiZmNtX3Rva2VuIix2YWx1ZTpuLnZhbHVlfSk7Y29uc3R7c3VwYWJhc2U6cn09YXdhaXQgaShhc3luYygpPT57Y29uc3R7c3VwYWJhc2U6Zn09YXdhaXQgaW1wb3J0KCIuL3N1cGFiYXNlLWNsaWVudC1EdkNtTmtwSS5qcyIpLnRoZW4ocD0+cC56KTtyZXR1cm57c3VwYWJhc2U6Zn19LFtdKSx7ZGF0YTpkfT1hd2FpdCByLmF1dGguZ2V0U2Vzc2lvbigpLHM9ZD8uc2Vzc2lvbj8udXNlcj8uaWQ7cyYmYXdhaXQgci5mcm9tKCJkZXZpY2VfdG9rZW5zIikudXBzZXJ0KHt1c2VyX2lkOnMsdG9rZW46bi52YWx1ZSxwbGF0Zm9ybToiYW5kcm9pZCJ9LHtvbkNvbmZsaWN0OiJ1c2VyX2lkLHRva2VuIn0pfWNhdGNoe319KSxhLmFkZExpc3RlbmVyKCJwdXNoTm90aWZpY2F0aW9uQWN0aW9uUGVyZm9ybWVkIixuPT57bj8ubm90aWZpY2F0aW9uPy5kYXRhPy5vcmRlcl9udW1iZXImJih3aW5kb3cubG9jYXRpb24uaHJlZj0iL2FjY291bnQiKX0pKX1jYXRjaHt9dHJ5e2NvbnN0e05ldHdvcms6YX09YXdhaXQgaShhc3luYygpPT57Y29uc3R7TmV0d29yazplfT1hd2FpdCBpbXBvcnQoIkBjYXBhY2l0b3IvbmV0d29yayIpO3JldHVybntOZXR3b3JrOmV9fSxbXSk7YS5hZGRMaXN0ZW5lcigibmV0d29ya1N0YXR1c0NoYW5nZSIsZT0+e2lmKHdpbmRvdy5kaXNwYXRjaEV2ZW50KG5ldyBDdXN0b21FdmVudCgibmV0d29yay1jaGFuZ2UiLHtkZXRhaWw6ZX0pKSxlLmNvbm5lY3RlZCl7Y29uc3QgdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib2ZmbGluZS1iYW5uZXIiKTt0JiZ0LnJlbW92ZSgpfWVsc2V7Y29uc3QgdD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTt0LmlkPSJvZmZsaW5lLWJhbm5lciIsdC5zdHlsZS5jc3NUZXh0PSJwb3NpdGlvbjpmaXhlZDt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDt6LWluZGV4Ojk5OTk7YmFja2dyb3VuZDojZWY0NDQ0O2NvbG9yOiNmZmY7dGV4dC1hbGlnbjpjZW50ZXI7cGFkZGluZzo4cHg7Zm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6NzAwO2ZvbnQtZmFtaWx5OkludGVyLHNhbnMtc2VyaWYiLHQudGV4dENvbnRlbnQ9IllvdSBhcmUgb2ZmbGluZS4gU29tZSBmZWF0dXJlcyBtYXkgYmUgdW5hdmFpbGFibGUuIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib2ZmbGluZS1iYW5uZXIiKXx8ZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZCh0KX19KX1jYXRjaHt9fX1vJiZ1KCk7Cg==">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-BZ_21NL6.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-1NxFCIXH.js">
+  <link rel="modulepreload" crossorigin href="/assets/ai-chat-U-IZQEoO-BfojXIY1.js">
+  <script type="module" crossorigin src="/src/auth-page.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BBtcpOs0.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-B_HxL1KQ-Do35V_4n.js">
+  <link rel="modulepreload" crossorigin href="/assets/auth-iMacRl0l-DlcadYa5.js">
+  <link rel="modulepreload" crossorigin href="/assets/native-bridge-z1PkSgfH-CV6U1YtG.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-CYE5uVRZ.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-CiDTzVNv.js">
+  <link rel="modulepreload" crossorigin href="/assets/ai-chat-U-IZQEoO-DrOtSYGJ.js">
+  <link rel="stylesheet" crossorigin href="/assets/localization-B_HxL1KQ-B_HxL1KQ.css">
+</head>
+<body class="bg-white text-gray-900 min-h-screen flex flex-col items-center justify-center p-4 relative overflow-x-hidden">
+  <a id="back-to-home" href="/" aria-label="Back to marketplace">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+    <span>Back</span>
+  </a>
+
+  <!-- Premium gradient background -->
+  <div class="fixed inset-0 pointer-events-none">
+    <div class="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-white"></div>
+    <div class="absolute -top-48 -left-48 w-[32rem] h-[32rem] bg-blue-50 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-48 -right-48 w-[32rem] h-[32rem] bg-blue-50 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-50 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Subtle grid overlay -->
+  <div class="fixed inset-0 pointer-events-none opacity-100" style="background-image:linear-gradient(rgba(59,130,246,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.05) 1px,transparent 1px);background-size:40px 40px"></div>
+
+  <!-- Animated particles container -->
+  <div id="particles" class="fixed inset-0 pointer-events-none overflow-hidden"></div>
+
+  <div class="w-full max-w-md relative z-10 py-6">
+
+    <!-- Logo + Brand -->
+    <div class="text-center mb-6 fade-in">
+      <div class="inline-flex items-center justify-center w-24 h-24 bg-blue-50 rounded-3xl shadow-lg shadow-blue-600/20 mb-3 ring-1 ring-blue-400/20 overflow-hidden">
+        <img data-brand="logo" src="" alt="Weverse Online Shop" class="w-full h-full object-contain p-2" style="display:none;">
+      </div>
+      <h1 data-brand="name" class="text-xl font-black tracking-tight text-gray-900 leading-tight">Weverse Online Shop</h1>
+    </div>
+
+    <!-- Security badge -->
+    <div class="flex justify-center mb-4 fade-in-d1">
+      <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-1.5">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Secure Checkout</span>
+      </div>
+    </div>
+
+    <!-- Main card -->
+    <div class="glass border border-blue-200 rounded-3xl p-7 sm:p-8 shadow-2xl shadow-blue-950/50 fade-in-d2">
+
+      <!-- Welcome message -->
+      <div class="text-center mb-6">
+        <h2 id="welcome-title" class="text-lg font-bold text-gray-900 mb-1">Welcome Back</h2>
+        <p id="welcome-subtitle" class="text-sm text-gray-600 leading-relaxed max-w-xs mx-auto">
+          Sign in or create an account to continue your purchase securely.
+        </p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="relative flex bg-gray-100 rounded-xl p-1 mb-6">
+        <div id="tab-indicator" class="tab-indicator" style="left:4px;width:calc(50% - 4px)"></div>
+        <button id="tab-login" class="relative flex-1 py-2.5 text-center text-sm font-bold uppercase tracking-wider rounded-lg transition-colors duration-300 text-blue-700 btn-press">Login</button>
+        <button id="tab-register" class="relative flex-1 py-2.5 text-center text-sm font-bold uppercase tracking-wider rounded-lg transition-colors duration-300 text-gray-600 btn-press">Create Account</button>
+      </div>
+
+      <!-- Quick navigation links -->
+      <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 mb-5 text-[11px]">
+        <a href="#" id="link-forgot-top" class="text-gray-500 hover:text-blue-600 transition flex items-center gap-1">
+          <i data-lucide="key-round" class="w-3 h-3"></i> Forgot Password?
+        </a>
+        <span class="text-gray-700">·</span>
+        <a href="#" id="link-guest-top" class="text-gray-500 hover:text-blue-600 transition flex items-center gap-1">
+          <i data-lucide="user-round" class="w-3 h-3"></i> Continue as Guest
+        </a>
+        <span class="text-gray-700">·</span>
+        <a href="#" id="link-help" class="text-gray-500 hover:text-blue-600 transition flex items-center gap-1">
+          <i data-lucide="help-circle" class="w-3 h-3"></i> Help Center
+        </a>
+        <span class="text-gray-700">·</span>
+        <a href="#" id="link-contact" class="text-gray-500 hover:text-blue-600 transition flex items-center gap-1">
+          <i data-lucide="mail" class="w-3 h-3"></i> Support
+        </a>
+      </div>
+
+      <!-- Form -->
+      <form id="auth-form" class="space-y-4">
+        <!-- Username (register only) -->
+        <div id="field-username" class="hidden">
+          <label class="block text-[11px] font-bold uppercase text-gray-600 mb-1.5 tracking-wide">Username</label>
+          <div class="relative">
+            <i data-lucide="at-sign" class="w-5 h-5 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input id="auth-username" type="text" autocomplete="username"
+                   class="input-field w-full bg-white border border-gray-300 rounded-xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                   placeholder="Choose a username">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-gray-600 mb-1.5 tracking-wide">Email Address</label>
+          <div class="relative">
+            <i data-lucide="mail" class="w-5 h-5 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input id="auth-email" type="email" required autocomplete="email"
+                   class="input-field w-full bg-white border border-gray-300 rounded-xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                   placeholder="you@example.com">
+          </div>
+        </div>
+
+        <!-- Country selector (register only) -->
+        <div id="field-country" class="hidden">
+          <label class="block text-[11px] font-bold uppercase text-gray-600 mb-1.5 tracking-wide">Country <span class="text-amber-600">*</span></label>
+          <button type="button" id="country-select-btn" class="input-field w-full bg-white border border-gray-300 rounded-xl pl-4 pr-4 py-3 text-sm text-left flex items-center justify-between gap-3 hover:border-blue-300 transition">
+            <div class="flex items-center gap-3 min-w-0">
+              <span id="country-flag" class="text-2xl">🌍</span>
+              <div class="min-w-0">
+                <div id="country-name" class="text-gray-900 font-medium truncate">Select your country</div>
+                <div id="country-meta" class="text-gray-500 text-xs">Required</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 shrink-0"></i>
+          </button>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-gray-600 mb-1.5 tracking-wide">Password</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-5 h-5 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <i data-lucide="shield" class="w-4 h-4 text-emerald-600 absolute right-12 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input id="auth-password" type="password" required autocomplete="current-password"
+                   class="input-field w-full bg-white border border-gray-300 rounded-xl pl-11 pr-12 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                   placeholder="Enter your password">
+            <button type="button" id="toggle-password" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600 transition p-1" aria-label="Show password">
+              <i data-lucide="eye" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <!-- Password strength meter (register only) -->
+          <div id="strength-meter" class="hidden mt-2">
+            <div class="flex gap-1.5 mb-1">
+              <div class="strength-bar h-1 flex-1 rounded-full bg-gray-100" data-level="1"></div>
+              <div class="strength-bar h-1 flex-1 rounded-full bg-gray-100" data-level="2"></div>
+              <div class="strength-bar h-1 flex-1 rounded-full bg-gray-100" data-level="3"></div>
+              <div class="strength-bar h-1 flex-1 rounded-full bg-gray-100" data-level="4"></div>
+            </div>
+            <p id="strength-label" class="text-[11px] text-gray-500 font-medium">Password strength</p>
+          </div>
+        </div>
+
+        <div id="auth-error" class="hidden text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span id="auth-error-msg"></span>
+        </div>
+
+        <button id="auth-submit" type="submit"
+                class="btn-press w-full py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 active:scale-[.98] font-bold text-white rounded-xl uppercase text-sm tracking-wider transition-all duration-200 shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden">
+          <i data-lucide="log-in" class="w-5 h-5"></i> <span id="auth-submit-label">Sign In</span>
+        </button>
+      </form>
+
+      <!-- Login extras -->
+      <div id="login-extras" class="mt-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="flex items-center gap-2 cursor-pointer select-none group">
+            <input id="remember-me" type="checkbox" class="w-4 h-4 rounded border-gray-300 bg-white text-blue-500 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer">
+            <span class="text-xs text-gray-600 group-hover:text-gray-700 transition">Remember Me</span>
+          </label>
+          <a href="#" id="link-forgot" class="text-xs text-blue-600 hover:text-blue-700 font-medium transition">Forgot Password?</a>
+        </div>
+        <p class="text-center text-xs text-gray-500">
+          Don't have an account? <a href="#" id="link-create" class="text-blue-600 hover:text-blue-700 font-bold transition">Create Account</a>
+        </p>
+      </div>
+
+      <!-- Register extras -->
+      <div id="register-extras" class="mt-4 hidden">
+        <p class="text-center text-xs text-gray-500">
+          Already have an account? <a href="#" id="link-signin" class="text-blue-600 hover:text-blue-700 font-bold transition">Sign In</a>
+        </p>
+      </div>
+
+      <!-- Terms (register only) -->
+      <div id="terms-row" class="hidden mt-4 text-center text-[11px] text-gray-500 leading-relaxed">
+        By creating an account, you agree to our
+        <a href="#" id="link-terms" class="text-blue-600 hover:text-blue-700 font-medium">Terms & Conditions</a>
+        and
+        <a href="#" id="link-privacy" class="text-blue-600 hover:text-blue-700 font-medium">Privacy Policy</a>.
+      </div>
+
+      <!-- Continue as Guest -->
+      <div class="mt-6">
+        <a href="#" id="link-guest-checkout" class="btn-press w-full flex items-center justify-center gap-2.5 py-3.5 bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 hover:border-amber-300 hover:from-amber-100 hover:to-amber-50 rounded-xl text-sm font-bold text-amber-600 transition group">
+          <i data-lucide="user-round" class="w-5 h-5 group-hover:scale-110 transition"></i>
+          Continue as Guest
+          <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition"></i>
+        </a>
+      </div>
+
+      <!-- Need Help -->
+      <div class="text-center mt-5">
+        <p class="text-xs text-gray-500">
+          <i data-lucide="help-circle" class="w-3.5 h-3.5 inline mr-1"></i>
+          Need Help? <a href="#" id="link-help-bottom" class="text-blue-600 hover:text-blue-700 font-medium transition">Contact Support</a>
+        </p>
+      </div>
+
+      <!-- Back to Marketplace -->
+      <div class="text-center mt-4 pt-4 border-t border-blue-100">
+        <a href="/" class="text-xs text-gray-500 hover:text-blue-600 transition inline-flex items-center gap-1.5">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to Marketplace
+        </a>
+      </div>
+    </div>
+
+    <!-- Trust badges -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5 fade-in-d3">
+      <div class="glass-soft border border-blue-100 rounded-xl px-2 py-2.5 flex flex-col items-center gap-1">
+        <i data-lucide="lock" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">SSL Encrypted</span>
+      </div>
+      <div class="glass-soft border border-blue-100 rounded-xl px-2 py-2.5 flex flex-col items-center gap-1">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Secure Payments</span>
+      </div>
+      <div class="glass-soft border border-blue-100 rounded-xl px-2 py-2.5 flex flex-col items-center gap-1">
+        <i data-lucide="eye-off" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Privacy Protected</span>
+      </div>
+      <div class="glass-soft border border-blue-100 rounded-xl px-2 py-2.5 flex flex-col items-center gap-1">
+        <i data-lucide="globe-2" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Trusted Worldwide</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-5 fade-in-d4">
+      <div class="flex items-center justify-center gap-1.5 mb-1.5">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-xs text-gray-600 font-medium">Your information is protected using SSL encryption.</span>
+      </div>
+      <p class="text-[11px] text-gray-600 leading-relaxed max-w-xs mx-auto">
+        We never share your personal information with third parties.
+      </p>
+    </div>
+  </div>
+
+  <!-- Country selector modal -->
+  <div id="country-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="country-modal-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+    <div class="relative glass border border-blue-200 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md max-h-[80vh] flex flex-col shadow-2xl shadow-blue-950/60">
+      <div class="flex items-center justify-between p-5 border-b border-blue-100">
+        <h3 class="text-base font-bold text-gray-900">Select Your Country</h3>
+        <button type="button" id="country-modal-close" class="p-2 hover:bg-blue-50 rounded-lg transition text-[10px] font-bold uppercase tracking-wide text-gray-600">
+          🔙 Back
+        </button>
+      </div>
+      <div class="p-4 border-b border-blue-100">
+        <div class="relative">
+          <i data-lucide="search" class="w-5 h-5 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input id="country-search" type="text" placeholder="Search country, code, or dial code..."
+                 class="w-full bg-white border border-gray-300 rounded-xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+      <div id="country-list" class="flex-1 overflow-y-auto p-2 space-y-0.5"></div>
+    </div>
+  </div>
+
+  <button id="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+  </button>
+
+  <script src="/back-button.js" defer></script>
+  <!-- APP PROMOTION BANNER + LIVE PRODUCT PROMOTIONS -->
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+  <div id="live-promo-alerts" class="fixed bottom-4 right-4 z-50 w-[340px] max-w-[90vw] space-y-3 pointer-events-none" aria-live="polite"></div>
+</body>
+</html>

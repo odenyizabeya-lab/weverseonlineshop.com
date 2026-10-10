@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Houses For Sale &amp; Rent | Weverse Online Shop</title>
+  <meta name="description" content="Browse every house and home for sale or rent with video tours on Weverse Online Shop. Villas, mansions, apartments, beach houses, commercial property and land — grouped by type in continuous side-scrolling lines.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Weverse Online Shop">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Weverse Online Shop">
+  <meta property="og:title" content="Houses For Sale &amp; Rent | Weverse Online Shop">
+  <meta property="og:description" content="Every house and home for sale or rent with video tours on Weverse Online Shop — villas, mansions, apartments, beach houses, commercial property and land, in continuous side-scrolling lines.">
+  <link rel="canonical" href="https://weverseonlineshop.com/showroom.html">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{font-family:'Inter',system-ui,sans-serif}
+    html{dark:false;color-scheme:light}
+    body{margin:0;background:#f8fafc;color:#0f172a;-webkit-font-smoothing:antialiased;min-height:100vh}
+    .kco-topbar{position:fixed;top:0;left:0;right:0;z-index:40;background:rgba(255,255,255,.93);backdrop-filter:blur(18px);border-bottom:1px solid #e2e8f0;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+    .kco-topbar-inner{max-width:1280px;margin:0 auto;padding:0 16px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .kco-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .kco-logo-mark{width:40px;height:40px;border-radius:12px;background:#0f172a;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .kco-logo-mark svg{width:26px;height:26px}
+    .kco-logo-name{font-size:17px;font-weight:900;color:#0f172a;letter-spacing:.01em;white-space:nowrap}
+    .kco-back{display:inline-flex;align-items:center;gap:6px;color:#475569;font-size:12px;font-weight:700;text-decoration:none;transition:color .15s}
+    .kco-back:hover{color:#1d4ed8}
+    .kco-main{max-width:1280px;margin:0 auto;padding:96px 16px 60px;position:relative;z-index:2}
+    .kco-head{text-align:center;margin-bottom:26px}
+    .kco-head .kco-eyebrow{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:999px}
+    .kco-head h1{font-size:28px;font-weight:900;margin:14px 0 6px;color:#0f172a}
+    .kco-head p{color:#64748b;font-size:15px;margin:0}
+    .kco-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:20px auto 26px}
+    .kco-tab{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:14px;background:#fff;border:1px solid #e2e8f0;color:#334155;font-size:13px;font-weight:800;text-decoration:none;box-shadow:0 2px 10px -4px rgba(0,0,0,.08);transition:all .15s}
+    .kco-tab:hover{border-color:#3b82f6;color:#1d4ed8;transform:translateY(-1px)}
+    .kco-tab.active{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 6px 16px -8px rgba(37,99,235,.5)}
+    .kco-catbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 auto 30px;max-width:960px}
+    .kco-cat{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid #e2e8f0;color:#334155;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;text-decoration:none}
+    .kco-cat:hover{border-color:#94a3b8}
+    .kco-cat.active,.kco-cat.veh.active{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+    .kco-group{position:relative;margin:0 0 34px}
+    .kco-group-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .kco-group-head .kco-gh-ic{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;font-size:20px}
+    .kco-group-head.veh .kco-gh-ic{background:#eff6ff;border-color:#bfdbfe;color:#2563eb}
+    .kco-group-head h2{font-size:19px;font-weight:900;margin:0;color:#0f172a}
+    .kco-group-head span{font-size:12px;font-weight:700;color:#64748b}
+    .kco-group .kco-hero-hscroll{padding-left:2px;padding-right:2px}
+    .kco-group .kco-hero-arrow{top:calc(50% + 18px)}
+    .kco-group .kco-hero-arrow.left{left:.35rem}
+    .kco-group .kco-hero-arrow.right{right:.35rem}
+    @media(max-width:1023px){.kco-group .kco-hero-arrow{display:flex;width:2rem;height:2rem}}
+    .kco-empty{padding:34px;text-align:center;background:#fff;border:1px dashed #cbd5e1;border-radius:1rem;color:#94a3b8;font-size:14px;font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="kco-topbar">
+    <div class="kco-topbar-inner">
+      <a href="/" class="kco-logo">
+        <span class="kco-logo-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5l4.5 14L12 8l4.5 11L21 5" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>
+          <span class="kco-logo-name">Weverse Online Shop</span>
+          <span style="display:block;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#94a3b8;margin-top:2px">Global Shopping · Worldwide Delivery</span>
+        </span>
+      </a>
+      <a href="/" class="kco-back"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home</a>
+    </div>
+  </header>
+  <main class="kco-main">
+    <div class="kco-head">
+      <span class="kco-eyebrow"><i data-lucide="layout-grid" class="w-3.5 h-3.5"></i> Showroom Archive</span>
+      <h1 id="kco-cat-title">Browse Everything</h1>
+      <p id="kco-cat-sub">Every house in a continuous side-scrolling line, grouped by type.</p>
+    </div>
+    <nav class="kco-tabs" id="kco-tabs">
+      <a class="kco-tab active" data-cat="real-estate" href="/showroom.html?cat=real-estate"><i data-lucide="home" class="w-4 h-4"></i> Real Estate</a>
+    </nav>
+    <div id="kco-catbar" class="kco-catbar"></div>
+    <div id="kco-results"></div>
+  </main>
+  <script src="/back-button.js" defer></script>
+  <script type="module" src="./src/showroom-video-keepalive.js"></script>
+  <script type="module" src="./src/showroom-page.js"></script>
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+</body>
+</html>

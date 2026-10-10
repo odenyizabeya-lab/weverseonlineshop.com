@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Domain Management | Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <style>
+    * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { -webkit-font-smoothing: antialiased; background: #070b16; }
+    .glass { background: rgba(15,23,42,.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .glass-soft { background: rgba(30,41,59,.4); backdrop-filter: blur(8px); }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fade-in .4s ease forwards; }
+    @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-up { animation: slide-up .5s cubic-bezier(.16,1,.3,1) forwards; }
+    .btn-press { transition: transform .15s cubic-bezier(.4,0,.2,1); }
+    .btn-press:active { transform: scale(.97); }
+    .input-field { transition: border-color .2s, box-shadow .2s; }
+    .input-field:focus { box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .modal-overlay { animation: fade-in .2s ease forwards; }
+    .modal-content { animation: slide-up .3s cubic-bezier(.16,1,.3,1) forwards; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(59,130,246,.2); border-radius: 3px; }
+    .progress-step { transition: all .3s ease; }
+    .progress-step.active { background: rgba(59,130,246,.2); border-color: rgba(59,130,246,.5); }
+    .progress-step.completed { background: rgba(16,185,129,.15); border-color: rgba(16,185,129,.4); }
+    .progress-line { transition: background .3s ease; }
+    .progress-line.completed { background: rgba(16,185,129,.4); }
+  </style>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BFHnnn3M.js">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e3MgYXMgZSxiIGFzIGMsQSBhcyBoLFMgYXMgZH1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBmPSJodHRwczovL3dldmVyc2VvbmxpbmVzaG9wLmNvbSI7ZnVuY3Rpb24gbygpe3RyeXtpZih3aW5kb3cuQ2FwYWNpdG9yPy5pc05hdGl2ZVBsYXRmb3JtPy4oKSlyZXR1cm4gZn1jYXRjaHt9cmV0dXJuIHdpbmRvdy5sb2NhdGlvbi5vcmlnaW59YXN5bmMgZnVuY3Rpb24gbCgpe2NvbnN0e2RhdGE6e3Nlc3Npb246dH19PWF3YWl0IGUuYXV0aC5nZXRTZXNzaW9uKCk7cmV0dXJuIHQ/LnVzZXJ8fG51bGx9YXN5bmMgZnVuY3Rpb24gcCgpe2lmKCFhd2FpdCBsKCkpcmV0dXJuITE7Y29uc3R7ZGF0YTpufT1hd2FpdCBlLnJwYygiaXNfY3VycmVudF91c2VyX2FkbWluIik7cmV0dXJuISFufWFzeW5jIGZ1bmN0aW9uIG0odCxuKXtjb25zdCByPWAke28oKX0vYXV0aC5odG1sYDtyZXR1cm4gZS5hdXRoLnNpZ25VcCh7ZW1haWw6dCxwYXNzd29yZDpuLG9wdGlvbnM6e2VtYWlsUmVkaXJlY3RUbzpyfX0pfWFzeW5jIGZ1bmN0aW9uIEEodCxuKXtyZXR1cm4gZS5hdXRoLnNpZ25JbldpdGhQYXNzd29yZCh7ZW1haWw6dCxwYXNzd29yZDpufSl9YXN5bmMgZnVuY3Rpb24gdygpe3JldHVybiBlLmF1dGguc2lnbk91dCgpfWFzeW5jIGZ1bmN0aW9uIHkodCl7cmV0dXJuIGUuYXV0aC5yZXNldFBhc3N3b3JkRm9yRW1haWwodCx7cmVkaXJlY3RUbzpgJHtvKCl9L2F1dGguaHRtbD9yZXNldD0xYH0pfWFzeW5jIGZ1bmN0aW9uIF8odCl7cmV0dXJuIGUuYXV0aC51cGRhdGVVc2VyKHtwYXNzd29yZDp0fSl9YXN5bmMgZnVuY3Rpb24gUyh0KXtyZXR1cm4gZS5hdXRoLnJlc2VuZCh7dHlwZToic2lnbnVwIixlbWFpbDp0fSl9ZnVuY3Rpb24gayh0KXtyZXR1cm4gZS5hdXRoLm9uQXV0aFN0YXRlQ2hhbmdlKChuLHIpPT57dChyPy51c2VyfHxudWxsKX0pfWZ1bmN0aW9uIFAoKXtyZXR1cm4gc2Vzc2lvblN0b3JhZ2UuZ2V0SXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKXx8bnVsbH1mdW5jdGlvbiBJKHQpe3Nlc3Npb25TdG9yYWdlLnNldEl0ZW0oImtjb19hdXRoX3JlZGlyZWN0Iix0KX1mdW5jdGlvbiBVKCl7c2Vzc2lvblN0b3JhZ2UucmVtb3ZlSXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKX1hc3luYyBmdW5jdGlvbiBPKHQsbil7aWYoIWMpcmV0dXJue29rOiExLGVycm9yOiJTdXBhYmFzZSBjcmVkZW50aWFscyBhcmUgbWlzc2luZy4ifTtjb25zdCByPWAke2R9L2Z1bmN0aW9ucy92MS9zZW5kLWF1dGgtZW1haWxgO3RyeXtjb25zdHtkYXRhOntzZXNzaW9uOmF9fT1hd2FpdCBlLmF1dGguZ2V0U2Vzc2lvbigpLHU9YT8uYWNjZXNzX3Rva2VufHxoLGk9YXdhaXQgZmV0Y2gocix7bWV0aG9kOiJQT1NUIixoZWFkZXJzOntBdXRob3JpemF0aW9uOmBCZWFyZXIgJHt1fWAsIkNvbnRlbnQtVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24ifSxib2R5OkpTT04uc3RyaW5naWZ5KHt0eXBlOnQsLi4ubn0pfSk7bGV0IHM9e307dHJ5e3M9YXdhaXQgaS5qc29uKCl9Y2F0Y2h7cz17fX1yZXR1cm57b2s6aS5vayYmIXMuZXJyb3IsZXJyb3I6cy5lcnJvcn19Y2F0Y2goYSl7cmV0dXJue29rOiExLGVycm9yOlN0cmluZyhhKX19fWV4cG9ydHtvIGFzIGFwcE9yaWdpbixVIGFzIGNsZWFyUmVkaXJlY3RBZnRlckF1dGgsbCBhcyBnZXRDdXJyZW50VXNlcixQIGFzIGdldFJlZGlyZWN0QWZ0ZXJBdXRoLHAgYXMgaXNBZG1pbixrIGFzIG9uQXV0aENoYW5nZSxTIGFzIHJlc2VuZFZlcmlmaWNhdGlvbix5IGFzIHJlc2V0UGFzc3dvcmQsTyBhcyBzZW5kQXV0aEVtYWlsLEkgYXMgc2V0UmVkaXJlY3RBZnRlckF1dGgsQSBhcyBzaWduSW4sdyBhcyBzaWduT3V0LG0gYXMgc2lnblVwLF8gYXMgdXBkYXRlVXNlclBhc3N3b3JkfTsK">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-1NxFCIXH.js">
+  <script type="module" crossorigin src="/assets/adminDomains-U0Ptstqk.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BBtcpOs0.js">
+  <link rel="modulepreload" crossorigin href="/assets/auth-iMacRl0l-DlcadYa5.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-CiDTzVNv.js">
+</head>
+<body class="bg-[#070b16] text-gray-100 min-h-screen p-4 sm:p-6">
+  <div id="domain-app" class="max-w-6xl mx-auto">
+    <!-- Loading state -->
+    <div id="loading" class="flex items-center justify-center py-20">
+      <div class="flex items-center gap-3 text-gray-500 text-sm">
+        <i data-lucide="loader-2" class="w-5 h-5 animate-spin text-blue-400"></i> Loading domain management...
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="main-content" class="hidden fade-in space-y-5">
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i data-lucide="globe" class="w-5 h-5 text-blue-400"></i> Custom Domain Management
+          </h2>
+          <p class="text-sm text-gray-400 mt-1">Add, verify, and manage custom domains for your marketplace.</p>
+        </div>
+        <button onclick="showAddDomainModal()" class="btn-press flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-blue-600/30">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Domain
+        </button>
+      </div>
+
+      <!-- Primary domain banner -->
+      <div id="primary-banner" class="hidden glass border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center shrink-0">
+          <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-bold text-white">Primary Domain: <span id="primary-domain-name" class="text-emerald-400"></span></p>
+          <p class="text-xs text-gray-500">All traffic is served from this domain.</p>
+        </div>
+      </div>
+
+      <!-- Domains list -->
+      <div id="domains-list" class="space-y-3"></div>
+
+      <!-- DNS Instructions section -->
+      <div class="glass border border-blue-500/20 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wide flex items-center gap-2">
+            <i data-lucide="book-open" class="w-4 h-4 text-blue-400"></i> DNS Instructions by Registrar
+          </h3>
+          <button onclick="toggleDnsInstructions()" class="btn-press text-xs font-bold text-blue-400 hover:text-blue-300 transition">
+            <span id="dns-toggle-text">Show Instructions</span>
+          </button>
+        </div>
+        <div id="dns-instructions" class="hidden space-y-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal container -->
+  <div id="modal-container"></div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-[200] transform translate-y-20 opacity-0 bg-gray-900 border border-blue-500/30 text-white px-5 py-3 rounded-xl shadow-xl text-xs flex items-center gap-2 font-medium transition-all duration-300 pointer-events-none">
+    <i data-lucide="info" class="w-4 h-4 text-blue-400"></i><span id="toast-msg">Action</span>
+  </div>
+
+  <!-- APP PROMOTION BANNER + LIVE PRODUCT PROMOTIONS -->
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+  <div id="live-promo-alerts" class="fixed bottom-4 right-4 z-50 w-[340px] max-w-[90vw] space-y-3 pointer-events-none" aria-live="polite"></div>
+</body>
+</html>

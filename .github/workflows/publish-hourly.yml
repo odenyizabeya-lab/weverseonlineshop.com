@@ -1,0 +1,67 @@
+name: Hourly Auto-Publish
+
+on:
+  # ⚠️  AUTOMATED SCHEDULE DISABLED.
+  # The hourly cron mass-created "illustrative" listings across every location
+  # on Earth and pinged search engines. That pattern is what gets a hosting
+  # account flagged for abuse/spam (and gets the domain deindexed by Google).
+  # It is intentionally NOT running on a timer anymore. Run it manually only
+  # when you have a small, real, curated batch to publish.
+  #
+  # schedule:
+  #   - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'Locations to publish this run (each = 7 kinds: motorhome, house, car, truck, fridge, washer, dog; +1 product after round 4)'
+        required: false
+        default: '12'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_MAIN_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_MAIN_SERVICE_ROLE_KEY }}
+      WEVERSE_SERVICE_ROLE_KEY: ${{ secrets.WEVERSE_SERVICE_ROLE_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      # Without the service-role key the run completes as a dry-run plan and
+      # reports exactly what to fix — it never shows a confusing failure.
+      PUBLISH_ALLOW_DRY_FALLBACK: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish next batch
+        run: node scripts/publish.mjs --live --batch=${{ github.event.inputs.batch || '12' }}
+
+      - name: Summarize this run
+        if: always()
+        shell: bash
+        run: |
+          BATCH="${{ github.event.inputs.batch || '12' }}"
+          KEY_VAR="unset"
+          if [ -n "${{ secrets.SUPABASE_MAIN_SERVICE_ROLE_KEY }}" ] || [ -n "${{ secrets.WEVERSE_SERVICE_ROLE_KEY }}" ] || [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then KEY_VAR="set"; fi
+          {
+            echo "## Hourly worldwide auto-publisher"
+            echo ""
+            echo "- Run type: \`${{ github.event_name }}\` (cron: schedule)."
+            echo "- Locations attempted this run: \`$BATCH\` (each yields the 7 showcase kinds + a marketplace product after round 4)."
+            echo "- Service-role key secret: **$KEY_VAR**."
+            echo "- If the secret is \`unset\`, this run stayed a DRY-RUN — the publisher cannot insert rows until you add \`SUPABASE_MAIN_SERVICE_ROLE_KEY\` (legacy names \`WEVERSE_SERVICE_ROLE_KEY\` / \`SUPABASE_SERVICE_ROLE_KEY\` also accepted) in **Repository → Settings → Secrets and variables → Actions**. After adding it, use *Actions → Hourly Auto-Publish → Run workflow* to publish immediately."
+            echo "- New pages appear within minutes in the live sitemap: https://weverseonlineshop.com/sitemap.xml (and are submitted to Bing/Yandex/Naver/Seznam via IndexNow once inserted)."
+            echo "- Google discovers the sitemap through robots.txt; Search Console at https://search.google.com/search-console shows what Googlebot actually indexed."
+          } >> "$GITHUB_STEP_SUMMARY"

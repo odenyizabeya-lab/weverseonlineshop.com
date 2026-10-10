@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>My Account | Weverse Online Shop</title>
+  <meta name="description" content="Manage your Weverse Online Shop account — view orders, track shipments, and update your profile.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Weverse Online Shop">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Weverse Online Shop">
+  <meta property="og:title" content="My Account | Weverse Online Shop">
+  <meta property="og:description" content="Manage your Weverse Online Shop account — view orders, track shipments, and update your profile.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="My Account | Weverse Online Shop">
+  <meta name="twitter:description" content="Manage your Weverse Online Shop account — view orders, track shipments, and update your profile.">
+  <link rel="canonical" href="https://weverseonlineshop.com/account">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <style>
+    * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { -webkit-font-smoothing: antialiased; }
+    @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fade-in .4s ease forwards}
+    @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .slide-up{animation:slide-up .5s cubic-bezier(.16,1,.3,1) forwards}
+    .glass{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+    .glass-soft{background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .btn-press{transition:transform .15s cubic-bezier(.4,0,.2,1)}
+    .btn-press:active{transform:scale(.97)}
+    .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:ripple-anim .6s ease-out;pointer-events:none}
+    @keyframes ripple-anim{to{transform:scale(4);opacity:0}}
+    @keyframes float-up{0%{transform:translateY(0);opacity:0}10%{opacity:.5}90%{opacity:.3}100%{transform:translateY(-100vh);opacity:0}}
+    .particle{position:absolute;border-radius:50%;pointer-events:none;animation:float-up linear infinite}
+    .skeleton{background:linear-gradient(90deg,rgba(226,232,240,.5) 25%,rgba(203,213,225,.8) 50%,rgba(226,232,240,.5) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.3)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}
+    .pulse-glow{animation:pulse-glow 2s ease-in-out infinite}
+    .scrollbar-none::-webkit-scrollbar{display:none}
+    .scrollbar-none{-ms-overflow-style:none;scrollbar-width:none}
+    .nav-item{transition:all .2s cubic-bezier(.4,0,.2,1)}
+    .nav-item.active{background:rgba(59,130,246,.15);color:#2563eb;border-color:rgba(59,130,246,.3)}
+    .nav-item.active .nav-icon{color:#2563eb}
+    .section{display:none}
+    .section.active{display:block;animation:fade-in .3s ease forwards}
+    @keyframes check-pop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+    .check-pop{animation:check-pop .5s cubic-bezier(.16,1,.3,1) forwards}
+    .toggle-bg{transition:background-color .2s}
+    .toggle-dot{transition:transform .2s cubic-bezier(.4,0,.2,1)}
+    input[type="checkbox"].toggle:checked + .toggle-bg{background:#2563eb}
+    input[type="checkbox"].toggle:checked + .toggle-bg .toggle-dot{transform:translateX(20px)}
+  </style>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BFHnnn3M.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-XLaEvqbL-DEyIhb6U.js">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e3MgYXMgZSxiIGFzIGMsQSBhcyBoLFMgYXMgZH1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBmPSJodHRwczovL3dldmVyc2VvbmxpbmVzaG9wLmNvbSI7ZnVuY3Rpb24gbygpe3RyeXtpZih3aW5kb3cuQ2FwYWNpdG9yPy5pc05hdGl2ZVBsYXRmb3JtPy4oKSlyZXR1cm4gZn1jYXRjaHt9cmV0dXJuIHdpbmRvdy5sb2NhdGlvbi5vcmlnaW59YXN5bmMgZnVuY3Rpb24gbCgpe2NvbnN0e2RhdGE6e3Nlc3Npb246dH19PWF3YWl0IGUuYXV0aC5nZXRTZXNzaW9uKCk7cmV0dXJuIHQ/LnVzZXJ8fG51bGx9YXN5bmMgZnVuY3Rpb24gcCgpe2lmKCFhd2FpdCBsKCkpcmV0dXJuITE7Y29uc3R7ZGF0YTpufT1hd2FpdCBlLnJwYygiaXNfY3VycmVudF91c2VyX2FkbWluIik7cmV0dXJuISFufWFzeW5jIGZ1bmN0aW9uIG0odCxuKXtjb25zdCByPWAke28oKX0vYXV0aC5odG1sYDtyZXR1cm4gZS5hdXRoLnNpZ25VcCh7ZW1haWw6dCxwYXNzd29yZDpuLG9wdGlvbnM6e2VtYWlsUmVkaXJlY3RUbzpyfX0pfWFzeW5jIGZ1bmN0aW9uIEEodCxuKXtyZXR1cm4gZS5hdXRoLnNpZ25JbldpdGhQYXNzd29yZCh7ZW1haWw6dCxwYXNzd29yZDpufSl9YXN5bmMgZnVuY3Rpb24gdygpe3JldHVybiBlLmF1dGguc2lnbk91dCgpfWFzeW5jIGZ1bmN0aW9uIHkodCl7cmV0dXJuIGUuYXV0aC5yZXNldFBhc3N3b3JkRm9yRW1haWwodCx7cmVkaXJlY3RUbzpgJHtvKCl9L2F1dGguaHRtbD9yZXNldD0xYH0pfWFzeW5jIGZ1bmN0aW9uIF8odCl7cmV0dXJuIGUuYXV0aC51cGRhdGVVc2VyKHtwYXNzd29yZDp0fSl9YXN5bmMgZnVuY3Rpb24gUyh0KXtyZXR1cm4gZS5hdXRoLnJlc2VuZCh7dHlwZToic2lnbnVwIixlbWFpbDp0fSl9ZnVuY3Rpb24gayh0KXtyZXR1cm4gZS5hdXRoLm9uQXV0aFN0YXRlQ2hhbmdlKChuLHIpPT57dChyPy51c2VyfHxudWxsKX0pfWZ1bmN0aW9uIFAoKXtyZXR1cm4gc2Vzc2lvblN0b3JhZ2UuZ2V0SXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKXx8bnVsbH1mdW5jdGlvbiBJKHQpe3Nlc3Npb25TdG9yYWdlLnNldEl0ZW0oImtjb19hdXRoX3JlZGlyZWN0Iix0KX1mdW5jdGlvbiBVKCl7c2Vzc2lvblN0b3JhZ2UucmVtb3ZlSXRlbSgia2NvX2F1dGhfcmVkaXJlY3QiKX1hc3luYyBmdW5jdGlvbiBPKHQsbil7aWYoIWMpcmV0dXJue29rOiExLGVycm9yOiJTdXBhYmFzZSBjcmVkZW50aWFscyBhcmUgbWlzc2luZy4ifTtjb25zdCByPWAke2R9L2Z1bmN0aW9ucy92MS9zZW5kLWF1dGgtZW1haWxgO3RyeXtjb25zdHtkYXRhOntzZXNzaW9uOmF9fT1hd2FpdCBlLmF1dGguZ2V0U2Vzc2lvbigpLHU9YT8uYWNjZXNzX3Rva2VufHxoLGk9YXdhaXQgZmV0Y2gocix7bWV0aG9kOiJQT1NUIixoZWFkZXJzOntBdXRob3JpemF0aW9uOmBCZWFyZXIgJHt1fWAsIkNvbnRlbnQtVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24ifSxib2R5OkpTT04uc3RyaW5naWZ5KHt0eXBlOnQsLi4ubn0pfSk7bGV0IHM9e307dHJ5e3M9YXdhaXQgaS5qc29uKCl9Y2F0Y2h7cz17fX1yZXR1cm57b2s6aS5vayYmIXMuZXJyb3IsZXJyb3I6cy5lcnJvcn19Y2F0Y2goYSl7cmV0dXJue29rOiExLGVycm9yOlN0cmluZyhhKX19fWV4cG9ydHtvIGFzIGFwcE9yaWdpbixVIGFzIGNsZWFyUmVkaXJlY3RBZnRlckF1dGgsbCBhcyBnZXRDdXJyZW50VXNlcixQIGFzIGdldFJlZGlyZWN0QWZ0ZXJBdXRoLHAgYXMgaXNBZG1pbixrIGFzIG9uQXV0aENoYW5nZSxTIGFzIHJlc2VuZFZlcmlmaWNhdGlvbix5IGFzIHJlc2V0UGFzc3dvcmQsTyBhcyBzZW5kQXV0aEVtYWlsLEkgYXMgc2V0UmVkaXJlY3RBZnRlckF1dGgsQSBhcyBzaWduSW4sdyBhcyBzaWduT3V0LG0gYXMgc2lnblVwLF8gYXMgdXBkYXRlVXNlclBhc3N3b3JkfTsK">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e18gYXMgaX1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBvPXR5cGVvZiB3aW5kb3c8InUiJiYhIXdpbmRvdy5DYXBhY2l0b3I/LmlzTmF0aXZlUGxhdGZvcm0/LigpO28mJndpbmRvdy5DYXBhY2l0b3I/LmdldFBsYXRmb3JtPy4oKTthc3luYyBmdW5jdGlvbiB1KCl7aWYobyl7dHJ5e2NvbnN0e1N0YXR1c0JhcjphLFN0eWxlOmV9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1N0YXR1c0Jhcjp0LFN0eWxlOm59PWF3YWl0IGltcG9ydCgiQGNhcGFjaXRvci9zdGF0dXMtYmFyIik7cmV0dXJue1N0YXR1c0Jhcjp0LFN0eWxlOm59fSxbXSk7YXdhaXQgYS5zZXRTdHlsZSh7c3R5bGU6ZS5EYXJrfSksYXdhaXQgYS5zZXRCYWNrZ3JvdW5kQ29sb3Ioe2NvbG9yOiIjZmZmZmZmIn0pfWNhdGNoe310cnl7Y29uc3R7U3BsYXNoU2NyZWVuOmF9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1NwbGFzaFNjcmVlbjplfT1hd2FpdCBpbXBvcnQoIkBjYXBhY2l0b3Ivc3BsYXNoLXNjcmVlbiIpO3JldHVybntTcGxhc2hTY3JlZW46ZX19LFtdKTthd2FpdCBhLmhpZGUoKX1jYXRjaHt9dHJ5e2NvbnN0e0FwcDphfT1hd2FpdCBpKGFzeW5jKCk9Pntjb25zdHtBcHA6ZX09YXdhaXQgaW1wb3J0KCJAY2FwYWNpdG9yL2FwcCIpO3JldHVybntBcHA6ZX19LFtdKTthLmFkZExpc3RlbmVyKCJhcHBVcmxPcGVuIiwoe3VybDplfSk9PntpZihlKXtjb25zdCB0PWUucmVwbGFjZSgvXmh0dHBzPzpcL1wvW14vXSsvLCIiKS5yZXBsYWNlKC9ea2NvOlwvXC9tYXJrZXRwbGFjZS8sIiIpO3QmJnQhPT0iLyImJndpbmRvdy5sb2NhdGlvbi5wYXRobmFtZSE9PXQmJih3aW5kb3cubG9jYXRpb24uaHJlZj10KX19KX1jYXRjaHt9dHJ5e2NvbnN0e1B1c2hOb3RpZmljYXRpb25zOmF9PWF3YWl0IGkoYXN5bmMoKT0+e2NvbnN0e1B1c2hOb3RpZmljYXRpb25zOm59PWF3YWl0IGltcG9ydCgiQGNhcGFjaXRvci9wdXNoLW5vdGlmaWNhdGlvbnMiKTtyZXR1cm57UHVzaE5vdGlmaWNhdGlvbnM6bn19LFtdKSx7UHJlZmVyZW5jZXM6ZX09YXdhaXQgaShhc3luYygpPT57Y29uc3R7UHJlZmVyZW5jZXM6bn09YXdhaXQgaW1wb3J0KCJAY2FwYWNpdG9yL3ByZWZlcmVuY2VzIik7cmV0dXJue1ByZWZlcmVuY2VzOm59fSxbXSk7bGV0IHQ9ITE7dHJ5e3Q9KGF3YWl0IGEucmVxdWVzdFBlcm1pc3Npb25zKCkpLnJlY2VpdmU9PT0iZ3JhbnRlZCJ9Y2F0Y2h7fXQmJihhd2FpdCBhLnJlZ2lzdGVyKCksYS5hZGRMaXN0ZW5lcigicmVnaXN0cmF0aW9uIixhc3luYyBuPT57dHJ5e2lmKChhd2FpdCBlLmdldCh7a2V5OiJmY21fdG9rZW4ifSkpLnZhbHVlPT09bi52YWx1ZSlyZXR1cm47YXdhaXQgZS5zZXQoe2tleToiZmNtX3Rva2VuIix2YWx1ZTpuLnZhbHVlfSk7Y29uc3R7c3VwYWJhc2U6cn09YXdhaXQgaShhc3luYygpPT57Y29uc3R7c3VwYWJhc2U6Zn09YXdhaXQgaW1wb3J0KCIuL3N1cGFiYXNlLWNsaWVudC1EdkNtTmtwSS5qcyIpLnRoZW4ocD0+cC56KTtyZXR1cm57c3VwYWJhc2U6Zn19LFtdKSx7ZGF0YTpkfT1hd2FpdCByLmF1dGguZ2V0U2Vzc2lvbigpLHM9ZD8uc2Vzc2lvbj8udXNlcj8uaWQ7cyYmYXdhaXQgci5mcm9tKCJkZXZpY2VfdG9rZW5zIikudXBzZXJ0KHt1c2VyX2lkOnMsdG9rZW46bi52YWx1ZSxwbGF0Zm9ybToiYW5kcm9pZCJ9LHtvbkNvbmZsaWN0OiJ1c2VyX2lkLHRva2VuIn0pfWNhdGNoe319KSxhLmFkZExpc3RlbmVyKCJwdXNoTm90aWZpY2F0aW9uQWN0aW9uUGVyZm9ybWVkIixuPT57bj8ubm90aWZpY2F0aW9uPy5kYXRhPy5vcmRlcl9udW1iZXImJih3aW5kb3cubG9jYXRpb24uaHJlZj0iL2FjY291bnQiKX0pKX1jYXRjaHt9dHJ5e2NvbnN0e05ldHdvcms6YX09YXdhaXQgaShhc3luYygpPT57Y29uc3R7TmV0d29yazplfT1hd2FpdCBpbXBvcnQoIkBjYXBhY2l0b3IvbmV0d29yayIpO3JldHVybntOZXR3b3JrOmV9fSxbXSk7YS5hZGRMaXN0ZW5lcigibmV0d29ya1N0YXR1c0NoYW5nZSIsZT0+e2lmKHdpbmRvdy5kaXNwYXRjaEV2ZW50KG5ldyBDdXN0b21FdmVudCgibmV0d29yay1jaGFuZ2UiLHtkZXRhaWw6ZX0pKSxlLmNvbm5lY3RlZCl7Y29uc3QgdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib2ZmbGluZS1iYW5uZXIiKTt0JiZ0LnJlbW92ZSgpfWVsc2V7Y29uc3QgdD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTt0LmlkPSJvZmZsaW5lLWJhbm5lciIsdC5zdHlsZS5jc3NUZXh0PSJwb3NpdGlvbjpmaXhlZDt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDt6LWluZGV4Ojk5OTk7YmFja2dyb3VuZDojZWY0NDQ0O2NvbG9yOiNmZmY7dGV4dC1hbGlnbjpjZW50ZXI7cGFkZGluZzo4cHg7Zm9udC1zaXplOjEycHg7Zm9udC13ZWlnaHQ6NzAwO2ZvbnQtZmFtaWx5OkludGVyLHNhbnMtc2VyaWYiLHQudGV4dENvbnRlbnQ9IllvdSBhcmUgb2ZmbGluZS4gU29tZSBmZWF0dXJlcyBtYXkgYmUgdW5hdmFpbGFibGUuIixkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib2ZmbGluZS1iYW5uZXIiKXx8ZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZCh0KX19KX1jYXRjaHt9fX1vJiZ1KCk7Cg==">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-BZ_21NL6.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-1NxFCIXH.js">
+  <link rel="modulepreload" crossorigin href="/assets/ai-chat-U-IZQEoO-BfojXIY1.js">
+  <script type="module" crossorigin src="/src/account-page.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-CiDTzVNv.js">
+  <link rel="modulepreload" crossorigin href="/assets/ai-chat-U-IZQEoO-DrOtSYGJ.js">
+  <link rel="stylesheet" crossorigin href="/assets/localization-B_HxL1KQ-B_HxL1KQ.css">
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+
+  <!-- Premium gradient background -->
+  <div class="fixed inset-0 pointer-events-none">
+    <div class="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-white"></div>
+    <div class="absolute -top-48 -left-48 w-[32rem] h-[32rem] bg-blue-50 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-48 -right-48 w-[32rem] h-[32rem] bg-blue-50 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-50 rounded-full blur-3xl"></div>
+  </div>
+  <div class="fixed inset-0 pointer-events-none opacity-100" style="background-image:linear-gradient(rgba(59,130,246,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.05) 1px,transparent 1px);background-size:40px 40px"></div>
+  <div id="particles" class="fixed inset-0 pointer-events-none overflow-hidden"></div>
+
+  <!-- Top header (mobile) -->
+  <header class="fixed top-0 inset-x-0 z-50 glass border-b border-blue-100 lg:hidden">
+    <div class="px-4 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 no-underline">
+        <div class="shrink-0 w-9 h-9 bg-black rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-blue-600/20">
+          <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" aria-hidden="true"><path d="M3 5l4.5 14L12 8l4.5 11L21 5" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="brand-name text-base font-black tracking-tight text-gray-900 whitespace-nowrap">Weverse Online Shop</span>
+        <svg viewBox="0 0 24 24" class="w-4 h-4 shrink-0" aria-label="Verified" role="img" data-weverse-badge="true"><circle cx="12" cy="12" r="11" fill="#3b82f6"/><path d="M10.8 15.6 7.4 12.2l1.5-1.5 1.9 1.9 3.9-3.9 1.5 1.5-5.4 5.4z" fill="#fff"/></svg>
+      </a>
+      <button id="btn-mobile-menu" class="p-2 hover:bg-blue-50 rounded-lg transition">
+        <i data-lucide="menu" class="w-6 h-6 text-gray-600"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar (desktop) -->
+  <aside id="sidebar" class="hidden lg:flex fixed top-0 left-0 bottom-0 w-64 glass border-r border-blue-100 flex-col z-40">
+    <div class="p-5 border-b border-blue-100">
+      <a href="/" class="flex items-center gap-2 no-underline">
+        <div class="shrink-0 w-9 h-9 bg-black rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-blue-600/20">
+          <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" aria-hidden="true"><path d="M3 5l4.5 14L12 8l4.5 11L21 5" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1">
+            <span class="brand-name text-sm font-black tracking-tight text-gray-900 block leading-tight whitespace-nowrap antialiased">Weverse Online Shop</span>
+            <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 shrink-0" aria-label="Verified" role="img" data-weverse-badge="true"><circle cx="12" cy="12" r="11" fill="#3b82f6"/><path d="M10.8 15.6 7.4 12.2l1.5-1.5 1.9 1.9 3.9-3.9 1.5 1.5-5.4 5.4z" fill="#fff"/></svg>
+          </div>
+          <span class="flex items-baseline whitespace-nowrap gap-x-[0.2em] mt-1.5 text-[9px] sm:text-[11px] font-bold tracking-[0.04em] sm:tracking-[0.08em] uppercase leading-snug antialiased text-gray-500"><span class="brand-tagline-1">GLOBAL SHOPPING</span><span class="text-gray-600" aria-hidden="true">•</span><span class="brand-tagline-2">WORLDWIDE DELIVERY</span></span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Profile mini -->
+    <div class="p-4 border-b border-blue-100">
+      <div class="flex items-center gap-3">
+        <div id="sidebar-avatar" class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-sm shrink-0 overflow-hidden"></div>
+        <div class="min-w-0">
+          <p id="sidebar-name" class="text-sm font-bold text-gray-900 truncate">Loading...</p>
+          <p id="sidebar-email" class="text-xs text-gray-500 truncate">—</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="nav-menu" class="flex-1 overflow-y-auto scrollbar-none p-3 space-y-0.5">
+      <!-- Nav items injected by JS -->
+    </nav>
+
+    <div class="p-3 border-t border-blue-100">
+      <button id="btn-signout-desktop" class="btn-press w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition relative overflow-hidden">
+        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile drawer -->
+  <div id="mobile-drawer" class="hidden fixed inset-0 z-50 lg:hidden">
+    <div id="mobile-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-72 glass border-r border-blue-200 shadow-2xl flex flex-col">
+      <div class="p-5 border-b border-blue-100 flex items-center justify-between">
+        <span class="text-base font-black text-gray-900">Menu</span>
+        <button id="btn-mobile-close" class="p-2 hover:bg-blue-50 rounded-lg transition text-[10px] font-bold uppercase tracking-wide text-gray-600">
+          🔙 Back
+        </button>
+      </div>
+      <div class="p-4 border-b border-blue-100">
+        <div class="flex items-center gap-3">
+          <div id="mobile-avatar" class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-sm shrink-0 overflow-hidden"></div>
+          <div class="min-w-0">
+            <p id="mobile-name" class="text-sm font-bold text-gray-900 truncate">Loading...</p>
+            <p id="mobile-email" class="text-xs text-gray-500 truncate">—</p>
+          </div>
+        </div>
+      </div>
+      <nav id="mobile-nav-menu" class="flex-1 overflow-y-auto scrollbar-none p-3 space-y-0.5"></nav>
+      <div class="p-3 border-t border-blue-100">
+        <button id="btn-signout-mobile" class="btn-press w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition relative overflow-hidden">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="pt-16 lg:pt-0 lg:pl-64 min-h-screen relative z-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
+      <div id="dashboard-root" class="min-h-[400px]">
+        <div class="flex items-center justify-center py-20">
+          <div class="flex items-center gap-3 text-gray-500 text-sm">
+            <i data-lucide="loader-2" class="w-5 h-5 animate-spin text-blue-600"></i>
+            Loading your dashboard...
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-[100] transform translate-y-20 opacity-0 bg-gray-900 border border-blue-500/30 text-white px-5 py-3 rounded-xl shadow-xl text-xs flex items-center gap-2 font-medium transition-all duration-300 pointer-events-none">
+    <i data-lucide="info" class="w-4 h-4 text-blue-600"></i><span id="toast-msg">Action</span>
+  </div>
+
+  <script src="/back-button.js" defer></script>
+  <!-- APP PROMOTION BANNER + LIVE PRODUCT PROMOTIONS -->
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+  <div id="live-promo-alerts" class="fixed bottom-4 right-4 z-50 w-[340px] max-w-[90vw] space-y-3 pointer-events-none" aria-live="polite"></div>
+</body>
+</html>

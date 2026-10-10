@@ -1,0 +1,12 @@
+# Force HTTPS — redirect all HTTP traffic to HTTPS
+http://weverseonlineshop.com/* https://weverseonlineshop.com/:splat 301!
+
+# Redirect www to apex domain
+https://www.weverseonlineshop.com/* https://weverseonlineshop.com/:splat 301!
+
+# Redirect old bolt.host URLs to production domain
+https://*.bolt.host/* https://weverseonlineshop.com/:splat 301!
+
+# Clean URL routing (remove .html extensions)
+/showroom /index.html 200
+/product/:splat /details.html?id=:splat 200

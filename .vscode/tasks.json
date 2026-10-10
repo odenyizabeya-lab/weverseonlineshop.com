@@ -1,0 +1,104 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "supabase-db-push",
+			"type": "shell",
+			"command": "C:\\Users\\HP\\AppData\\Roaming\\npm\\supabase.cmd",
+			"args": [
+				"db",
+				"push"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "check-site-settings",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$headers = @{ apikey = 'sb_publishable_SqmJ1R-a-_0CYzuVbS1c7w_FSSIfEsX'; Authorization = 'Bearer sb_publishable_SqmJ1R-a-_0CYzuVbS1c7w_FSSIfEsX' }; Invoke-RestMethod -Uri 'https://mzgrjwvwzgqgivwmlkno.supabase.co/rest/v1/site_settings?select=homepage_banner_image,homepage_banner_alt,updated_at&limit=1' -Headers $headers -Method Get | ConvertTo-Json -Depth 5"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "supabase-db-push-admin-grant",
+			"type": "shell",
+			"command": "C:\\Users\\HP\\AppData\\Roaming\\npm\\supabase.cmd",
+			"args": [
+				"db",
+				"push"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "build-after-homepage-banner-fix",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "build-products-showroom-redesign",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "build-verify",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "npm.cmd",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}

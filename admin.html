@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Admin Dashboard | Weverse Online Shop</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <style>
+    *{font-family:'Inter',system-ui,-apple-system,sans-serif}
+    body{-webkit-font-smoothing:antialiased}
+    .glass{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+    .glass-soft{background:rgba(248,250,252,.85);backdrop-filter:blur(8px)}
+    @keyframes fade-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fade-in .35s ease forwards}
+    @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .slide-up{animation:slide-up .4s cubic-bezier(.16,1,.3,1) forwards}
+    .btn-press{transition:transform .12s cubic-bezier(.4,0,.2,1)}
+    .btn-press:active{transform:scale(.96)}
+    .nav-item{transition:all .18s;cursor:pointer}
+    .nav-item.active{background:rgba(37,99,235,.12);color:#1d4ed8}
+    .nav-item:hover:not(.active){background:rgba(37,99,235,.06);color:#2563eb}
+    .scrollbar-thin::-webkit-scrollbar{width:5px;height:5px}
+    .scrollbar-thin::-webkit-scrollbar-track{background:transparent}
+    .scrollbar-thin::-webkit-scrollbar-thumb{background:rgba(37,99,235,.35);border-radius:3px}
+    .input-field{transition:border-color .2s,box-shadow .2s;background:#fff;border:1px solid #cbd5e1;color:#0f172a;border-radius:.8rem;padding:.9rem 1.05rem;font-size:1rem;width:100%;outline:none;display:block}
+    .input-field:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .input-field::placeholder{color:#94a3b8}
+    select.input-field option{background:#fff;color:#0f172a}
+    textarea.input-field{resize:vertical;min-height:120px}
+    .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;animation:fade-in .2s ease}
+    .modal-box{background:#ffffff;border:1px solid #e2e8f0;border-radius:1.5rem;padding:1.75rem;width:100%;max-width:820px;margin:auto;animation:slide-up .3s cubic-bezier(.16,1,.3,1)}
+    .modal-box.wide{max-width:1280px}
+    .stat-card{transition:transform .2s,box-shadow .2s}
+    .stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(59,130,246,.1)}
+    .tab-btn{transition:all .2s;cursor:pointer;padding:.35rem .9rem;border-radius:.5rem;font-size:.75rem;font-weight:700;color:#475569;border:1px solid #e2e8f0;white-space:nowrap}
+    .tab-btn.active{background:rgba(37,99,235,.12);color:#1d4ed8;border-color:rgba(37,99,235,.3)}
+    .tab-btn:hover:not(.active){color:#0f172a;background:#f1f5f9}
+    table.dt th{position:sticky;top:0;z-index:2;background:#f8fafc;padding:.6rem 1rem;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#475569;text-align:left;border-bottom:1px solid #e2e8f0}
+    table.dt td{padding:.65rem 1rem;font-size:.8rem;border-bottom:1px solid #eef2f7;vertical-align:middle}
+    table.dt tr:hover td{background:#f1f5f9}
+    .badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.72rem;font-weight:700;padding:.3rem .85rem;border-radius:9999px;text-transform:uppercase;letter-spacing:.05em;border:1px solid;white-space:nowrap}
+    .drop-zone{border:2px dashed rgba(37,99,235,.35);border-radius:1.25rem;padding:3.5rem 1.5rem;text-align:center;transition:all .2s;cursor:pointer}
+    .drop-zone:hover,.drop-zone.drag-over{border-color:rgba(37,99,235,.6);background:rgba(37,99,235,.05)}
+    .img-thumb{position:relative;width:106px;height:106px;border-radius:.8rem;overflow:hidden;border:2px solid rgba(37,99,235,.25);flex-shrink:0;cursor:grab}
+    .img-thumb img,.img-thumb video{width:100%;height:100%;object-fit:cover}
+    .img-thumb.cover-img{border-color:#f97316;box-shadow:0 0 0 2px rgba(249,115,22,.3)}
+.img-thumb .rm{position:absolute;top:3px;right:3px;background:rgba(239,68,68,.95);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;line-height:1;flex-shrink:0}
+    .img-thumb .rm:hover{background:rgba(220,38,38,1);transform:scale(1.08)}
+    .img-thumb .rm svg{width:14px;height:14px}
+    .img-thumb .rp{position:absolute;top:3px;left:3px;background:rgba(59,130,246,.95);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;line-height:1;flex-shrink:0}
+    .img-thumb .rp:hover{background:rgba(59,130,246,1);transform:scale(1.08)}
+    .img-thumb .rp-input{display:none}
+    .prod-table-row{cursor:pointer}
+    .prod-table-row:hover{background:rgba(37,99,235,.06)}
+    .view-toggle{display:inline-flex;align-items:center;gap:.25rem;padding:.4rem .75rem;border-radius:.75rem;font-size:.7rem;font-weight:700;border:1px solid #cbd5e1;background:#f1f5f9;color:#475569;transition:all .15s}
+    .view-toggle.active{background:#2563eb;color:#fff;border-color:#2563eb}
+    .view-toggle:hover{background:#e2e8f0}
+    #sidebar{transition:transform .3s cubic-bezier(.16,1,.3,1)}
+    .section-label{font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#64748b;padding:.6rem .75rem .2rem;display:block}
+    @media(max-width:1023px){#sidebar{transform:translateX(-100%)!important}#sidebar.open{transform:translateX(0)!important}}
+    @media(min-width:1024px){#main-wrapper{margin-left:16rem}}
+    #login-screen{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#f8fafc 0%,#eef2f7 50%,#f8fafc 100%);display:flex;align-items:center;justify-content:center;padding:1rem}
+    .login-card{background:#ffffff;border:1px solid #e2e8f0;border-radius:1.5rem;padding:2.5rem;width:100%;max-width:400px;backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(15,23,42,.12)}
+    .toggle-switch{position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0}
+    .toggle-switch input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:22px;transition:.3s;border:1px solid #94a3b8}
+    .toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:2px;bottom:2px;background:#ffffff;border-radius:50%;transition:.3s}
+    input:checked+.toggle-slider{background:#2563eb;border-color:#2563eb}
+    input:checked+.toggle-slider:before{transform:translateX(18px);background:#ffffff}
+    .form-grid{display:grid;gap:1rem}
+    .form-grid-2{grid-template-columns:1fr 1fr}
+    @media(max-width:640px){.form-grid-2{grid-template-columns:1fr}}
+    .lbl{display:block;font-size:.82rem;font-weight:700;color:#475569;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em}
+    .typing-dot{animation:typing-bounce 1.4s infinite ease-in-out}
+    .typing-dot:nth-child(2){animation-delay:.2s}
+    .typing-dot:nth-child(3){animation-delay:.4s}
+    @keyframes typing-bounce{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+    /* ── Admin white/black light-theme overrides ─────────────────────
+       Neutralizes the remaining dark arbitrary utilities used by the
+       admin templates (AI modal shells, image thumb cells, progress
+       bars) that the global light theme in src/styles.css does not
+       already convert. Unlayered + !important beat Tailwind utilities. */
+    [class*="bg-[#030712]"]:not([class*="hover:bg-[#030712]"]) { background-color: #f8fafc !important; }
+    [class*="bg-blue-950/"]:not([class*="hover:bg-blue-950/"]) { background-color: rgba(37,99,235,.08) !important; }
+    [class*="bg-blue-950/60"]:not([class*="hover:bg-blue-950/60"]) { background-color: rgba(37,99,235,.14) !important; }
+    [class*="bg-[#0a1124]"]:not([class*="hover:bg-[#0a1124]"]),
+    [class*="bg-[#0b1124]"]:not([class*="hover:bg-[#0b1124]"]) { background-color: #ffffff !important; }
+    [class*="from-[#070b16]"], [class*="via-[#070b16]"] { --tw-gradient-from: #ffffff !important; --tw-gradient-via: #f8fafc !important; }
+    [class*="bg-black"]:not([class*="bg-black/50"]):not([class*="bg-black/70"]):not([class*="bg-black/40"]):not([class*="bg-black/30"]) { background-color: #111827 !important; }
+    body { color: #0f172a !important; }
+    /* Page backdrop: the global light theme force-converts body's own
+       bg-[#070b16] class to pure white (attribute selector out-specifies
+       `body`), which leaves the dashboard as one flat white sheet with no
+       visible cards. Beat it with a higher-specificity soft-gray rule so
+       white panels actually stand out. */
+    body[class*="bg-[#070b16]"][class*="text-gray-100"], body[class*="bg-[#0a1124]"][class*="text-gray-100"] { background: #e9eef5 !important; }
+    /* Give cards/panels real edges: the templates use ultra-faint blue
+       borders (15%/10% opacity) that vanish on white. Bump them to a solid
+       light-gray divider and add a soft shadow so structure is readable. */
+    [class*="border-blue-500/15"], [class*="border-blue-500/10"], [class*="border-blue-500/5"] { border-color: #dbe3ee !important; }
+    .glass, .glass-soft {
+      border-color: #dbe3ee !important;
+      box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 6px 16px rgba(15,23,42,.05) !important;
+    }
+    table.dt th { background: #f8fafc !important; color: #475569 !important; }
+    table.dt td { color: #334155 !important; }
+    /* Keep white text on gradient buttons (AI send, Save Approved) */
+    [class*="from-fuchsia-"][class*="text-white"],
+    [class*="to-purple-"][class*="text-white"],
+    [class*="from-emerald-"][class*="text-white"],
+    [class*="to-emerald-"][class*="text-white"] { color: #ffffff !important; }
+    /* Now-light blue-tint panels: white text inside must go dark */
+    [class*="bg-blue-950/"] [class*="text-white"],
+    [class*="bg-blue-950/"] [class*="text-gray-100"],
+    [class*="bg-[#030712]"] [class*="text-white"] { color: #0f172a !important; }
+    /* 300-level accents styles.css doesn't remap — darken for white bg */
+    [class*="text-fuchsia-300"] { color: #c026d3 !important; }
+    [class*="text-violet-300"] { color: #6d28d9 !important; }
+    [class*="text-purple-300"] { color: #9333ea !important; }
+    [class*="text-pink-300"] { color: #db2777 !important; }
+    [class*="text-rose-300"] { color: #e11d48 !important; }
+    [class*="text-teal-300"] { color: #0d9488 !important; }
+  </style>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BFHnnn3M.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-XLaEvqbL-DEyIhb6U.js">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,Y29uc3QgYz0ia2NvX2xvY2FsX3Nob3dyb29tX2xpc3RpbmdzX3YxIjtmdW5jdGlvbiBkKCl7cmV0dXJuIHR5cGVvZiB3aW5kb3c8InUiJiZ0eXBlb2Ygd2luZG93LmxvY2FsU3RvcmFnZTwidSJ9ZnVuY3Rpb24gYSgpe2lmKCFkKCkpcmV0dXJuW107dHJ5e2NvbnN0IHI9d2luZG93LmxvY2FsU3RvcmFnZS5nZXRJdGVtKGMpLGU9cj9KU09OLnBhcnNlKHIpOltdO3JldHVybiBBcnJheS5pc0FycmF5KGUpP2U6W119Y2F0Y2h7cmV0dXJuW119fWZ1bmN0aW9uIGkocil7ZCgpJiZ3aW5kb3cubG9jYWxTdG9yYWdlLnNldEl0ZW0oYyxKU09OLnN0cmluZ2lmeShyKSl9ZnVuY3Rpb24gcyhyKXtyZXR1cm57Li4ucixpbWFnZXM6QXJyYXkuaXNBcnJheShyLmltYWdlcyk/ci5pbWFnZXM6W10sZmVhdHVyZXM6QXJyYXkuaXNBcnJheShyLmZlYXR1cmVzKT9yLmZlYXR1cmVzOltdLHRhZ3M6QXJyYXkuaXNBcnJheShyLnRhZ3MpP3IudGFnczpbXSxoaWdobGlnaHRzOkFycmF5LmlzQXJyYXkoci5oaWdobGlnaHRzKT9yLmhpZ2hsaWdodHM6W10sc2VvX2tleXdvcmRzOkFycmF5LmlzQXJyYXkoci5zZW9fa2V5d29yZHMpP3Iuc2VvX2tleXdvcmRzOltdLHByaWNlOk51bWJlcihyLnByaWNlKXx8MCxpc19hY3RpdmU6ci5pc19hY3RpdmUhPT0hMSxjcmVhdGVkX2F0OnIuY3JlYXRlZF9hdHx8bmV3IERhdGUoKS50b0lTT1N0cmluZygpLHVwZGF0ZWRfYXQ6bmV3IERhdGUoKS50b0lTT1N0cmluZygpfX1mdW5jdGlvbiB1KCl7cmV0dXJuIGEoKS5tYXAocykuc29ydCgocixlKT0+bmV3IERhdGUoZS5jcmVhdGVkX2F0KS1uZXcgRGF0ZShyLmNyZWF0ZWRfYXQpKX1mdW5jdGlvbiBmKHIpe3JldHVybiB1KCkuZmluZChlPT5lLnByb3BlcnR5X2lkPT09cil8fG51bGx9ZnVuY3Rpb24gXyhyKXtjb25zdCBlPWEoKSx0PXMociksbz1lLmZpbmRJbmRleChuPT5uLnByb3BlcnR5X2lkPT09dC5wcm9wZXJ0eV9pZCk7cmV0dXJuIG8+PTA/ZVtvXT17Li4uZVtvXSwuLi50LGNyZWF0ZWRfYXQ6ZVtvXS5jcmVhdGVkX2F0fHx0LmNyZWF0ZWRfYXR9OmUudW5zaGlmdCh0KSxpKGUpLHR9ZnVuY3Rpb24geShyLGUpe2NvbnN0IHQ9YSgpLG89dC5maW5kSW5kZXgobj0+bi5wcm9wZXJ0eV9pZD09PXIpO3JldHVybiBvPDA/bnVsbDoodFtvXT1zKHsuLi50W29dLC4uLmUscHJvcGVydHlfaWQ6cixjcmVhdGVkX2F0OnRbb10uY3JlYXRlZF9hdH0pLGkodCksdFtvXSl9ZnVuY3Rpb24gdyhyKXtjb25zdCBlPWEoKS5maWx0ZXIodD0+dC5wcm9wZXJ0eV9pZCE9PXIpO3JldHVybiBpKGUpLCEwfWV4cG9ydHtmIGFzIGdldExvY2FsU2hvd3Jvb21MaXN0aW5nQnlJZCx1IGFzIGxpc3RMb2NhbFNob3dyb29tTGlzdGluZ3MseSBhcyBwYXRjaExvY2FsU2hvd3Jvb21MaXN0aW5nLHcgYXMgcmVtb3ZlTG9jYWxTaG93cm9vbUxpc3RpbmcsXyBhcyB1cHNlcnRMb2NhbFNob3dyb29tTGlzdGluZ307Cg==">
+  <link rel="modulepreload" crossorigin href="/assets/payment-settings-DAIw4D2k-B4aiBAPi.js">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,Y29uc3Qgbj1bXSxzPU9iamVjdC5mcmVlemUoT2JqZWN0LmRlZmluZVByb3BlcnR5KHtfX3Byb3RvX186bnVsbCxQUk9EVUNUX0xJU1RJTkdTOm59LFN5bWJvbC50b1N0cmluZ1RhZyx7dmFsdWU6Ik1vZHVsZSJ9KSksYz1bXSxfPU9iamVjdC5mcmVlemUoT2JqZWN0LmRlZmluZVByb3BlcnR5KHtfX3Byb3RvX186bnVsbCxQUk9EVUNUX0VYVFJBX0xJU1RJTkdTOmN9LFN5bWJvbC50b1N0cmluZ1RhZyx7dmFsdWU6Ik1vZHVsZSJ9KSksbz1bXTtmdW5jdGlvbiBhKHQpe3JldHVybiBvLmZpbmQoZT0+ZS5wcm9wZXJ0eV9pZD09PXQpfHxudWxsfWZ1bmN0aW9uIHUodCl7Y29uc3QgZT10JiZ0eXBlb2YgdD09Im9iamVjdCI/dC5wcmljZTp0O3JldHVybiBOdW1iZXIoZXx8MCkudG9Mb2NhbGVTdHJpbmcoImVuLVVTIix7c3R5bGU6ImN1cnJlbmN5IixjdXJyZW5jeToiVVNEIixtYXhpbXVtRnJhY3Rpb25EaWdpdHM6MH0pfWNvbnN0IGk9T2JqZWN0LmZyZWV6ZShPYmplY3QuZGVmaW5lUHJvcGVydHkoe19fcHJvdG9fXzpudWxsLFRSVUNLX0xJU1RJTkdTOm8sZm9ybWF0VHJ1Y2tQcmljZTp1LGdldFRydWNrQnlJZDphfSxTeW1ib2wudG9TdHJpbmdUYWcse3ZhbHVlOiJNb2R1bGUifSkpLHI9W107ZnVuY3Rpb24gbCh0KXtyZXR1cm4gci5maW5kKGU9PmUucHJvcGVydHlfaWQ9PT10KXx8bnVsbH1jb25zdCBTPU9iamVjdC5mcmVlemUoT2JqZWN0LmRlZmluZVByb3BlcnR5KHtfX3Byb3RvX186bnVsbCxNT1RPUkhPTUVfTElTVElOR1M6cixnZXRNb3RvcmhvbWVCeUlkOmx9LFN5bWJvbC50b1N0cmluZ1RhZyx7dmFsdWU6Ik1vZHVsZSJ9KSk7ZXhwb3J0e3IgYXMgTSxuIGFzIFAsbyBhcyBULGMgYXMgYSxsIGFzIGIsXyBhcyBjLHUgYXMgZixhIGFzIGcsUyBhcyBtLHMgYXMgcCxpIGFzIHR9Owo=">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e18gYXMgdX1mcm9tIi4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBsPSJrY29faGlkZGVuX2NhdGFsb2dfaWRzX3YxIjtmdW5jdGlvbiBnKCl7dHJ5e2NvbnN0IHQ9SlNPTi5wYXJzZShsb2NhbFN0b3JhZ2UuZ2V0SXRlbShsKXx8IltdIik7cmV0dXJuIEFycmF5LmlzQXJyYXkodCk/dC5maWx0ZXIoZT0+dHlwZW9mIGU9PSJzdHJpbmciKTpbXX1jYXRjaHtyZXR1cm5bXX19ZnVuY3Rpb24geSh0KXt0cnl7bG9jYWxTdG9yYWdlLnNldEl0ZW0obCxKU09OLnN0cmluZ2lmeSh0KSl9Y2F0Y2h7fX1sZXQgaT1nKCksYz0hMTtmdW5jdGlvbiByKHQpe2NvbnN0IGU9bmV3IFNldCxuPVtdO2Zvcihjb25zdCBhIG9mIEFycmF5LmlzQXJyYXkodCk/dDpbXSl0eXBlb2YgYT09InN0cmluZyImJiFlLmhhcyhhKSYmKGUuYWRkKGEpLG4ucHVzaChhKSk7cmV0dXJuIG59ZnVuY3Rpb24gZCh0KXtpPXIodCkseShpKX1mdW5jdGlvbiB3KCl7cmV0dXJuIGkuc2xpY2UoKX1mdW5jdGlvbiBwKHQpe3JldHVybiBpLmluY2x1ZGVzKHQpfWZ1bmN0aW9uIEMoKXtyZXR1cm4gY31hc3luYyBmdW5jdGlvbiBoKCl7Y29uc3R7c3VwYWJhc2U6dH09YXdhaXQgdShhc3luYygpPT57Y29uc3R7c3VwYWJhc2U6bn09YXdhaXQgaW1wb3J0KCIuL3N1cGFiYXNlLWNsaWVudC1EdkNtTmtwSS5qcyIpLnRoZW4oYT0+YS56KTtyZXR1cm57c3VwYWJhc2U6bn19LFtdKSx7ZGF0YTplfT1hd2FpdCB0LmZyb20oInNpdGVfc2V0dGluZ3MiKS5zZWxlY3QoImhpZGRlbl9jYXRhbG9nX2lkcyIpLmxpbWl0KDEpLm1heWJlU2luZ2xlKCk7cmV0dXJuIEFycmF5LmlzQXJyYXkoZT8uaGlkZGVuX2NhdGFsb2dfaWRzKT9lLmhpZGRlbl9jYXRhbG9nX2lkczpbXX1hc3luYyBmdW5jdGlvbiBfKHQpe2NvbnN0e3N1cGFiYXNlOmV9PWF3YWl0IHUoYXN5bmMoKT0+e2NvbnN0e3N1cGFiYXNlOnN9PWF3YWl0IGltcG9ydCgiLi9zdXBhYmFzZS1jbGllbnQtRHZDbU5rcEkuanMiKS50aGVuKGY9PmYueik7cmV0dXJue3N1cGFiYXNlOnN9fSxbXSksbj17aGlkZGVuX2NhdGFsb2dfaWRzOnIodCl9LHtkYXRhOmF9PWF3YWl0IGUuZnJvbSgic2l0ZV9zZXR0aW5ncyIpLnNlbGVjdCgiaWQiKS5saW1pdCgxKS5tYXliZVNpbmdsZSgpO2lmKGE/LmlkKXtjb25zdHtlcnJvcjpzfT1hd2FpdCBlLmZyb20oInNpdGVfc2V0dGluZ3MiKS51cGRhdGUobikuZXEoImlkIixhLmlkKTtyZXR1cm57b2s6IXMsZXJyb3I6c319Y29uc3R7ZXJyb3I6b309YXdhaXQgZS5mcm9tKCJzaXRlX3NldHRpbmdzIikuaW5zZXJ0KG4pO3JldHVybntvazohbyxlcnJvcjpvfX1hc3luYyBmdW5jdGlvbiBiKCl7dHJ5e2NvbnN0IHQ9YXdhaXQgaCgpLGU9cihbLi4udCwuLi5pXSk7cmV0dXJuIGQoZSksYz0hMCxlfWNhdGNoe3JldHVybiBjPSEwLGkuc2xpY2UoKX19YXN5bmMgZnVuY3Rpb24gQSh0LGUpe2NvbnN0IG49bmV3IFNldChpKTtlP24uYWRkKHQpOm4uZGVsZXRlKHQpO2NvbnN0IGE9cihbLi4ubl0pO3JldHVybiBkKGEpLGF3YWl0IF8oYSl9YXN5bmMgZnVuY3Rpb24gUygpe3JldHVybiBkKFtdKSxhd2FpdCBfKFtdKX1leHBvcnR7dyBhcyBnZXRIaWRkZW5DYXRhbG9nSWRzLHAgYXMgaXNDYXRhbG9nTGlzdGluZ0hpZGRlbixDIGFzIGlzSGlkZGVuQ2F0YWxvZ0xvYWRlZCxiIGFzIGxvYWRIaWRkZW5DYXRhbG9nSWRzLFMgYXMgcmVzZXRIaWRkZW5DYXRhbG9nSWRzLEEgYXMgc2F2ZUNhdGFsb2dIaWRkZW59Owo=">
+  <link rel="modulepreload" crossorigin href="data:text/javascript;base64,aW1wb3J0e2dldEhpZGRlbkNhdGFsb2dJZHMgYXMgcyxpc0NhdGFsb2dMaXN0aW5nSGlkZGVuIGFzIGYsaXNIaWRkZW5DYXRhbG9nTG9hZGVkIGFzIEksbG9hZEhpZGRlbkNhdGFsb2dJZHMgYXMgSCxyZXNldEhpZGRlbkNhdGFsb2dJZHMgYXMgTCxzYXZlQ2F0YWxvZ0hpZGRlbiBhcyBwfWZyb20iLi9jYXRhbG9nLWhpZGRlbi1zdG9yZS1CQU1nZlV1VS5qcyI7aW1wb3J0Ii4vc3VwYWJhc2UtY2xpZW50LUR2Q21Oa3BJLmpzIjtjb25zdCBuPVtdO2Z1bmN0aW9uIGUoKXtyZXR1cm4gbnVsbH1mdW5jdGlvbiBvKCl7cmV0dXJuIDB9ZnVuY3Rpb24gYSgpe3JldHVybltdfWZ1bmN0aW9uIHIoKXtyZXR1cm4gbnVsbH1mdW5jdGlvbiBnKCl7cmV0dXJuIG51bGx9ZnVuY3Rpb24gaSgpe3JldHVybltdfWZ1bmN0aW9uIHUoKXtyZXR1cm5bXX1mdW5jdGlvbiBkKCl7cmV0dXJuIG51bGx9ZnVuY3Rpb24gbCgpe3JldHVybiBudWxsfWV4cG9ydHtuIGFzIENBVEFMT0dfQ0FURUdPUklFUyxyIGFzIGNhdGFsb2dJZEZvcixkIGFzIGZpbmRDYXRhbG9nTGlzdGluZ0J5SWQsbCBhcyBnZW5lcmF0ZUxpc3RpbmdCeUlkLGcgYXMgZ2VuZXJhdGVQcm9kdWN0LGEgYXMgZ2V0Q2F0YWxvZ0NhdGVnb3JpZXMsZSBhcyBnZXRDYXRhbG9nQ2F0ZWdvcnksaSBhcyBnZXRDYXRhbG9nUHJvZHVjdHMsdSBhcyBnZXRDYXRhbG9nU2FtcGxlLG8gYXMgZ2V0Q2F0ZWdvcnlDb3VudCxzIGFzIGdldEhpZGRlbkNhdGFsb2dJZHMsZiBhcyBpc0NhdGFsb2dMaXN0aW5nSGlkZGVuLEkgYXMgaXNIaWRkZW5DYXRhbG9nTG9hZGVkLEggYXMgbG9hZEhpZGRlbkNhdGFsb2dJZHMsTCBhcyByZXNldEhpZGRlbkNhdGFsb2dJZHMscCBhcyBzYXZlQ2F0YWxvZ0hpZGRlbn07Cg==">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-1NxFCIXH.js">
+  <link rel="modulepreload" crossorigin href="/assets/categories-BEuiwWw5-DvU_r1Ww.js">
+  <script type="module" crossorigin src="/src/admin-page.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BBtcpOs0.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-B_HxL1KQ-Do35V_4n.js">
+  <link rel="modulepreload" crossorigin href="/assets/local-showroom-store-mzP0nSoS-DaE1u71h.js">
+  <link rel="modulepreload" crossorigin href="/assets/payment-settings-DAIw4D2k-BaImmvy0.js">
+  <link rel="modulepreload" crossorigin href="/assets/motorhome-data-CupbOvk0--c7gbSNU.js">
+  <link rel="modulepreload" crossorigin href="/assets/catalog-hidden-store-BAMgfUuU-D15H80aw.js">
+  <link rel="modulepreload" crossorigin href="/assets/catalog-qysuyAKK-CoyDMFKy.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-CiDTzVNv.js">
+  <link rel="modulepreload" crossorigin href="/assets/categories-BEuiwWw5-Dd8DYwb8.js">
+  <link rel="stylesheet" crossorigin href="/assets/localization-B_HxL1KQ-B_HxL1KQ.css">
+</head>
+<body class="bg-[#070b16] text-gray-100 min-h-screen">
+
+  <!-- BG -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute -top-64 -left-64 w-[40rem] h-[40rem] bg-blue-700/6 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-64 -right-64 w-[40rem] h-[40rem] bg-violet-700/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- ══════ LOGIN SCREEN ══════ -->
+  <div id="login-screen">
+    <div class="login-card slide-up" style="max-width:420px">
+
+      <!-- Header (shared) -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30 shrink-0">
+          <i data-lucide="shield-check" id="login-header-icon" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h1 id="login-header-title" class="text-lg font-black text-white leading-tight">Admin Access</h1>
+          <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Weverse Online Shop</p>
+        </div>
+      </div>
+
+      <!-- Error banner -->
+      <div id="login-error" class="hidden mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium flex items-start gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+        <span id="login-error-text"></span>
+      </div>
+      <!-- Success banner -->
+      <div id="login-success" class="hidden mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium flex items-start gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+        <span id="login-success-text"></span>
+      </div>
+
+      <!-- ── STEP 1: Email + Password ── -->
+      <form id="login-form" class="space-y-4" autocomplete="on">
+        <div>
+          <label class="lbl">Email Address</label>
+            <input id="login-email" type="email" class="input-field" placeholder="weverseonlineshop@gmail.com" autocomplete="email" required>
+        </div>
+        <div>
+          <label class="lbl">Password</label>
+          <div class="relative">
+            <input id="login-password" type="password" class="input-field pr-10" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" id="toggle-pw" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition" tabindex="-1">
+              <i data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="remember-me" class="w-3.5 h-3.5 accent-blue-500">
+            <span class="text-xs text-gray-400">Remember me for 30 days</span>
+          </label>
+          <button type="button" id="forgot-pw-btn" class="text-xs text-blue-400 hover:text-blue-300 font-medium transition">Forgot password?</button>
+        </div>
+        <button type="submit" id="login-btn" class="btn-press w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-2.5 rounded-xl text-sm tracking-wide transition shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2">
+          <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
+        </button>
+        <a href="/auth.html?redirect=/admin.html&mode=register" class="block text-center text-xs text-blue-400 hover:text-blue-300 font-medium transition pt-1">Create Account</a>
+      </form>
+
+      <!-- ── STEP 2: 2FA Verification ── -->
+      <div id="twofa-form" class="hidden space-y-5">
+        <div class="p-3 bg-blue-500/8 border border-blue-500/20 rounded-xl flex items-start gap-3">
+          <i data-lucide="smartphone" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+          <p class="text-xs text-blue-300">Open your authenticator app and enter the 6-digit code shown for this account.</p>
+        </div>
+        <div>
+          <label class="lbl">6-Digit Authentication Code</label>
+          <input id="totp-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                 class="input-field text-center text-2xl font-black tracking-[0.5em] py-3"
+                 placeholder="000000" autocomplete="one-time-code">
+        </div>
+        <button id="verify-2fa-btn" class="btn-press w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4"></i> Verify & Sign In
+        </button>
+        <div class="flex items-center justify-between">
+          <button id="use-backup-btn" class="text-xs text-gray-400 hover:text-gray-200 transition">Use backup code instead</button>
+          <button id="cancel-2fa-btn" class="text-xs text-red-400 hover:text-red-300 transition">← Cancel login</button>
+        </div>
+        <!-- Backup code input (hidden by default) -->
+        <div id="backup-code-wrap" class="hidden space-y-3">
+          <label class="lbl">Backup Recovery Code</label>
+          <input id="backup-code" type="text" class="input-field font-mono tracking-widest" placeholder="XXXX-XXXX-XXXX">
+          <button id="verify-backup-btn" class="btn-press w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-sm transition">Use Backup Code</button>
+        </div>
+      </div>
+
+      <!-- ── Forgot Password ── -->
+      <div id="forgot-form" class="hidden space-y-4">
+        <p class="text-xs text-gray-400 leading-relaxed">Enter your admin email. We'll send a secure password reset link valid for 1 hour.</p>
+        <div>
+          <label class="lbl">Email Address</label>
+            <input id="reset-email" type="email" class="input-field" placeholder="weverseonlineshop@gmail.com" autocomplete="email">
+        </div>
+        <button id="send-reset-btn" class="btn-press w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
+          <i data-lucide="mail" class="w-4 h-4"></i> Send Reset Link
+        </button>
+        <a href="/auth.html?redirect=/admin.html&mode=register" class="block text-center text-xs text-blue-400 hover:text-blue-300 font-medium transition">Create Account</a>
+        <button id="back-to-login" class="w-full text-xs text-gray-400 hover:text-gray-300 py-1 transition">← Back to login</button>
+      </div>
+
+      <!-- ── Session lock indicator ── -->
+      <div id="lockout-notice" class="hidden mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+        <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
+        <span id="lockout-text">Account temporarily locked.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside id="sidebar" class="fixed left-0 top-0 bottom-0 w-64 glass border-r border-blue-500/15 z-50 flex flex-col">
+    <div class="h-16 flex items-center gap-2.5 px-4 border-b border-blue-500/10 shrink-0">
+      <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-blue-600/25">
+        <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" aria-hidden="true"><path d="M3 5l4.5 14L12 8l4.5 11L21 5" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="min-w-0">
+        <span class="text-sm font-black text-white block truncate">Weverse Admin</span>
+        <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Management Console</span>
+      </div>
+      <button id="close-sidebar" class="ml-auto lg:hidden p-1 text-gray-500 hover:text-white transition text-[10px] font-bold uppercase tracking-wide">
+        🔙 Back
+      </button>
+    </div>
+    <nav id="sidebar-nav" class="flex-1 overflow-y-auto scrollbar-thin py-2 px-2"></nav>
+    <div class="p-3 border-t border-blue-500/10 shrink-0">
+      <div class="flex items-center gap-2 px-2 py-1.5 mb-2">
+        <div class="w-7 h-7 bg-blue-500/15 rounded-lg flex items-center justify-center shrink-0">
+          <i data-lucide="user" class="w-3.5 h-3.5 text-blue-400"></i>
+        </div>
+        <div class="min-w-0">
+          <p id="admin-user-email" class="text-[11px] font-bold text-white truncate">Loading…</p>
+          <p class="text-[9px] text-emerald-400 font-bold uppercase tracking-wider">Administrator</p>
+        </div>
+      </div>
+      <a href="/" target="_blank" class="btn-press flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-white px-3 py-2 rounded-xl transition w-full">
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i> View Website
+      </a>
+      <button onclick="adminSignOut()" class="btn-press flex items-center gap-2 text-xs font-semibold text-red-400 hover:text-red-300 px-3 py-2 rounded-xl transition w-full mt-0.5">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Sidebar overlay mobile -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+  <!-- ══════ MAIN ══════ -->
+  <div id="main-wrapper" class="min-h-screen flex flex-col">
+    <header class="h-16 glass border-b border-blue-500/10 flex items-center px-4 gap-3 sticky top-0 z-30">
+      <button class="lg:hidden p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition" onclick="openSidebar()">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+      <div class="flex-1 min-w-0">
+        <h1 id="page-title" class="text-sm font-black text-white truncate">Dashboard</h1>
+        <p id="page-subtitle" class="text-[11px] text-gray-500 hidden sm:block truncate">Weverse Online Shop</p>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="/" class="btn-press px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-300 hover:text-white hover:bg-blue-500/20 text-xs font-bold transition flex items-center gap-1.5" title="Leave the admin and return to the store homepage">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Back to Store</span>
+        </a>
+        <button onclick="navigate('notifications')" class="relative p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition" title="Notifications">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span id="notif-badge" class="hidden absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <button onclick="navigate('settings')" class="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition" title="Settings">
+          <i data-lucide="settings" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </header>
+    <main id="content" class="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto"></main>
+  </div>
+
+  <!-- MODAL CONTAINER -->
+  <div id="modal-container"></div>
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 z-[500] transform translate-y-20 opacity-0 bg-gray-900 border border-blue-500/30 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2 font-medium transition-all duration-300 max-w-sm pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+    <span id="toast-msg">Done</span>
+  </div>
+
+  <!-- APP PROMOTION BANNER + LIVE PRODUCT PROMOTIONS -->
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+  <div id="live-promo-alerts" class="fixed bottom-4 right-4 z-50 w-[340px] max-w-[90vw] space-y-3 pointer-events-none" aria-live="polite"></div>
+</body>
+</html>

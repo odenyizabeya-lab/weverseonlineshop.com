@@ -1,0 +1,742 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+   K.C.O GLOBE — Global design system (mobile-app feel)
+   Loaded before each page's inline <style>, so page-specific styles
+   may still refine these defaults.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Base polish */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+button,
+a,
+input,
+select,
+textarea,
+[role="button"] {
+  touch-action: manipulation; /* removes the mobile double-tap zoom delay */
+}
+::selection {
+  background: rgba(59, 130, 246, 0.45);
+  color: #fff;
+}
+
+/* Readability: no body text below 12px, no micro labels below 10px.
+   Neutralizes the many tiny arbitrary Tailwind sizes used across the app. */
+.text-\[8px\] {
+  font-size: 10px !important;
+  line-height: 1.25 !important;
+}
+.text-\[9px\] {
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+}
+.text-\[10px\] {
+  font-size: 12px !important;
+}
+.text-\[11px\] {
+  font-size: 12px !important;
+}
+
+/* Smallest buttons/links get a taller, easier-to-tap hit area */
+button.text-\[9px\],
+button.text-\[10px\],
+a.text-\[9px\],
+a.text-\[10px\],
+[role="button"].text-\[9px\],
+[role="button"].text-\[10px\] {
+  min-height: 30px;
+}
+
+/* Consistent focus ring for keyboard/touch navigation */
+:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.7);
+  outline-offset: 2px;
+}
+
+/* App-like rounded scrollbars wherever the thin scrollbar is used */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.35);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Single-accent icon system — neutralizes the per-row rainbow in the
+   navigation drawer and ⋮ More panel so the brand reads clean & trusted.
+   (These override the per-row Tailwind color utilities.) */
+.menu-icon {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.22) !important;
+}
+.menu-icon i {
+  color: #93c5fd !important;
+}
+.more-icon {
+  color: #93c5fd !important;
+}
+.menu-row .absolute,
+.menu-icon .absolute {
+  background: #3b82f6 !important;
+  border-color: #0d1b2e !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WHITE + BLUE PREMIUM THEME
+   Converts the legacy dark/navy interface into a clean, professional
+   white e-commerce theme. Unlayered rules below override the Tailwind
+   utilities (which live inside @layer utilities) across every page.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 1. Page background & base text */
+body {
+  background: #f6f8fb !important;
+  color: #0f172a !important;
+}
+
+/* 2. Dark surfaces -> white (covers opacity variants via partial match).
+   :not() guards stop hover/focus/group-hover tokens from forcing a
+   permanent background onto transparent icon buttons. */
+[class*="bg-[#0f172a]"]:not([class*="hover:bg-[#0f172a]"]):not([class*="group-hover:bg-[#0f172a]"]):not([class*="focus:bg-[#0f172a]"]),
+[class*="bg-[#0a1124]"]:not([class*="hover:bg-[#0a1124]"]):not([class*="group-hover:bg-[#0a1124]"]):not([class*="focus:bg-[#0a1124]"]),
+[class*="bg-[#0b0f19]"]:not([class*="hover:bg-[#0b0f19]"]),
+[class*="bg-[#070b16]"]:not([class*="hover:bg-[#070b16]"]),
+[class*="bg-[#0d1b2e]"]:not([class*="hover:bg-[#0d1b2e]"]),
+[class*="bg-[#0d1424]"]:not([class*="hover:bg-[#0d1424]"]),
+[class*="bg-[#0b1020]"]:not([class*="hover:bg-[#0b1020]"]),
+[class*="bg-[#0b1f3a]"]:not([class*="hover:bg-[#0b1f3a]"]),
+[class*="bg-[#111827]"]:not([class*="hover:bg-[#111827]"]),
+[class*="bg-[#1c1c1c]"]:not([class*="hover:bg-[#1c1c1c]"]),
+[class*="bg-[#111]"]:not([class*="hover:bg-[#111]"]),
+[class*="bg-gray-950"]:not([class*="hover:bg-gray-950"]),
+[class*="bg-gray-900"]:not([class*="hover:bg-gray-900"]):not([class*="group-hover:bg-gray-900"]):not([class*="focus:bg-gray-900"]),
+[class*="bg-slate-900"]:not([class*="hover:bg-slate-900"]):not([class*="group-hover:bg-slate-900"]):not([class*="focus:bg-slate-900"]) {
+  background-color: #ffffff !important;
+}
+
+/* Mid surfaces -> light gray chips */
+[class*="bg-gray-800"]:not([class*="hover:bg-gray-800"]):not([class*="group-hover:bg-gray-800"]):not([class*="focus:bg-gray-800"]),
+[class*="bg-slate-800"]:not([class*="hover:bg-slate-800"]):not([class*="group-hover:bg-slate-800"]):not([class*="focus:bg-slate-800"]),
+[class*="bg-[#1e293b]"]:not([class*="hover:bg-[#1e293b]"]) {
+  background-color: #eef2f7 !important;
+}
+[class*="bg-gray-700"]:not([class*="hover:bg-gray-700"]):not([class*="group-hover:bg-gray-700"]),
+[class*="bg-slate-700"]:not([class*="hover:bg-slate-700"]):not([class*="group-hover:bg-slate-700"]) {
+  background-color: #e2e8f0 !important;
+}
+[class*="bg-white/"]:not([class*="hover:bg-white/"]):not([class*="group-hover:bg-white/"]):not([class*="focus:bg-white/"]) {
+  background-color: #eef2f7 !important;
+}
+
+/* Dark arbitrary gradient stops -> light (only the dark navy ones) */
+[class*="from-[#0f172a]"],
+[class*="from-[#070b16]"],
+[class*="from-[#0a1124]"],
+[class*="from-[#0b0f19]"],
+[class*="from-[#0b1f3a]"] {
+  --tw-gradient-from: #ffffff !important;
+}
+[class*="via-[#0f172a]"],
+[class*="via-[#0a1124]"],
+[class*="via-[#070b16]"],
+[class*="via-[#0d1424]"] {
+  --tw-gradient-via: #f1f5f9 !important;
+}
+[class*="to-[#070b16]"],
+[class*="to-[#0a1124]"],
+[class*="to-[#0f172a]"],
+[class*="to-[#0b2a1f]"],
+[class*="to-[#0b1f3a]"] {
+  --tw-gradient-to: #ffffff !important;
+}
+[class*="via-gray-700"],
+[class*="via-gray-800"] {
+  --tw-gradient-via: #e2e8f0 !important;
+}
+
+/* 3. White text -> charcoal, EXCEPT on colored/hero surfaces (below) */
+[class*="text-white"] {
+  color: #0f172a !important;
+}
+[class*="text-white/"] {
+  color: #64748b !important;
+}
+
+/* Keep white text on colored buttons, badges & dark hero overlays */
+[class*="bg-blue-"][class*="text-white"],
+[class*="bg-blue-"] [class*="text-white"],
+[class*="from-blue-"][class*="text-white"],
+[class*="from-blue-"] [class*="text-white"],
+[class*="to-blue-"][class*="text-white"],
+[class*="to-blue-"] [class*="text-white"],
+[class*="bg-emerald-"][class*="text-white"],
+[class*="bg-emerald-"] [class*="text-white"],
+[class*="bg-green-"][class*="text-white"],
+[class*="bg-green-"] [class*="text-white"],
+[class*="bg-red-"][class*="text-white"],
+[class*="bg-red-"] [class*="text-white"],
+[class*="bg-rose-"][class*="text-white"],
+[class*="bg-rose-"] [class*="text-white"],
+[class*="bg-amber-"][class*="text-white"],
+[class*="bg-amber-"] [class*="text-white"],
+[class*="bg-orange-"][class*="text-white"],
+[class*="bg-orange-"] [class*="text-white"],
+[class*="bg-yellow-"][class*="text-white"],
+[class*="bg-yellow-"] [class*="text-white"],
+[class*="bg-violet-"][class*="text-white"],
+[class*="bg-violet-"] [class*="text-white"],
+[class*="bg-purple-"][class*="text-white"],
+[class*="bg-purple-"] [class*="text-white"],
+[class*="bg-pink-"][class*="text-white"],
+[class*="bg-pink-"] [class*="text-white"],
+[class*="bg-cyan-"][class*="text-white"],
+[class*="bg-cyan-"] [class*="text-white"],
+[class*="bg-sky-"][class*="text-white"],
+[class*="bg-sky-"] [class*="text-white"],
+[class*="bg-teal-"][class*="text-white"],
+[class*="bg-teal-"] [class*="text-white"],
+[class*="bg-indigo-"][class*="text-white"],
+[class*="bg-indigo-"] [class*="text-white"],
+[class*="bg-lime-"][class*="text-white"],
+[class*="bg-lime-"] [class*="text-white"],
+[class*="bg-fuchsia-"][class*="text-white"],
+[class*="bg-fuchsia-"] [class*="text-white"],
+[class*="bg-black"][class*="text-white"],
+[class*="bg-black"] [class*="text-white"],
+#hero-carousel [class*="text-white"],
+#live-ad-badge [class*="text-white"] {
+  color: #ffffff !important;
+}
+
+/* Colored gradient surfaces: keep white text (buttons etc.) */
+[class*="from-blue-"][class*="text-white"],
+[class*="to-blue-"][class*="text-white"],
+[class*="from-emerald-"][class*="text-white"],
+[class*="to-emerald-"][class*="text-white"],
+[class*="from-green-"][class*="text-white"],
+[class*="to-green-"][class*="text-white"],
+[class*="from-red-"][class*="text-white"],
+[class*="to-red-"][class*="text-white"],
+[class*="from-rose-"][class*="text-white"],
+[class*="to-rose-"][class*="text-white"],
+[class*="from-amber-"][class*="text-white"],
+[class*="to-amber-"][class*="text-white"],
+[class*="from-orange-"][class*="text-white"],
+[class*="to-orange-"][class*="text-white"],
+[class*="from-yellow-"][class*="text-white"],
+[class*="to-yellow-"][class*="text-white"],
+[class*="from-violet-"][class*="text-white"],
+[class*="to-violet-"][class*="text-white"],
+[class*="from-purple-"][class*="text-white"],
+[class*="to-purple-"][class*="text-white"],
+[class*="from-pink-"][class*="text-white"],
+[class*="to-pink-"][class*="text-white"],
+[class*="from-cyan-"][class*="text-white"],
+[class*="to-cyan-"][class*="text-white"],
+[class*="from-sky-"][class*="text-white"],
+[class*="to-sky-"][class*="text-white"],
+[class*="from-teal-"][class*="text-white"],
+[class*="to-teal-"][class*="text-white"],
+[class*="from-indigo-"][class*="text-white"],
+[class*="to-indigo-"][class*="text-white"],
+[class*="from-lime-"][class*="text-white"],
+[class*="to-lime-"][class*="text-white"],
+[class*="from-fuchsia-"][class*="text-white"],
+[class*="to-fuchsia-"][class*="text-white"],
+[class*="from-black-"][class*="text-white"],
+[class*="to-black-"][class*="text-white"] {
+  color: #ffffff !important;
+}
+
+/* 4. Gray / slate text scale (dark enough to read on white) */
+[class~="text-gray-100"] { color: #0f172a !important; }
+[class~="text-gray-200"] { color: #1e293b !important; }
+[class~="text-gray-300"] { color: #334155 !important; }
+[class~="text-gray-400"] { color: #64748b !important; }
+[class~="text-gray-500"] { color: #475569 !important; }
+[class~="text-gray-600"] { color: #64748b !important; }
+[class~="text-slate-200"] { color: #1e293b !important; }
+[class~="text-slate-300"] { color: #334155 !important; }
+[class~="text-slate-400"] { color: #64748b !important; }
+[class~="text-slate-500"] { color: #475569 !important; }
+[class~="text-slate-600"] { color: #94a3b8 !important; }
+[class~="text-zinc-200"] { color: #1e293b !important; }
+[class~="text-zinc-300"] { color: #334155 !important; }
+[class~="text-zinc-400"] { color: #64748b !important; }
+[class~="text-neutral-200"] { color: #1e293b !important; }
+[class~="text-neutral-300"] { color: #334155 !important; }
+[class~="text-neutral-400"] { color: #64748b !important; }
+
+/* 5. Accent colors — deepen for contrast on white */
+[class*="text-blue-400"] { color: #2563eb !important; }
+[class*="text-blue-300"] { color: #3b82f6 !important; }
+[class*="text-blue-200"] { color: #60a5fa !important; }
+[class*="text-emerald-400"] { color: #059669 !important; }
+[class*="text-emerald-300"] { color: #059669 !important; }
+[class*="text-emerald-200"] { color: #10b981 !important; }
+[class*="text-green-400"] { color: #16a34a !important; }
+[class*="text-green-300"] { color: #16a34a !important; }
+[class*="text-cyan-400"] { color: #0891b2 !important; }
+[class*="text-cyan-300"] { color: #0e7490 !important; }
+[class*="text-sky-400"] { color: #0284c7 !important; }
+[class*="text-sky-300"] { color: #0369a1 !important; }
+[class*="text-teal-400"] { color: #0d9488 !important; }
+[class*="text-amber-400"] { color: #d97706 !important; }
+[class*="text-amber-300"] { color: #b45309 !important; }
+[class*="text-yellow-400"] { color: #ca8a04 !important; }
+[class*="text-red-400"] { color: #dc2626 !important; }
+[class*="text-red-300"] { color: #dc2626 !important; }
+[class*="text-rose-400"] { color: #e11d48 !important; }
+[class*="text-pink-400"] { color: #db2777 !important; }
+[class*="text-violet-400"] { color: #7c3aed !important; }
+[class*="text-purple-400"] { color: #9333ea !important; }
+[class*="text-indigo-400"] { color: #4f46e5 !important; }
+[class*="text-fuchsia-400"] { color: #c026d3 !important; }
+[class*="text-orange-400"] { color: #ea580c !important; }
+[class*="text-lime-400"] { color: #65a30d !important; }
+[class*="fill-amber-400"] { fill: #f59e0b !important; }
+
+/* 5b. Admin-only: force the remaining light text dark so every write-up
+   is readable on the white admin background — Products Manager included.
+   Scoped to body bg-[#070b16], which ONLY admin pages use, so public
+   pages keep their existing lighter accent look. Covers the 200-level
+   shades and the 300-levels that aren't remapped above (opacity variants
+   like text-blue-300/80 are caught by these substring matches too). */
+body[class*="bg-[#070b16]"] [class*="text-blue-200"] { color: #1d4ed8 !important; }
+body[class*="bg-[#070b16]"] [class*="text-sky-200"] { color: #0369a1 !important; }
+body[class*="bg-[#070b16]"] [class*="text-cyan-200"] { color: #0e7490 !important; }
+body[class*="bg-[#070b16]"] [class*="text-emerald-200"] { color: #047857 !important; }
+body[class*="bg-[#070b16]"] [class*="text-green-200"] { color: #15803d !important; }
+body[class*="bg-[#070b16]"] [class*="text-teal-200"] { color: #0f766e !important; }
+body[class*="bg-[#070b16]"] [class*="text-amber-200"] { color: #b45309 !important; }
+body[class*="bg-[#070b16]"] [class*="text-yellow-200"] { color: #a16207 !important; }
+body[class*="bg-[#070b16]"] [class*="text-orange-200"] { color: #c2410c !important; }
+body[class*="bg-[#070b16]"] [class*="text-red-200"] { color: #b91c1c !important; }
+body[class*="bg-[#070b16]"] [class*="text-rose-200"] { color: #be123c !important; }
+body[class*="bg-[#070b16]"] [class*="text-pink-200"] { color: #be185d !important; }
+body[class*="bg-[#070b16]"] [class*="text-violet-200"] { color: #6d28d9 !important; }
+body[class*="bg-[#070b16]"] [class*="text-purple-200"] { color: #9333ea !important; }
+body[class*="bg-[#070b16]"] [class*="text-indigo-200"] { color: #4338ca !important; }
+body[class*="bg-[#070b16]"] [class*="text-fuchsia-200"] { color: #a21caf !important; }
+body[class*="bg-[#070b16]"] [class*="text-slate-200"] { color: #1e293b !important; }
+body[class*="bg-[#070b16]"] [class*="text-zinc-200"] { color: #1e293b !important; }
+body[class*="bg-[#070b16]"] [class*="text-neutral-200"] { color: #1e293b !important; }
+/* 300-level accents not remapped globally (admin.html only had them inline) */
+body[class*="bg-[#070b16]"] [class*="text-violet-300"] { color: #6d28d9 !important; }
+body[class*="bg-[#070b16]"] [class*="text-purple-300"] { color: #9333ea !important; }
+body[class*="bg-[#070b16]"] [class*="text-fuchsia-300"] { color: #c026d3 !important; }
+body[class*="bg-[#070b16]"] [class*="text-pink-300"] { color: #db2777 !important; }
+body[class*="bg-[#070b16]"] [class*="text-rose-300"] { color: #e11d48 !important; }
+body[class*="bg-[#070b16]"] [class*="text-teal-300"] { color: #0d9488 !important; }
+body[class*="bg-[#070b16]"] [class*="text-orange-300"] { color: #ea580c !important; }
+/* Text inside now-light-tinted blue panels must go dark too (higher
+   specificity than the global blue-surface white-text exception, which
+   wins the source-order tie in the built CSS). */
+body[class*="bg-[#070b16]"] [class*="bg-blue-950/"] [class*="text-white"],
+body[class*="bg-[#070b16]"] [class*="bg-blue-950/"] [class*="text-gray-100"],
+body[class*="bg-[#070b16]"] [class*="bg-[#030712]"] [class*="text-white"] { color: #0f172a !important; }
+
+/* 6. Borders -> light dividers */
+[class*="border-gray-800"],
+[class*="border-gray-900"],
+[class*="border-slate-800"] {
+  border-color: #e2e8f0 !important;
+}
+[class*="border-gray-700"],
+[class*="border-slate-700"] {
+  border-color: #d3dae4 !important;
+}
+[class*="border-[#0d1b2e]"] { border-color: #e2e8f0 !important; }
+[class*="border-[#1e293b]"] { border-color: #d3dae4 !important; }
+[class*="border-white/"] { border-color: #e2e8f0 !important; }
+
+/* 7. Hover states tuned for light surfaces */
+.hover\:bg-white\/5:hover,
+.hover\:bg-white\/8:hover,
+.hover\:bg-white\/10:hover,
+.hover\:bg-white\/15:hover,
+.hover\:bg-white\/20:hover,
+.hover\:bg-white\/\[0\.06\]:hover,
+.hover\:bg-white\/\[0\.08\]:hover {
+  background-color: #e2e8f0 !important;
+}
+.hover\:bg-gray-800:hover,
+.hover\:bg-gray-700:hover,
+.hover\:bg-gray-900:hover {
+  background-color: #e2e8f0 !important;
+}
+.hover\:text-white:hover {
+  color: #2563eb !important;
+}
+.hover\:text-gray-100:hover,
+.hover\:text-gray-200:hover,
+.hover\:text-gray-300:hover,
+.hover\:text-gray-400:hover {
+  color: #334155 !important;
+}
+
+/* 8. Gradient headlines -> solid charcoal */
+[class*="bg-clip-text"][class*="text-transparent"] {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  background-image: none !important;
+}
+
+/* 9. Header, search & category bar */
+#site-header {
+  background: #ffffff !important;
+  border-bottom-color: #e2e8f0 !important;
+  box-shadow: 0 1px 10px rgba(15, 23, 42, 0.06) !important;
+}
+#smart-search-container > div:first-child {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+#search-suggestions {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+#site-categories-nav {
+  background: #ffffff !important;
+  border-bottom-color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+#region-dropdown {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+#more-menu-panel {
+  background: #ffffff !important;
+  border-bottom-color: #e2e8f0 !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Header inline-style classes (.menu-row / .more-row / .hdr-action) */
+.menu-row { color: #334155 !important; }
+.menu-row:hover,
+.menu-row:focus-visible {
+  background: #eef2f7 !important;
+  color: #2563eb !important;
+}
+.more-row { color: #334155 !important; }
+.more-row:hover,
+.more-row:focus-visible {
+  background: #eef2f7 !important;
+  color: #2563eb !important;
+}
+.more-row.text-red-400:hover { color: #dc2626 !important; }
+.menu-section-label,
+.more-label { color: #64748b !important; }
+.hdr-action { color: #475569 !important; }
+.hdr-action:hover {
+  background: #eef2f7 !important;
+  color: #2563eb !important;
+  box-shadow: none !important;
+}
+.hdr-action:active { background: #e2e8f0 !important; }
+
+/* Navigation drawer */
+#mobile-menu {
+  background: #ffffff !important;
+  border-right-color: #e2e8f0 !important;
+  box-shadow: 6px 0 24px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Notification badges/dots: dark border rings were built for the old
+   navy header — switch them to white rings on the light theme */
+.hdr-badge,
+.hdr-badge-dot,
+.menu-row .absolute,
+.menu-icon .absolute {
+  border-color: #ffffff !important;
+}
+
+/* ── Two-way category carousel (department chips row) ────────────────
+   The category row is a single horizontal scroller: swipe both ways on
+   touch, drag with the mouse, trackpad/mouse-wheel horizontal on desktop.
+   Vertical page scrolling is never hijacked. */
+#category-list {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: .25rem;
+}
+@media (min-width: 640px) {
+  #category-list {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  #category-list::-webkit-scrollbar {
+    height: 4px;
+    display: block;
+  }
+  #category-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+  }
+  #category-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  #category-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+.nav-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  flex-shrink: 0;
+  padding: .5rem .9rem;
+  border-radius: .75rem;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  transition: border-color .15s, color .15s, background .15s, transform .12s;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+.nav-cat-chip i {
+  color: #94a3b8;
+  transition: color .15s;
+}
+.nav-cat-chip:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+  background: #eff6ff;
+}
+.nav-cat-chip:hover i {
+  color: #2563eb;
+}
+.nav-cat-chip:active {
+  transform: scale(.97);
+}
+.nav-cat-chip.active {
+  border-color: rgba(59, 130, 246, .4);
+  background: rgba(59, 130, 246, .1);
+  color: #2563eb;
+}
+.nav-cat-chip.active i {
+  color: #2563eb;
+}
+
+/* Empty category state in the showroom grid */
+.category-empty {
+  animation: fadeInUp .3s ease both;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Live date/time/trust bar */
+#trust-bar > div {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Showroom cards */
+.showroom-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.07) !important;
+}
+.showroom-card:hover {
+  border-color: rgba(59, 130, 246, 0.45) !important;
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.15) !important;
+}
+
+/* Vertical one-by-one feed cards — full-width, image left / content right */
+#all-houses-body .hscroll .showroom-card,
+#all-cars-body .hscroll .showroom-card,
+#all-trucks-body .hscroll .showroom-card {
+  width: 290px;
+  min-width: 290px;
+}
+@media (min-width: 640px) {
+  #all-houses-body .hscroll .showroom-card,
+  #all-cars-body .hscroll .showroom-card,
+  #all-trucks-body .hscroll .showroom-card {
+    width: 360px;
+    min-width: 360px;
+  }
+}
+.showroom-feed-card {
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+}
+.showroom-feed-card:hover {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.18) !important;
+}
+.showroom-feed .showroom-feed-card {
+  width: 100%;
+}
+.details-btn {
+  background: #ffffff !important;
+  border-color: #3b82f6 !important;
+  color: #2563eb !important;
+}
+.details-btn:hover {
+  background: #eff6ff !important;
+  border-color: #2563eb !important;
+  color: #1d4ed8 !important;
+}
+.share-btn,
+.wishlist-btn {
+  background: #eef2f7 !important;
+  color: #475569 !important;
+}
+.share-btn:hover {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+}
+.wishlist-btn:hover {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+.wishlist-btn.saved {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  color: #dc2626 !important;
+}
+
+/* Details page buttons */
+#view-details-btn {
+  background: #ffffff !important;
+  border: 1px solid #3b82f6 !important;
+  color: #2563eb !important;
+}
+#view-details-btn:hover { background: #eff6ff !important; }
+#add-cart-btn {
+  background: #eef2f7 !important;
+  color: #1e293b !important;
+}
+#add-cart-btn:hover { background: #e2e8f0 !important; }
+#wishlist-btn,
+#share-btn {
+  background: #eef2f7 !important;
+  color: #475569 !important;
+}
+#share-btn:hover {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+}
+#wishlist-btn:hover {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+/* Footer */
+footer {
+  background: #ffffff !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+/* Floating widgets: EN country selector + Contact us */
+#kco-loc-fab {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12) !important;
+}
+#kco-ai-fab {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14) !important;
+}
+#kco-ai-panel {
+  background: #ffffff !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+#kco-ai-panel [class*="text-blue-100"],
+#kco-ai-panel [class*="text-blue-200"] {
+  color: #2563eb !important;
+}
+#kco-loc-modal .kco-loc-modal > div:first-child {
+  background: #ffffff !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+.kco-loc-tab.active {
+  background: #eff6ff !important;
+  border-color: rgba(59, 130, 246, 0.4) !important;
+  color: #2563eb !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LITTLE-BIG TEXT — subtle ~9% bump across the whole site.
+   html base 16px -> 17.5px scales every rem-based Tailwind text size
+   (and rem spacing) proportionally, so big and small text both grow
+   a little while keeping their exact hierarchy. The rules below bump
+   the arbitrary pixel sizes by the same small amount (on top of the
+   readability floor above). The search bar gets a slightly bigger
+   input text and taller tap area so it reads clearly.
+   ═══════════════════════════════════════════════════════════════ */
+html {
+  font-size: 17.5px;
+}
+
+[class~="text-[7px]"] {
+  font-size: 7.5px !important;
+}
+[class~="text-[8px]"] {
+  font-size: 11px !important;
+}
+[class~="text-[9px]"] {
+  font-size: 12px !important;
+}
+[class~="text-[10px]"] {
+  font-size: 13px !important;
+}
+[class~="text-[11px]"] {
+  font-size: 13.5px !important;
+}
+[class~="text-[13px]"] {
+  font-size: 14.5px !important;
+}
+[class~="text-[15px]"] {
+  font-size: 16.5px !important;
+}
+[class~="text-[19px]"] {
+  font-size: 21px !important;
+}
+
+/* Search bar: a little bigger — bigger input text and a taller tap area */
+#search-input {
+  font-size: 16px !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+/* Real Price strikethrough — a clear horizontal line drawn DIRECTLY THROUGH
+   the middle/body of the real (original) price text, never underneath it. */
+.price-strike {
+  text-decoration: line-through !important;
+  text-decoration-thickness: 2px !important;
+  text-decoration-color: #ef4444 !important;
+}
+
+/* Homepage bottom: hide scrollbars on the horizontal product rails while
+   keeping touch/mouse scrolling smooth. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

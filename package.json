@@ -1,0 +1,44 @@
+{
+  "name": "kco-marketplace",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/generate-seo.mjs && node scripts/prerender-home.mjs && vite build && node scripts/optimize-dist.mjs && node -e \"import{copyFileSync}from'fs';copyFileSync('app.js','dist/app.js')\" && node scripts/check-fresh-build.mjs",
+    "guard:fresh": "node scripts/check-fresh-build.mjs",
+    "videos:compress": "node scripts/compress-videos.mjs",
+    "videos:upload": "node scripts/upload-videos-b2.mjs",
+    "preview": "vite preview",
+    "cap:sync": "npm run build && npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:copy": "npm run build && npx cap copy android",
+    "android:build": "npm run build && npx cap sync android && cd android && ./gradlew bundleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/camera": "^8.2.1",
+    "@capacitor/cli": "^8.4.2",
+    "@capacitor/core": "^8.4.2",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/network": "^8.0.1",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/push-notifications": "^8.1.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
+    "@supabase/supabase-js": "^2.110.8",
+    "ffmpeg-static": "^5.2.0",
+    "lucide": "^1.27.0",
+    "pdfjs-dist": "^4.10.38",
+    "sharp": "^0.35.4",
+    "vite": "^5.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2"
+  }
+}

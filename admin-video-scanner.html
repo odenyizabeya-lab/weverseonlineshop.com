@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Video Scanner | Weverse Online Shop</title>
+  <meta name="description" content="Admin video scanner — analyze real video clips with AI at Weverse Online Shop.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Weverse Online Shop">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Weverse Online Shop">
+  <meta property="og:title" content="Video Scanner | Weverse Online Shop">
+  <meta property="og:description" content="Admin video scanner — analyze real video clips with AI at Weverse Online Shop.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Video Scanner | Weverse Online Shop">
+  <meta name="twitter:description" content="Admin video scanner — analyze real video clips with AI at Weverse Online Shop.">
+  <link rel="canonical" href="https://weverseonlineshop.com/admin-video-scanner">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.460.0" defer></script>
+  <style>
+    * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { -webkit-font-smoothing: antialiased; }
+    @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fade-in .4s ease forwards}
+    @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .slide-up{animation:slide-up .5s cubic-bezier(.16,1,.3,1) forwards}
+    .glass{background:rgba(15,23,42,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+    .btn-press{transition:transform .15s cubic-bezier(.4,0,.2,1)}
+    .btn-press:active{transform:scale(.97)}
+    .input-field{transition:border-color .2s,box-shadow .2s}
+    .input-field:focus{box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+    .progress-stripes{background-image:linear-gradient(135deg,rgba(255,255,255,.18) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.18) 50%,rgba(255,255,255,.18) 75%,transparent 75%,transparent);background-size:1rem 1rem;animation:progress-move 1s linear infinite}
+    @keyframes progress-move{from{background-position:1rem 0}to{background-position:0 0}}
+  </style>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BFHnnn3M.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-XLaEvqbL-DEyIhb6U.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-BZ_21NL6.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-1NxFCIXH.js">
+  <script type="module" crossorigin src="/src/admin-video-scanner.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabase-client-DvCmNkpI-BBtcpOs0.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-B_HxL1KQ-Do35V_4n.js">
+  <link rel="modulepreload" crossorigin href="/assets/localization-bootstrap-BhglmvwT-CYE5uVRZ.js">
+  <link rel="modulepreload" crossorigin href="/assets/app-promo-banner-VTpzwpvR-CiDTzVNv.js">
+  <link rel="stylesheet" crossorigin href="/assets/localization-B_HxL1KQ-B_HxL1KQ.css">
+</head>
+<body class="bg-[#070b16] text-gray-100 min-h-screen">
+  <div class="fixed inset-0 pointer-events-none">
+    <div class="absolute inset-0 bg-gradient-to-br from-[#070b16] via-[#0a1124] to-[#070b16]"></div>
+    <div class="absolute -top-48 -left-48 w-[32rem] h-[32rem] bg-violet-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-48 -right-48 w-[32rem] h-[32rem] bg-fuchsia-800/8 rounded-full blur-3xl"></div>
+  </div>
+  <header class="fixed top-0 inset-x-0 z-40 glass border-b border-violet-500/15">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-fuchsia-700 rounded-lg flex items-center justify-center shadow-lg shadow-violet-600/20">
+          <i data-lucide="video" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <span class="text-lg font-black tracking-tight text-white block leading-tight">Video Scanner</span>
+          <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Admin Dashboard</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/" class="text-xs text-gray-400 hover:text-white transition flex items-center gap-1.5"><i data-lucide="arrow-left" class="w-4 h-4"></i> <span class="hidden sm:inline">Back to Site</span></a>
+      </div>
+    </div>
+  </header>
+  <main class="pt-16 max-w-7xl mx-auto px-4 sm:px-6 py-8 relative z-10">
+    <div id="admin-root" class="min-h-[400px]">
+      <div class="flex items-center justify-center py-20">
+        <div class="flex items-center gap-3 text-gray-500 text-sm">
+          <i data-lucide="loader-2" class="w-5 h-5 animate-spin text-violet-400"></i>
+          Loading video scanner...
+        </div>
+      </div>
+    </div>
+  </main>
+  <div id="toast" class="fixed bottom-5 right-5 z-[100] transform translate-y-20 opacity-0 bg-gray-900 border border-violet-500/30 text-white px-5 py-3 rounded-xl shadow-xl text-xs flex items-center gap-2 font-medium transition-all duration-300 pointer-events-none">
+    <i data-lucide="info" class="w-4 h-4 text-violet-400"></i><span id="toast-msg">Action</span>
+  </div>
+  <script src="/back-button.js" defer></script>
+  <!-- APP PROMOTION BANNER -->
+  <div id="trust-info-area"></div>
+  <div id="app-promo-banner"></div>
+</body>
+</html>
