@@ -15,6 +15,7 @@ import { invalidateSiteContent, DEFAULT_SITE_CONTENT } from './site-content.js';
 import { MARKETPLACE_CATEGORIES, MARKETPLACE_AUTOMOTIVE, normalizeToMarketplaceCategory } from './categories.js';
 import { looksLikePdf } from './pdf-pages.js';
 import { renderSocialMedia } from './social-admin.js';
+import { renderIntegrationsSettings } from './integrations-settings.js';
 
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -47,6 +48,7 @@ const NAV = [
   ]},
 { group: 'Marketing', items: [
     { id: 'social', label: 'Social Media Automation', icon: 'share-2' },
+    { id: 'integrations', label: 'API & Integrations Settings', icon: 'key-round' },
   ]},
 { group: 'Configuration', items: [
     { id: 'payment-settings', label: 'Payment Settings',  icon: 'credit-card' },
@@ -81,6 +83,7 @@ messages: 'Messages & Support', coupons: 'Coupons Manager', ads: 'Advertisement 
   security: 'Security', activity: 'Activity Logs', backup: 'Backup & Restore',
   settings: 'Settings', publish: 'Publish & Deploy',
   social: 'Social Media Automation', 'social-settings': 'Social Media Integrations',
+  integrations: 'API & Integrations Settings',
 };
 
 const SORTED_CURRENCIES = [...ALL_CURRENCIES].sort();
@@ -259,6 +262,7 @@ window.navigate = function(section) {
     'payment-settings': renderPaymentSettings,
     backup: renderBackup, settings: renderSettings, publish: renderPublish,
     social: () => renderSocialMedia('overview'), 'social-settings': () => renderSocialMedia('platforms'),
+    integrations: () => renderIntegrationsSettings(),
   };
   const fn = renderers[section] || (() => { const c = document.getElementById('content'); if (c) c.innerHTML = emptyState('construction', 'Coming Soon', `${title} is being built.`); });
   fn();

@@ -14,6 +14,11 @@ import { decryptToken } from '../../shared/social/crypto.mjs';
 import { triggerPost, runPublish, createPost, dedupeHash, enqueueDueScheduled, requeueRetryable, logPost } from '../../shared/social/publish-engine.mjs';
 import { runRule, getGlobalSettings } from '../../shared/social/auto-generator.mjs';
 import { json, readBody, corsHeaders } from '../../shared/social/http.mjs';
+import { fetchJson } from '../../shared/social/platforms/_utils.mjs';
+import {
+  CATEGORIES, PLATFORM_CATEGORIES, adapterIdFor, isCategory, sanitizeValues,
+  saveCreds, removeCreds, hydrateEnv, listCategoryStatus, CF_SECRETS_URL,
+} from '../../shared/social/integrations-store.mjs';
 
 export const config = { maxDuration: 120 };
 
@@ -312,7 +317,7 @@ async function handleStatus(req, res, cors) {
   return json(req, res, {
     ok: true,
     serverConfigured: {
-      supabase: Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
+      supabase: Boolean((process.env.SUPABASE_MAIN_URL || process.env.SUPABASE_URL) && (process.env.SUPABASE_MAIN_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.WEVERSE_SERVICE_ROLE_KEY)),
       tokenEncryption: Boolean(process.env.SOCIAL_TOKEN_ENC_KEY),
       schedulerSecret: Boolean(process.env.SCHEDULER_CRON_SECRET),
     },
@@ -401,6 +406,112 @@ async function handleScheduler(req, res, cors) {
   }
 }
 
+// CSRF guard for mutating integration endpoints. Admin auth uses a Bearer
+// token (not cookies), so a custom header that browsers cannot send
+// cross-site (without a CORS preflight we do not allow) plus an origin check
+// gives effective CSRF protection.
+function assertCsrf(req) {
+  if (String(req.headers['x-admin-csrf'] || '') !== '1') {
+    const e = new Error('Missing or invalid CSRF header.'); e.status = 403; throw e;
+  }
+  const host = String(req.headers['x-forwarded-host'] || req.headers['host'] || '').split(',')[0].trim();
+  const src = req.headers['origin'] || req.headers['referer'] || '';
+  if (src) {
+    let srcHost = '';
+    try { srcHost = new URL(src).host; } catch { const e = new Error('Invalid request origin.'); e.status = 403; throw e; }
+    if (host && srcHost !== host) { const e = new Error('Cross-origin request rejected.'); e.status = 403; throw e; }
+  }
+  return true;
+}
+
+// Performs a REAL connectivity/config check for a platform. Never reports
+// success unless it actually contacted the platform.
+async function testCategory(category, sb) {
+  const adapter = getAdapter(adapterIdFor(category));
+  await hydrateEnv(sb);
+
+  if (category === 'facebook' || category === 'instagram') {
+    const id = (category === 'instagram' ? process.env.INSTAGRAM_CLIENT_ID : '') || process.env.FB_CLIENT_ID || '';
+    const secret = (category === 'instagram' ? process.env.INSTAGRAM_CLIENT_SECRET : '') || process.env.FB_CLIENT_SECRET || '';
+    if (!id || !secret) return { ok: false, verified: false, note: 'Provide the App ID and App Secret, then save before testing.' };
+    const r = await fetchJson(`https://graph.facebook.com/v20.0/oauth/access_token?client_id=${encodeURIComponent(id)}&client_secret=${encodeURIComponent(secret)}&grant_type=client_credentials`);
+    if (r.ok && r.body?.access_token) return { ok: true, verified: true, note: 'Meta app credentials verified — a Meta app access token was issued.' };
+    return { ok: false, verified: true, note: r.body?.error?.message || `Meta rejected the credentials (HTTP ${r.status}).` };
+  }
+
+  if (category === 'telegram') {
+    try {
+      const result = await adapter.validateConnection();
+      return { ok: !!result.ok, verified: true, note: result.note || (result.ok ? 'Telegram bot is reachable.' : 'Telegram bot check failed.') };
+    } catch (err) {
+      return { ok: false, verified: true, note: err.message };
+    }
+  }
+
+  if (category === 'whatsapp') {
+    const token = process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_ACCESS_TOKEN;
+    if (!token) return { ok: false, verified: false, note: 'Provide the access token, then save before testing.' };
+    const r = await fetchJson(`https://graph.facebook.com/v20.0/me?access_token=${encodeURIComponent(token)}`);
+    if (r.ok && r.body?.id) return { ok: true, verified: true, note: `Meta access token is valid (id ${r.body.id}).` };
+    return { ok: false, verified: true, note: r.body?.error?.message || `Meta rejected the access token (HTTP ${r.status}).` };
+  }
+
+  return {
+    ok: false,
+    verified: false,
+    requiresAccount: true,
+    note: `${adapter.metadata.label} uses OAuth — the client credentials are stored. A live check runs when you connect an account under Social Media Automation → Connected Accounts.`,
+  };
+}
+
+async function handleIntegrations(req, res, cors) {
+  await verifyAdmin(req.headers.authorization);
+  const sb = getServiceClient();
+  const r = route(req);
+
+  if (r === '/api/social/integrations' && req.method === 'GET') {
+    const categories = await listCategoryStatus(sb);
+    return json(req, res, { ok: true, categories, deploymentGuide: { dashboardUrl: CF_SECRETS_URL } }, 200, cors);
+  }
+
+  if (req.method !== 'POST') return json(req, res, { ok: false, error: 'Method not allowed.' }, 405, cors);
+  assertCsrf(req);
+
+  const body = await readBody(req, 1);
+  const category = String(body.category || '');
+  if (!isCategory(category)) return json(req, res, { ok: false, error: 'Unknown integration category.' }, 400, cors);
+
+  if (CATEGORIES[category].kind === 'deployment') {
+    return json(req, res, {
+      ok: false,
+      error: 'This is a Cloudflare Pages deployment secret. It must be set from the Cloudflare dashboard and cannot be changed from a web form.',
+      dashboardUrl: CF_SECRETS_URL,
+    }, 400, cors);
+  }
+
+  if (r === '/api/social/integrations/save') {
+    const { values, errors } = sanitizeValues(category, body.values || {});
+    if (errors.length) return json(req, res, { ok: false, error: errors.join(' '), errors }, 400, cors);
+    await saveCreds(sb, adapterIdFor(category), values);
+    await hydrateEnv(sb);
+    const categories = await listCategoryStatus(sb);
+    return json(req, res, { ok: true, message: 'Credentials saved securely.', category: categories.find((c) => c.id === category) }, 200, cors);
+  }
+
+  if (r === '/api/social/integrations/remove') {
+    await removeCreds(sb, adapterIdFor(category));
+    const categories = await listCategoryStatus(sb);
+    return json(req, res, { ok: true, message: 'Credentials removed.', category: categories.find((c) => c.id === category) }, 200, cors);
+  }
+
+  if (r === '/api/social/integrations/test') {
+    const result = await testCategory(category, sb);
+    return json(req, res, result, 200, cors);
+  }
+
+  return json(req, res, { ok: false, error: 'Unknown integrations action.' }, 404, cors);
+}
+
 export default async function handler(req, res) {
   const cors = corsHeaders();
   if (req.method === 'OPTIONS') {
@@ -413,6 +524,8 @@ export default async function handler(req, res) {
   }
   const r = route(req);
   try {
+    if (r.startsWith('/api/social/integrations')) return await handleIntegrations(req, res, cors);
+    try { await hydrateEnv(getServiceClient()); } catch { /* supabase not configured or no stored creds */ }
     if (r === '/api/social/publish') return await handlePublish(req, res, cors);
     if (r === '/api/social/posts') return await handlePosts(req, res, cors);
     if (r === '/api/social/accounts') return await handleAccounts(req, res, cors);

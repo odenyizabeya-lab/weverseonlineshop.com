@@ -7,6 +7,7 @@
 import { getServiceClient, siteUrl } from '../../shared/social/db.mjs';
 import { randomToken, encryptToken } from '../../shared/social/crypto.mjs';
 import { getAdapter, isPlatform } from '../../shared/social/registry.mjs';
+import { hydrateEnv } from '../../shared/social/integrations-store.mjs';
 import { redirect, json, html, corsHeaders } from '../../shared/social/http.mjs';
 
 export const config = { maxDuration: 30 };
@@ -175,6 +176,7 @@ export default async function handler(req, res) {
   }
   const r = route(req);
   try {
+    try { await hydrateEnv(getServiceClient()); } catch { /* supabase not configured or no stored creds */ }
     if (r === '/api/social/oauth/start') return await handleStart(req, res, cors);
     if (r === '/api/social/oauth/callback') return await handleCallback(req, res);
     return json(req, res, { ok: false, error: 'Unknown OAuth step.' }, 404, cors);
