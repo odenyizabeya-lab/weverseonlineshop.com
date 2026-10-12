@@ -4,17 +4,8 @@
 #
 # Clean URLs (e.g. /about -> /about.html) are handled AUTOMATICALLY by Pages.
 # Do NOT add "/x /x.html 200" rules: Pages 308-redirects *.html back to the clean
-# URL, so such rewrites loop forever (showroom/details/about were all broken).
-
-# Product detail pages -> details app. The URL keeps its clean form /product/<id>;
-# src/details.js reads the id from the path (getListingId).
-/product/:splat /details 200
-
-# Bare /product -> showroom
-/product /showroom 301
-
-# Category & country landings -> showroom
-/category /showroom 301
-/country /showroom 301
-/category/:splat /showroom 301
-/country/:splat /showroom 301
+# URL, so such rewrites loop forever.
+#
+# /product/<id>, /category/<slug>, /country/<slug>, /sitemap.xml and
+# /merchant-feed.xml are served by Cloudflare Pages Functions (see functions/
+# and _routes.json) — they are intentionally NOT listed here.
