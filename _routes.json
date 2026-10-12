@@ -8,7 +8,10 @@
     "/country",
     "/country/*",
     "/sitemap.xml",
-    "/merchant-feed.xml"
+    "/merchant-feed.xml",
+    "/seo-audit",
+    "/api/social",
+    "/api/social/*"
   ],
   "exclude": []
 }
