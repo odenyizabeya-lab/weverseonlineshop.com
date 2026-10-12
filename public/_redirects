@@ -1,44 +1,20 @@
 # Cloudflare Pages redirects / rewrites.
 # NOTE: Cloudflare Pages ignores full-domain rules (http://host/*) here.
 # HTTPS and www -> apex are handled by Cloudflare (Always Use HTTPS + a Redirect Rule).
+#
+# Clean URLs (e.g. /about -> /about.html) are handled AUTOMATICALLY by Pages.
+# Do NOT add "/x /x.html 200" rules: Pages 308-redirects *.html back to the clean
+# URL, so such rewrites loop forever (showroom/details/about were all broken).
 
-# Clean URLs -> real .html files (200 = internal rewrite; the URL stays clean)
-/details /details.html 200
-/showroom /showroom.html 200
-/about /about.html 200
-/contact /contact.html 200
-/team /team.html 200
-/help /help.html 200
-/privacy /privacy.html 200
-/terms /terms.html 200
-/shipping-policy /shipping-policy.html 200
-/refund-policy /refund-policy.html 200
-/policies /policies.html 200
-/policies-usa /policies-usa.html 200
-/policies-uk /policies-uk.html 200
-/policies-eu /policies-eu.html 200
-/policies-germany /policies-germany.html 200
-/policies-france /policies-france.html 200
-/policies-japan /policies-japan.html 200
-/policies-canada /policies-canada.html 200
-/policies-australia /policies-australia.html 200
-/policies-switzerland /policies-switzerland.html 200
-/checkout /checkout.html 200
-/payment /payment.html 200
-/account /account.html 200
-/cart /cart.html 200
-/auth /auth.html 200
-/admin /admin.html 200
-/admin-shipping /admin-shipping.html 200
-/admin-domains /admin-domains.html 200
-/admin-video-scanner /admin-video-scanner.html 200
+# Product detail pages -> details app. The URL keeps its clean form /product/<id>;
+# src/details.js reads the id from the path (getListingId).
+/product/:splat /details 200
 
-# Product detail pages (client-rendered in Phase 1; Phase 2 API restores server meta)
-/product /showroom.html 301
-/product/:splat /details.html?id=:splat 200
+# Bare /product -> showroom
+/product /showroom 301
 
-# Category & country landings -> showroom (Phase 2 API restores server rendering)
-/category /showroom.html 301
-/country /showroom.html 301
-/category/:splat /showroom.html 301
-/country/:splat /showroom.html 301
+# Category & country landings -> showroom
+/category /showroom 301
+/country /showroom 301
+/category/:splat /showroom 301
+/country/:splat /showroom 301
