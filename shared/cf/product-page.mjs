@@ -427,7 +427,9 @@ export async function renderProductPage({ id, isProductPath, origin, siteUrl, us
   const ua = String(userAgent || '');
   const isRealBrowser = /mozilla/i.test(ua) && !BOT_RE.test(ua);
   if (isRealBrowser) {
-    return { status: 200, body: withBeacon(html), contentType: 'text/html; charset=utf-8', cacheControl: 'public, max-age=300, s-maxage=3600' };
+    // Browser-only cache: no s-maxage so a crawler sharing the URL can never be
+    // served a cached, generic-meta shell from the edge.
+    return { status: 200, body: withBeacon(html), contentType: 'text/html; charset=utf-8', cacheControl: 'public, max-age=300' };
   }
 
   let listing = null;
@@ -466,10 +468,11 @@ export async function renderProductPage({ id, isProductPath, origin, siteUrl, us
       ? `${base}/product/${encodeURIComponent(id)}`
       : `${base}/details.html?id=${encodeURIComponent(id)}`;
     const posterPhoto = productPoster(listing);
-    const useSized = fromDb;
-    const ogImage = useSized
-      ? `${base}/api/og-image?id=${encodeURIComponent(id)}`
-      : absUrl(posterPhoto || '/brand-logo.jpeg', base);
+    // The og-image generator (api/og-image.js — sharp/ffmpeg) is NOT portable to
+    // Cloudflare Workers and is not ported, so always use the product's real
+    // photo (or the brand logo when it has none) rather than /api/og-image.
+    const useSized = false;
+    const ogImage = absUrl(posterPhoto || '/brand-logo.jpeg', base);
     const videoUrl = productVideo(listing);
     const videoTags = videoUrl
       ? [
