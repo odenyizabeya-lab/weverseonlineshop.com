@@ -7,7 +7,7 @@
 // /api/social/<path> is rewritten here by vercel.json, so browser-facing and
 // platform-facing URLs stay identical. Merging keeps the project under Vercel's
 // Hobby serverless-function cap (12 per deployment).
-import { getServiceClient } from '../../shared/social/db.mjs';
+import { getServiceClient, isServiceConfigured } from '../../shared/social/db.mjs';
 import { verifyAdmin } from '../../shared/social/auth.mjs';
 import { getAdapter, isPlatform, platformList } from '../../shared/social/registry.mjs';
 import { decryptToken } from '../../shared/social/crypto.mjs';
@@ -317,7 +317,7 @@ async function handleStatus(req, res, cors) {
   return json(req, res, {
     ok: true,
     serverConfigured: {
-      supabase: Boolean((process.env.SUPABASE_MAIN_URL || process.env.SUPABASE_URL) && (process.env.SUPABASE_MAIN_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.WEVERSE_SERVICE_ROLE_KEY)),
+      supabase: isServiceConfigured(),
       tokenEncryption: Boolean(process.env.SOCIAL_TOKEN_ENC_KEY),
       schedulerSecret: Boolean(process.env.SCHEDULER_CRON_SECRET),
     },
