@@ -170,7 +170,7 @@ function ensureVideoPoster(videoEl, src) {
 function ratingStars(rating, cls = 'w-4 h-4') {
   const r = Math.round(Number(rating) || 0);
   return [1, 2, 3, 4, 5].map(i =>
-    `<i data-lucide="star" class="${cls} ${i <= r ? 'fill-amber-400 text-amber-400 drop-shadow-[0_1px_4px_rgba(0,0,0,.25)]' : 'text-gray-300'}"></i>`
+    `<i data-lucide="star" class="${cls} ${i <= r ? 'fill-amber-400 text-amber-400 drop-shadow-[0_1px_4px_rgba(0,0,0,.25)]' : 'text-slate-500'}"></i>`
   ).join('');
 }
 
@@ -876,12 +876,12 @@ function replyItemHtml(c) {
   return `
     <div class="flex gap-2.5 pl-0.5">
       <div class="shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 text-white flex items-center justify-center text-[11px] font-black uppercase shadow-sm">${initial}</div>
-      <div class="min-w-0 flex-1 rounded-xl bg-gray-50 border border-gray-100 px-3 py-2">
+      <div class="min-w-0 flex-1 rounded-xl bg-white/[.06] border border-white/10 px-3 py-2">
         <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-          <span class="text-xs font-bold text-gray-900">${escapeHtml(c.author || 'Guest')}</span>
-          <span class="text-[11px] text-gray-400">&middot; ${formatCommentDate(c.created_at)}</span>
+          <span class="text-xs font-bold text-white">${escapeHtml(c.author || 'Guest')}</span>
+          <span class="text-[11px] text-slate-400">&middot; ${formatCommentDate(c.created_at)}</span>
         </div>
-        <p class="text-sm text-gray-700 mt-0.5 leading-relaxed break-words">${escapeHtml(c.body || '')}</p>
+        <p class="text-sm text-slate-200 mt-0.5 leading-relaxed break-words">${escapeHtml(c.body || '')}</p>
       </div>
     </div>`;
 }
@@ -889,13 +889,13 @@ function replyItemHtml(c) {
 function reviewItemHtml(r) {
   const nm = r.author_name || r.name || r.profiles?.full_name || 'Anonymous';
   const initial = escapeHtml(nm.trim().charAt(0).toUpperCase() || 'A');
-  const handle = r.handle ? `<span class="text-xs font-semibold text-gray-400">${escapeHtml(r.handle)}</span>` : '';
+  const handle = r.handle ? `<span class="text-xs font-semibold text-slate-400">${escapeHtml(r.handle)}</span>` : '';
   const time = formatCommentDate(r.date || r.created_at);
-  const timeHtml = time ? `<span class="text-xs text-gray-400">&middot; ${time}</span>` : '';
-  const loc = r.location && !r.handle ? `<span class="text-xs text-gray-400">&middot; ${escapeHtml(r.location)}</span>` : '';
-  const title = r.title ? `<p class="text-sm font-bold text-gray-900 mt-1">${escapeHtml(r.title)}</p>` : '';
-  const verifiedBadge = r.verified ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><i data-lucide="badge-check" class="w-3 h-3"></i> Verified Purchase</span>` : '';
-  const photo = r.review_photo ? `<div class="mt-2.5"><img src="${escapeHtml(r.review_photo)}" alt="Customer photo" class="w-28 h-28 object-cover rounded-xl border border-gray-200" loading="lazy" onerror="this.style.display='none'"></div>` : '';
+  const timeHtml = time ? `<span class="text-xs text-slate-400">&middot; ${time}</span>` : '';
+  const loc = r.location && !r.handle ? `<span class="text-xs text-slate-400">&middot; ${escapeHtml(r.location)}</span>` : '';
+  const title = r.title ? `<p class="text-sm font-bold text-white mt-1">${escapeHtml(r.title)}</p>` : '';
+  const verifiedBadge = r.verified ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/25 px-2 py-0.5 rounded-full"><i data-lucide="badge-check" class="w-3 h-3"></i> Verified Purchase</span>` : '';
+  const photo = r.review_photo ? `<div class="mt-2.5"><img src="${escapeHtml(r.review_photo)}" alt="Customer photo" class="w-28 h-28 object-cover rounded-xl border border-white/15" loading="lazy" onerror="this.style.display='none'"></div>` : '';
   const key = r._key || '';
   const extraLikes = (riState.likes.get(key) || 0);
   const likes = commentLikeCount(r) + extraLikes;
@@ -903,46 +903,48 @@ function reviewItemHtml(r) {
   const storedComments = riState.comments.get(key) || [];
   const repliesTotal = (typeof r.replies === 'number' && r.replies > 0 ? r.replies : 0) + storedComments.length;
   const likeBtn = `
-    <button type="button" class="review-like-btn btn-press inline-flex items-center gap-1.5 text-xs font-bold transition ${liked ? 'text-[#fe2c55]' : 'text-gray-500 hover:text-[#fe2c55]'}" data-key="${key}">
+    <button type="button" class="review-like-btn btn-press inline-flex items-center gap-1.5 text-xs font-bold transition ${liked ? 'text-[#fe2c55]' : 'text-slate-400 hover:text-[#fe2c55]'}" data-key="${key}">
       <i data-lucide="heart" class="w-4 h-4 ${liked ? 'fill-[#fe2c55] text-[#fe2c55]' : ''}"></i> ${compactCount(likes)}
     </button>`;
   const replyBtn = `
-    <button type="button" class="review-reply-toggle btn-press inline-flex items-center gap-1.5 text-xs font-bold transition ${openReplyKey === key ? 'text-blue-600' : 'text-gray-500 hover:text-blue-500'}" data-key="${key}">
+    <button type="button" class="review-reply-toggle btn-press inline-flex items-center gap-1.5 text-xs font-bold transition ${openReplyKey === key ? 'text-blue-300' : 'text-slate-400 hover:text-blue-300'}" data-key="${key}">
       <i data-lucide="message-circle" class="w-4 h-4"></i> ${repliesTotal > 0 ? `${compactCount(repliesTotal)} replies` : 'Reply'}
     </button>`;
   let replyBox = '';
   if (openReplyKey === key) {
     const nameVal = escapeHtml(savedReplyName || '');
     replyBox = `
-      <div class="review-reply-box mt-3 rounded-xl border border-gray-200 bg-gray-50/80 p-3 space-y-2">
-        <input type="text" class="review-reply-name w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" placeholder="Your name (optional)" maxlength="40" value="${nameVal}">
-        <textarea class="review-reply-body w-full rounded-lg border border-gray-300 px-3 py-2 text-sm min-h-[74px] resize-y" placeholder="Write a comment..." maxlength="1000"></textarea>
+      <div class="review-reply-box mt-3 rounded-xl border border-white/15 bg-white/[.06] p-3 space-y-2">
+        <input type="text" class="review-reply-name w-full rounded-lg border border-white/20 bg-slate-950/40 px-3 py-2 text-sm text-white placeholder-slate-400" placeholder="Your name (optional)" maxlength="40" value="${nameVal}">
+        <textarea class="review-reply-body w-full rounded-lg border border-white/20 bg-slate-950/40 px-3 py-2 text-sm text-white placeholder-slate-400 min-h-[74px] resize-y" placeholder="Write a comment..." maxlength="1000"></textarea>
         <div class="flex items-center justify-end gap-2">
-          <button type="button" class="review-reply-cancel text-xs font-bold text-gray-500 hover:text-gray-700 px-3 py-2 transition">Cancel</button>
+          <button type="button" class="review-reply-cancel text-xs font-bold text-slate-300 hover:text-white px-3 py-2 transition">Cancel</button>
           <button type="button" data-key="${key}" class="review-reply-post btn-press inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm shadow-blue-500/20"><i data-lucide="send" class="w-3.5 h-3.5"></i> Comment</button>
         </div>
       </div>`;
   }
-  const threads = storedComments.length ? `<div class="mt-2.5 space-y-2.5">${storedComments.map(replyItemHtml).join('')}</div>` : '';
+  const threads = storedComments.length ? `<div class="mt-3 space-y-2.5">${storedComments.map(replyItemHtml).join('')}</div>` : '';
   return `
-    <div class="flex gap-3 py-4 border-b border-gray-100 last:border-0">
-      <button type="button" class="review-avatar shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-sm font-black uppercase shadow-sm transition hover:ring-2 hover:ring-blue-200" data-open-reviewer="${key}" title="View ${escapeHtml(nm)}'s profile">${initial}</button>
-      <div class="min-w-0 flex-1">
-        <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-          <button type="button" data-open-reviewer="${key}" class="review-author text-sm font-bold text-gray-900 hover:text-blue-600 hover:underline transition">${escapeHtml(nm)}</button>${handle}${timeHtml}${loc}
-          ${verifiedBadge}
+    <div class="flex flex-col rounded-2xl border border-white/10 bg-white/[.09] backdrop-blur-md p-4 shadow-lg shadow-slate-950/40">
+      <div class="flex items-start gap-3">
+        <button type="button" class="review-avatar shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-sm font-black uppercase shadow-sm transition hover:ring-2 hover:ring-blue-200" data-open-reviewer="${key}" title="View ${escapeHtml(nm)}'s profile">${initial}</button>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <button type="button" data-open-reviewer="${key}" class="review-author text-sm font-bold text-white hover:text-blue-300 hover:underline transition">${escapeHtml(nm)}</button>${handle}${timeHtml}${loc}
+            ${verifiedBadge}
+          </div>
+          <div class="flex gap-0.5 mt-1">${[1,2,3,4,5].map(i => `<i data-lucide="star" class="w-3.5 h-3.5 ${i <= (r.rating || 0) ? 'fill-amber-400 text-amber-400' : 'text-slate-500'}"></i>`).join('')}</div>
         </div>
-        <div class="flex gap-0.5 mt-1">${[1,2,3,4,5].map(i => `<i data-lucide="star" class="w-3.5 h-3.5 ${i <= (r.rating || 0) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}"></i>`).join('')}</div>
-        ${title}
-        <p class="text-[15px] text-gray-700 leading-relaxed mt-1.5">${escapeHtml(r.text || r.comment || '')}</p>
-        ${photo}
-        <div class="flex items-center gap-5 mt-2.5">
-          ${likeBtn}
-          ${replyBtn}
-        </div>
-        ${replyBox}
-        ${threads}
       </div>
+      ${title}
+      <p class="text-[15px] text-slate-200 leading-relaxed mt-1.5">${escapeHtml(r.text || r.comment || '')}</p>
+      ${photo}
+      <div class="flex items-center gap-5 mt-3 pt-3 border-t border-white/10">
+        ${likeBtn}
+        ${replyBtn}
+      </div>
+      ${replyBox}
+      ${threads}
     </div>`;
 }
 
@@ -970,43 +972,43 @@ function reviewsSectionHtml(listing) {
           <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/25 px-3 py-1.5 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 100% Verified Purchase Reviews</span>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6 mb-5">
-          <div id="reviews-summary" class="mb-4"><div class="text-gray-400 text-sm py-3">Loading ratings…</div></div>
+        <div class="rounded-2xl border border-white/10 bg-white/[.07] backdrop-blur p-5 sm:p-6 mb-5">
+          <div id="reviews-summary" class="mb-4"><div class="text-slate-400 text-sm py-3">Loading ratings…</div></div>
           <div id="reviews-breakdown"></div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6 mb-5">
-          <div class="flex items-center justify-between gap-3 mb-2">
-            <h4 class="text-sm font-black text-gray-900 uppercase tracking-wide">What Buyers Say</h4>
-            <span class="text-xs text-gray-400">Newest first</span>
+        <div class="mb-5">
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <h4 class="text-sm font-black text-white uppercase tracking-wide">What Buyers Say</h4>
+            <span class="text-xs text-slate-400">Newest first</span>
           </div>
-          <div id="reviews-list"><div class="text-gray-400 text-sm py-4">Loading reviews…</div></div>
+          <div id="reviews-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"><div class="text-slate-400 text-sm py-4 col-span-full">Loading reviews…</div></div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6">
+        <div class="rounded-2xl border border-white/10 bg-white/[.07] backdrop-blur p-5 sm:p-6">
           <div id="review-form-wrapper">
-            <h4 class="text-[15px] font-black text-gray-900 mb-0.5 flex items-center gap-2"><i data-lucide="pen-line" class="w-4 h-4 text-blue-500"></i> Write a Review</h4>
-            <p class="text-xs text-gray-500 mb-3">Rate the product and share your experience — your review appears right at the top, newest first. No account needed.</p>
+            <h4 class="text-[15px] font-black text-white mb-0.5 flex items-center gap-2"><i data-lucide="pen-line" class="w-4 h-4 text-blue-300"></i> Write a Review</h4>
+            <p class="text-xs text-slate-400 mb-3">Rate the product and share your experience — your review appears right at the top, newest first. No account needed.</p>
             <form id="review-form" class="space-y-3">
               <div class="flex items-center gap-2">
-                <label class="text-xs text-gray-700 font-bold uppercase">Rating</label>
+                <label class="text-xs text-slate-300 font-bold uppercase">Rating</label>
                 <div id="star-rating" class="flex gap-1">
-                  ${[1,2,3,4,5].map(i => `<button type="button" data-rating="${i}" class="star-btn p-1"><i data-lucide="star" class="w-5 h-5 text-gray-300 hover:text-amber-400 transition"></i></button>`).join('')}
+                  ${[1,2,3,4,5].map(i => `<button type="button" data-rating="${i}" class="star-btn p-1"><i data-lucide="star" class="w-5 h-5 text-slate-500 hover:text-amber-400 transition"></i></button>`).join('')}
                 </div>
               </div>
-              <input id="review-name" type="text" maxlength="40" placeholder="Your name (optional)" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
-              <textarea id="review-text" rows="3" placeholder="Share your experience with this product..." class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"></textarea>
+              <input id="review-name" type="text" maxlength="40" placeholder="Your name (optional)" class="w-full bg-slate-950/40 border border-white/15 rounded-xl px-4 py-2.5 text-[15px] text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20">
+              <textarea id="review-text" rows="3" placeholder="Share your experience with this product..." class="w-full bg-slate-950/40 border border-white/15 rounded-xl px-4 py-3 text-[15px] text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20"></textarea>
               <div id="review-photo-row" class="flex items-center gap-3">
-                <label for="review-photo-input" class="inline-flex items-center gap-2 text-xs font-bold text-gray-700 bg-gray-100 border border-gray-200 rounded-xl px-3.5 py-2.5 cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition">
-                  <i data-lucide="camera" class="w-4 h-4 text-blue-500"></i> Add a photo
+                <label for="review-photo-input" class="inline-flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 cursor-pointer hover:border-blue-400 hover:bg-white/15 transition">
+                  <i data-lucide="camera" class="w-4 h-4 text-blue-300"></i> Add a photo
                 </label>
                 <input id="review-photo-input" type="file" accept="image/*" class="hidden">
                 <div id="review-photo-preview" class="flex items-center gap-2"></div>
               </div>
               <div class="flex items-center gap-3">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition">Submit Review</button>
-                <div id="review-submit-msg" class="text-xs text-emerald-600 font-bold hidden"><i data-lucide="check-circle" class="w-3.5 h-3.5 inline"></i> Thank you! Your review is now live.</div>
-                <div id="review-error-msg" class="text-xs text-red-600 font-bold hidden"><i data-lucide="alert-circle" class="w-3.5 h-3.5 inline"></i> <span></span></div>
+                <div id="review-submit-msg" class="text-xs text-emerald-300 font-bold hidden"><i data-lucide="check-circle" class="w-3.5 h-3.5 inline"></i> Thank you! Your review is now live.</div>
+                <div id="review-error-msg" class="text-xs text-red-400 font-bold hidden"><i data-lucide="alert-circle" class="w-3.5 h-3.5 inline"></i> <span></span></div>
               </div>
             </form>
           </div>
@@ -1018,15 +1020,15 @@ function reviewsSectionHtml(listing) {
 function ratingsBreakdownHtml(listing, breakdown, total) {
   const max = Math.max(1, total);
   return `
-    <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 items-center bg-gray-50 border border-gray-100 rounded-2xl p-4">
+    <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 items-center bg-white/[.06] border border-white/10 rounded-2xl p-4">
       ${[5,4,3,2,1].map(s => {
         const n = breakdown[s] || 0;
         const pct = Math.round((n / max) * 100);
         return `
-        <div class="flex items-center gap-1.5 text-xs text-gray-600 font-semibold"><i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>${s}</div>
+        <div class="flex items-center gap-1.5 text-xs text-slate-300 font-semibold"><i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>${s}</div>
         <div class="flex items-center gap-2">
-          <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full" style="width:${pct}%"></div></div>
-          <span class="text-[11px] text-gray-400 w-9 text-right tabular-nums">${pct}%</span>
+          <div class="flex-1 h-2 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full" style="width:${pct}%"></div></div>
+          <span class="text-[11px] text-slate-400 w-9 text-right tabular-nums">${pct}%</span>
         </div>`;
       }).join('')}
     </div>`;
@@ -2618,10 +2620,10 @@ async function setupReviewForm(listing) {
         if (!icon) return;
         if (i < selectedRating) {
           icon.classList.add('fill-amber-400','text-amber-400');
-          icon.classList.remove('text-gray-300');
+          icon.classList.remove('text-slate-500');
         } else {
           icon.classList.remove('fill-amber-400','text-amber-400');
-          icon.classList.add('text-gray-300');
+          icon.classList.add('text-slate-500');
         }
       });
     });
@@ -2745,7 +2747,7 @@ async function setupReviewForm(listing) {
       const icon = b.querySelector('i, svg');
       if (!icon) return;
       icon.classList.remove('fill-amber-400','text-amber-400');
-      icon.classList.add('text-gray-300');
+      icon.classList.add('text-slate-500');
     });
     if (msg) {
       msg.classList.remove('hidden');
@@ -2808,17 +2810,17 @@ async function loadReviews(listing) {
   const summaryHtml = `
     <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
       <div class="flex items-center gap-4 shrink-0">
-        <div class="text-5xl sm:text-6xl font-black leading-none text-gray-900 tracking-tight">${displayRating > 0 ? displayRating.toFixed(1) : 'New'}</div>
+        <div class="text-5xl sm:text-6xl font-black leading-none text-white tracking-tight">${displayRating > 0 ? displayRating.toFixed(1) : 'New'}</div>
         <div class="shrink-0">
           <div class="flex gap-1">${ratingStars(displayRating, 'w-5 h-5 sm:w-6 sm:h-6')}</div>
-          <div class="text-[13px] sm:text-sm font-bold text-gray-500 mt-1.5 tracking-wide">Customer Reviews</div>
+          <div class="text-[13px] sm:text-sm font-bold text-slate-400 mt-1.5 tracking-wide">Customer Reviews</div>
         </div>
       </div>
-      <div class="hidden md:block w-px h-12 bg-gray-200"></div>
+      <div class="hidden md:block w-px h-12 bg-white/10"></div>
       <div class="flex flex-wrap items-center gap-2">
-        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 rounded-full"><i data-lucide="badge-check" class="w-3.5 h-3.5"></i> Verified Listing</span>
-        <span class="inline-flex items-center gap-1 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1.5 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Secure Checkout</span>
-        <span class="inline-flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-full"><i data-lucide="truck" class="w-3.5 h-3.5"></i> Fast Worldwide Delivery</span>
+        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/25 px-2.5 py-1.5 rounded-full"><i data-lucide="badge-check" class="w-3.5 h-3.5"></i> Verified Listing</span>
+        <span class="inline-flex items-center gap-1 text-xs font-bold text-blue-300 bg-blue-500/15 border border-blue-400/25 px-2.5 py-1.5 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Secure Checkout</span>
+        <span class="inline-flex items-center gap-1 text-xs font-bold text-amber-300 bg-amber-400/15 border border-amber-400/25 px-2.5 py-1.5 rounded-full"><i data-lucide="truck" class="w-3.5 h-3.5"></i> Fast Worldwide Delivery</span>
       </div>
     </div>`;
   if (summaryEl) summaryEl.innerHTML = summaryHtml;
@@ -2826,7 +2828,7 @@ async function loadReviews(listing) {
 
   const all = [...guestReviews, ...dbReviews, ...seed.reviews];
   if (!all.length) {
-    listEl.innerHTML = '<p class="text-gray-400 text-sm py-2">No reviews yet. Be the first to review this product!</p>';
+    listEl.innerHTML = '<p class="text-slate-400 text-sm py-2 col-span-full">No reviews yet. Be the first to review this product!</p>';
     if (window.lucide) lucide.createIcons();
     return;
   }
