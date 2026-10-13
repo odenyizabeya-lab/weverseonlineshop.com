@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "include": [
+    "/product",
+    "/product/*",
+    "/category",
+    "/category/*",
+    "/country",
+    "/country/*",
+    "/sitemap.xml",
+    "/merchant-feed.xml",
+    "/seo-audit",
+    "/api/social",
+    "/api/social/*"
+  ],
+  "exclude": []
+}
