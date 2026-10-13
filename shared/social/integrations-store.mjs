@@ -202,17 +202,43 @@ export async function removeCreds(sb, platform) {
   if (error) throw new Error(error.message);
 }
 
+// All env var names that the dashboard can manage (platform categories only;
+// deployment secrets are never touched).
+const MANAGED_KEYS = new Set();
+for (const id of CATEGORY_ORDER) {
+  const cat = CATEGORIES[id];
+  if (cat.kind === 'platform') for (const f of cat.fields) MANAGED_KEYS.add(f.name);
+}
+// Baseline env values captured before the first injection, so a removed
+// dashboard credential stops taking effect even inside a reused isolate.
+const envBaseline = {};
+let baselineCaptured = false;
+
 // Decrypt every stored credential set and inject into process.env so the
 // platform adapters (which read process.env) use the dashboard-managed values.
 // DB-managed values intentionally OVERRIDE any legacy environment variables.
 export async function hydrateEnv(sb) {
+  if (!baselineCaptured) {
+    for (const k of MANAGED_KEYS) envBaseline[k] = process.env[k];
+    baselineCaptured = true;
+  }
+  // Reset managed keys to their original (deployment) state so credentials
+  // deleted from the dashboard do not persist in a long-lived isolate.
+  for (const k of MANAGED_KEYS) {
+    const b = envBaseline[k];
+    try {
+      if (b === undefined) delete process.env[k];
+      else process.env[k] = b;
+    } catch { /* read-only env in some runtimes */ }
+  }
+
   let applied = 0;
   const { data } = await sb.from('social_platform_settings').select('platform,config');
   for (const row of data || []) {
     const blob = await readBlob(row.config);
     if (!blob) continue;
     for (const [k, v] of Object.entries(blob.values)) {
-      if (typeof v === 'string' && v) {
+      if (typeof v === 'string' && v && MANAGED_KEYS.has(k)) {
         try { process.env[k] = v; applied += 1; } catch { /* read-only env in some runtimes */ }
       }
     }
