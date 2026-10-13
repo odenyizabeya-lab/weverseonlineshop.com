@@ -136,34 +136,60 @@ function guessMime(url) {
 async function fetchAsFile(url) {
   const res = await fetch(url, { mode: 'cors', credentials: 'omit', redirect: 'follow' });
   if (!res.ok) throw new Error('HTTP ' + res.status);
+  // A missing/again-relative video is answered with the SPA HTML page. Never
+  // treat an HTML response as media — sharing it would post a broken "video".
+  const headerType = (res.headers.get('content-type') || '').split(';')[0].trim();
+  if (/^text\/html/i.test(headerType)) throw new Error('not-a-media-file');
   const blob = await res.blob();
-  const type = blob.type || guessMime(url) || 'application/octet-stream';
-  const isVideo = /^video\//.test(type) || /\.(mp4|webm|m4v)/i.test(url);
+  const type = headerType || blob.type || guessMime(url) || 'application/octet-stream';
+  const isVideo = /^video\//.test(type) || /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(url);
+  const finalType = isVideo ? (/^video\//.test(type) ? type : 'video/mp4') : type;
   const name = fileNameFromUrl(url, isVideo ? 'mp4' : 'jpg');
-  const file = new File([blob], name, { type });
-  return { file, isVideo, type };
+  const file = new File([blob], name, { type: finalType });
+  return { file, isVideo, type: finalType };
 }
 
-// Shares a product's real media file natively (native Facebook/Instagram/etc.
-// post). Returns true if the OS share went through (or the user cancelled),
-// false if the file could not be shared and the caller should fall back.
-async function shareMediaFile(listing) {
+// ── Media prefetch cache ───────────────────────────────────────
+// navigator.share() MUST run inside the user's tap (transient activation).
+// Downloading a multi-MB video *after* the tap can blow that window, after which
+// the browser rejects the file share and we silently drop to a SMALL link card.
+// So the instant the share sheet opens we begin downloading the product's real
+// file; by the time the customer taps an app it is already in memory and the
+// full-size photo/video is shared instantly.
+const _mediaCache = new Map(); // url -> Promise<{file,isVideo,type}|null>
+
+function prefetchMedia(listing) {
   const src = primaryMediaSource(listing);
-  if (!src || typeof navigator.share !== 'function') return false;
-  let file = null;
-  try {
-    const f = await fetchAsFile(src);
-    file = f.file;
-  } catch {
-    return false;
+  if (!src || typeof navigator.share !== 'function') return;
+  if (_mediaCache.has(src)) return;
+  if (_mediaCache.size > 8) _mediaCache.delete(_mediaCache.keys().next().value);
+  _mediaCache.set(src, fetchAsFile(src).catch(() => null));
+}
+
+function getMediaFile(listing) {
+  const src = primaryMediaSource(listing);
+  if (!src) return Promise.resolve(null);
+  if (!_mediaCache.has(src)) {
+    if (_mediaCache.size > 8) _mediaCache.delete(_mediaCache.keys().next().value);
+    _mediaCache.set(src, fetchAsFile(src).catch(() => null));
   }
-  if (!(navigator.canShare && navigator.canShare({ files: [file] }))) return false;
+  return _mediaCache.get(src);
+}
+
+// Shares a product's real media file natively (full-size native WhatsApp /
+// Telegram / Facebook / Instagram / Stories / TikTok / Messenger post). Returns
+// true if the OS share went through (or the user cancelled), false to fall back.
+async function shareMediaFile(listing) {
+  if (!listing || typeof navigator.share !== 'function') return false;
+  const cached = await getMediaFile(listing);
+  if (!cached || !cached.file) return false;
+  if (!(navigator.canShare && navigator.canShare({ files: [cached.file] }))) return false;
   const meta = productMeta(listing);
   // The product link MUST always travel with the shared image/video. We put the
   // full caption (title + price + LINK) in BOTH `text` and `title` so the URL is
   // never dropped — even if a platform ignores one of those fields.
   try {
-    await navigator.share({ files: [file], title: meta.caption, text: meta.caption, url: meta.url });
+    await navigator.share({ files: [cached.file], title: meta.caption, text: meta.caption, url: meta.url });
     return true;
   } catch (err) {
     if (err && err.name === 'AbortError') return true; // user cancelled
@@ -255,13 +281,8 @@ const WEB_URLS = {
   facebook_lite: (m) => `https://m.facebook.com/sharer.php?u=${encodeURIComponent(m.url)}`,
 };
 
-// Platforms that must receive the REAL media file — they cannot render a link
-// preview card, so a URL alone would share nothing useful.
-const MEDIA_ACTIONS = new Set(['facebook', 'facebook_lite', 'instagram', 'instagram_stories', 'tiktok']);
-
-function nativeThenWeb(meta, wantsMedia, web) {
+function nativeThenWeb(meta, web) {
   const run = async () => {
-    if (wantsMedia && meta._listing && (await shareMediaFile(meta._listing))) return;
     if (await shareLinkNative(meta)) return;
     if (web) { openWindow(web(meta)); return; }
     await copyText(meta.caption);
@@ -306,15 +327,25 @@ async function runAction(action, meta) {
 
   const scheme = APP_SCHEMES[action];
   const web = WEB_URLS[action];
-  const wantsMedia = MEDIA_ACTIONS.has(action);
+  const hasMedia = !!primaryMediaSource(meta._listing || {});
+
+  // BIG-MEDIA FIRST: when the product has a real image/video and the device can
+  // share files, hand the actual FILE to the OS share sheet — no matter which app
+  // button was tapped. This posts full-size media in WhatsApp, Telegram,
+  // Facebook, Facebook Lite, Instagram, Stories, TikTok, Messenger and every
+  // other installed app, never a small link card.
+  if (hasMedia && typeof navigator.share === 'function') {
+    if (await shareMediaFile(meta._listing)) return;
+    // File share unsupported/rejected → continue to the link/app fallbacks.
+  }
 
   if (isMobile() && scheme) {
-    // Open the installed app straight away, preserving the tap gesture.
-    launchScheme(scheme(meta), () => { nativeThenWeb(meta, false, web); });
+    // Direct app link (small link card) — only reached when there is no media.
+    launchScheme(scheme(meta), () => { nativeThenWeb(meta, web); });
     return;
   }
-  // Native share sheet first (mobile apps + desktop OS sheet), web only last.
-  await nativeThenWeb(meta, wantsMedia, web);
+  // Native link sheet first, then the web share URL as a last resort.
+  await nativeThenWeb(meta, web);
 }
 
 const ICONS = {
@@ -388,7 +419,7 @@ function buildSheet() {
           <span class="text-white">${ICONS.more}</span> Share via installed apps
         </button>
         <div class="grid grid-cols-3 gap-x-4 gap-y-5" id="share-platforms"></div>
-        <p class="text-[11px] text-gray-400 text-center leading-relaxed">Opens the app on your device. Shares this exact product with its image, name, price and link.</p>
+        <p id="share-hint" class="text-[11px] text-gray-400 text-center leading-relaxed">Opens the app on your device. Shares this exact product with its image, name, price and link.</p>
       </div>
     </div>`;
   document.body.appendChild(root);
@@ -416,6 +447,12 @@ function openSheet(meta) {
     mediaEl.innerHTML = `<i data-lucide="video-off" class="w-7 h-7 text-gray-300"></i>`;
   }
   sheet.querySelector('#share-platforms').innerHTML = platformList().map(platformBtn).join('');
+  const hint = sheet.querySelector('#share-hint');
+  if (hint) {
+    hint.textContent = meta.video
+      ? 'Sends the full-size video + link to the app you choose.'
+      : (meta.image ? 'Sends the full-size photo + link to the app you choose.' : 'Shares this product with its name and link.');
+  }
   sheet.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   sheet.querySelectorAll('[data-share-close]').forEach((el) => el.addEventListener('click', closeSheet));
@@ -431,6 +468,7 @@ function openSheet(meta) {
 
 export function openShareSheet(listing) {
   if (!listing) return;
+  prefetchMedia(listing); // start the download now so the tap → share is instant
   openSheet(productMeta(listing));
 }
 
