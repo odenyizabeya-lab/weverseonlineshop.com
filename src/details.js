@@ -2861,7 +2861,7 @@ async function applyReviewsBannerBg() {
   if (!slot) return;
   try {
     const bg = await loadPromoBackgrounds();
-    slot.innerHTML = bgMediaLayer(bg.reviews_bg_image, bg.reviews_bg_video);
+    slot.innerHTML = bgMediaLayer(bg.reviews_bg_image, bg.reviews_bg_video, { overlay: 'strong' });
   } catch {}
 }
 

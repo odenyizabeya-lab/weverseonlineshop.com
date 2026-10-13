@@ -310,7 +310,7 @@ function feedbackCardHtml(f) {
     f.date || '',
   ].filter(Boolean).join(' · ');
   return `
-    <div class="bg-white/[.07] border border-white/10 rounded-2xl p-4 backdrop-blur flex flex-col">
+    <div class="bg-white/[.09] border border-white/15 rounded-2xl p-4 backdrop-blur-md shadow-lg shadow-slate-950/40 flex flex-col">
       <div class="flex items-center gap-1 mb-2.5">${feedbackStars(f.rating || 5)}</div>
       <p class="text-[13px] text-slate-200 leading-relaxed flex-1">“${esc(f.text)}”</p>
       <div class="flex items-center gap-2.5 mt-3.5">
@@ -663,7 +663,7 @@ function applyBg(bg) {
   slots.forEach((el) => {
     const slot = el.dataset.bgSlot;
     if (slot === 'trust_promo') el.innerHTML = bgMediaLayer(bg.trust_promo_bg_image, bg.trust_promo_bg_video);
-    else if (slot === 'reviews') el.innerHTML = bgMediaLayer(bg.reviews_bg_image, bg.reviews_bg_video);
+    else if (slot === 'reviews') el.innerHTML = bgMediaLayer(bg.reviews_bg_image, bg.reviews_bg_video, { overlay: 'strong' });
   });
 }
 

@@ -68,9 +68,12 @@ export function invalidatePromoBackgrounds() {
 
 // A background media layer for a section: video first (if present), else image.
 // Returns an HTML string used inside a `relative overflow-hidden` section.
-export function bgMediaLayer(bgImage, bgVideo) {
+// opts.overlay === 'strong' adds a heavier scrim + colour glow so floating cards
+// and white comments stay crisp on top of a bright photo (used by Customer Reviews).
+export function bgMediaLayer(bgImage, bgVideo, opts = {}) {
   const img = (bgImage || '').trim();
   const vid = (bgVideo || '').trim();
+  const strong = opts.overlay === 'strong';
   const parts = [];
   if (vid) {
     parts.push(
@@ -84,8 +87,21 @@ export function bgMediaLayer(bgImage, bgVideo) {
       `<div class="absolute inset-0 bg-cover bg-center" style="background-image:url('${escCssUrl(img)}')"></div>`
     );
   }
-  // Soft overlay keeps the text readable on any media.
-  if (vid || img) parts.push(`<div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/70 to-slate-900/45"></div>`);
+  // Overlay keeps the text readable on any media.
+  if (vid || img) {
+    parts.push(
+      strong
+        ? `<div class="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/72 to-slate-950/90"></div>`
+        : `<div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/70 to-slate-900/45"></div>`
+    );
+    if (strong) {
+      parts.push(
+        `<div class="absolute inset-0" style="background:
+          radial-gradient(1100px 560px at 20% 6%, rgba(16,185,129,.22), transparent 60%),
+          radial-gradient(900px 520px at 88% 100%, rgba(6,182,212,.16), transparent 60%)"></div>`
+      );
+    }
+  }
   return parts.join('');
 }
 
