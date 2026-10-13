@@ -502,6 +502,7 @@ async function handleIntegrations(req, res, cors) {
 
   if (r === '/api/social/integrations/remove') {
     await removeCreds(sb, adapterIdFor(category));
+    await hydrateEnv(sb);
     const categories = await listCategoryStatus(sb);
     return json(req, res, { ok: true, message: 'Credentials removed.', category: categories.find((c) => c.id === category) }, 200, cors);
   }
