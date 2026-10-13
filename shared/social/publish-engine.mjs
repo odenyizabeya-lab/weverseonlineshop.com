@@ -32,15 +32,15 @@ export async function loadAccount(sb, accountId) {
   if (!data) return null;
   return {
     ...data,
-    accessToken: decryptToken(data.access_token_enc),
-    refreshToken: decryptToken(data.refresh_token_enc),
+    accessToken: await decryptToken(data.access_token_enc),
+    refreshToken: await decryptToken(data.refresh_token_enc),
   };
 }
 
 export async function saveTokens(sb, accountId, tokenBundle) {
   const patch = {};
-  if (tokenBundle.accessToken !== undefined) patch.access_token_enc = encryptToken(tokenBundle.accessToken);
-  if (tokenBundle.refreshToken !== undefined) patch.refresh_token_enc = encryptToken(tokenBundle.refreshToken);
+  if (tokenBundle.accessToken !== undefined) patch.access_token_enc = await encryptToken(tokenBundle.accessToken);
+  if (tokenBundle.refreshToken !== undefined) patch.refresh_token_enc = await encryptToken(tokenBundle.refreshToken);
   if (tokenBundle.tokenExpiresAt !== undefined) patch.token_expires_at = tokenBundle.tokenExpiresAt;
   if (tokenBundle.refreshTokenExpiresAt !== undefined) patch.refresh_token_expires_at = tokenBundle.refreshTokenExpiresAt;
   if (tokenBundle.scopes !== undefined) patch.scopes = tokenBundle.scopes;

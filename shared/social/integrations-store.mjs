@@ -163,11 +163,11 @@ export function sanitizeValues(category, input) {
 }
 
 // ── encrypted blob I/O ──────────────────────────────────────────────
-export function readBlob(config) {
+export async function readBlob(config) {
   const blob = config ? config[STORE_KEY] : null;
   if (!blob || typeof blob !== 'string') return null;
   try {
-    const obj = JSON.parse(decryptToken(blob) || 'null');
+    const obj = JSON.parse((await decryptToken(blob)) || 'null');
     if (obj && typeof obj === 'object' && obj.v && typeof obj.v === 'object') {
       return { values: obj.v, updatedAt: obj.at || null };
     }
@@ -184,13 +184,13 @@ async function readConfigRow(sb, platform) {
 
 export async function loadCreds(sb, platform) {
   const config = await readConfigRow(sb, platform);
-  const blob = readBlob(config);
+  const blob = await readBlob(config);
   return blob ? blob.values : null;
 }
 
 export async function saveCreds(sb, platform, values) {
   const config = { ...(await readConfigRow(sb, platform)) };
-  config[STORE_KEY] = encryptToken(JSON.stringify({ v: values, at: new Date().toISOString() }));
+  config[STORE_KEY] = await encryptToken(JSON.stringify({ v: values, at: new Date().toISOString() }));
   const { error } = await sb.from('social_platform_settings').update({ config }).eq('platform', platform);
   if (error) throw new Error(error.message);
 }
@@ -209,7 +209,7 @@ export async function hydrateEnv(sb) {
   let applied = 0;
   const { data } = await sb.from('social_platform_settings').select('platform,config');
   for (const row of data || []) {
-    const blob = readBlob(row.config);
+    const blob = await readBlob(row.config);
     if (!blob) continue;
     for (const [k, v] of Object.entries(blob.values)) {
       if (typeof v === 'string' && v) {
@@ -230,7 +230,8 @@ export async function listCategoryStatus(sb) {
   const configByPlatform = {};
   for (const row of data || []) configByPlatform[row.platform] = row.config || {};
 
-  return CATEGORY_ORDER.map((id) => {
+  const statuses = [];
+  for (const id of CATEGORY_ORDER) {
     const cat = CATEGORIES[id];
     if (cat.kind === 'deployment') {
       const secrets = cat.secrets.map((s) => ({
@@ -239,7 +240,7 @@ export async function listCategoryStatus(sb) {
         note: s.note,
         configured: Boolean(process.env[s.name]),
       }));
-      return {
+      statuses.push({
         id,
         kind: 'deployment',
         label: cat.label,
@@ -248,11 +249,12 @@ export async function listCategoryStatus(sb) {
         secrets,
         configured: secrets.every((s) => s.configured),
         dashboardUrl: CF_SECRETS_URL,
-      };
+      });
+      continue;
     }
 
     const platform = adapterIdFor(id);
-    const blob = readBlob(configByPlatform[platform]);
+    const blob = await readBlob(configByPlatform[platform]);
     const storedValues = blob ? blob.values : null;
     const fields = cat.fields.map((f) => ({
       name: f.name,
@@ -264,7 +266,7 @@ export async function listCategoryStatus(sb) {
       source: storedValues && storedValues[f.name] ? 'dashboard' : (process.env[f.name] ? 'environment' : 'none'),
     }));
     const storedConfigured = Boolean(blob) || requiredEnvPresent(id);
-    return {
+    statuses.push({
       id,
       kind: 'platform',
       adapter: platform,
@@ -274,6 +276,7 @@ export async function listCategoryStatus(sb) {
       configured: storedConfigured,
       source: blob ? 'dashboard' : (requiredEnvPresent(id) ? 'environment' : 'none'),
       updatedAt: blob ? blob.updatedAt : null,
-    };
-  });
+    });
+  }
+  return statuses;
 }

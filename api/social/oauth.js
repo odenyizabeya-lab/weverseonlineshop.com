@@ -126,6 +126,8 @@ async function handleCallback(req, res) {
       .eq('platform', platform)
       .maybeSingle();
 
+    const accessTokenEnc = await encryptToken(bundle.accessToken);
+    const refreshTokenEnc = await encryptToken(bundle.refreshToken);
     const accountPayload = {
       platform,
       platform_user_id: profile?.platformUserId || bundle.openId || null,
@@ -133,8 +135,8 @@ async function handleCallback(req, res) {
       display_name: profile?.displayName || null,
       avatar_url: profile?.avatarUrl || null,
       status: 'connected',
-      access_token_enc: encryptToken(bundle.accessToken),
-      refresh_token_enc: encryptToken(bundle.refreshToken),
+      access_token_enc: accessTokenEnc,
+      refresh_token_enc: refreshTokenEnc,
       token_expires_at: bundle.tokenExpiresAt || null,
       refresh_token_expires_at: bundle.refreshTokenExpiresAt || null,
       scopes: bundle.scopes || [],

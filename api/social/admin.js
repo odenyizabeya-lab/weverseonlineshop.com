@@ -238,7 +238,7 @@ async function handleAccounts(req, res, cors) {
         if (adapter.metadata.usesOAuth && data.access_token_enc) {
           result = await adapter.validateConnection({
             ...clean(data),
-            accessToken: decryptToken(data.access_token_enc),
+            accessToken: await decryptToken(data.access_token_enc),
           });
         } else if (typeof adapter.validateConnection === 'function') {
           result = await adapter.validateConnection();
@@ -444,7 +444,8 @@ async function testCategory(category, sb) {
       const result = await adapter.validateConnection();
       return { ok: !!result.ok, verified: true, note: result.note || (result.ok ? 'Telegram bot is reachable.' : 'Telegram bot check failed.') };
     } catch (err) {
-      return { ok: false, verified: true, note: err.message };
+      const notConfigured = /not configured|is not set|missing/i.test(String(err.message || ''));
+      return { ok: false, verified: !notConfigured, note: err.message };
     }
   }
 
