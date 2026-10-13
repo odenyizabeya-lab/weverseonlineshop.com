@@ -952,19 +952,22 @@ function reviewItemHtml(r) {
 // over the admin-chosen "reviews" promo banner background.
 function reviewsSectionHtml(listing) {
   return `
-    <div id="reviews-section" class="relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm mb-8">
+    <div id="reviews-section" class="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b1226] text-white shadow-xl shadow-slate-900/30 mb-8">
       <div class="absolute inset-0" data-bg-slot="reviews"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-white/95 via-white/92 to-white/95"></div>
+      <div class="absolute inset-0" style="background:
+        radial-gradient(800px 420px at 15% 20%, rgba(245,158,11,.18), transparent 60%),
+        linear-gradient(160deg,#141d38 0%,#0b1226 55%,#0d1b2a 100%)"></div>
+      <div class="absolute inset-0 opacity-[.06]" style="background-image:radial-gradient(#7dd3fc 1px, transparent 1px);background-size:22px 22px"></div>
       <div class="relative p-4 sm:p-6 lg:p-8">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div class="flex items-center gap-3">
-            <div class="shrink-0 w-11 h-11 rounded-2xl bg-amber-400/15 text-amber-500 flex items-center justify-center"><i data-lucide="message-square-star" class="w-5 h-5"></i></div>
+            <div class="shrink-0 w-11 h-11 rounded-2xl bg-amber-400/15 text-amber-300 flex items-center justify-center"><i data-lucide="message-square-star" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Customer Reviews</h3>
-              <p class="text-xs text-gray-500 mt-0.5">All reviews are from verified buyers only.</p>
+              <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">Customer Reviews</h3>
+              <p class="text-xs text-slate-400 mt-0.5">All reviews are from verified buyers only.</p>
             </div>
           </div>
-          <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 100% Verified Purchase Reviews</span>
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/25 px-3 py-1.5 rounded-full"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 100% Verified Purchase Reviews</span>
         </div>
 
         <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-6 mb-5">
