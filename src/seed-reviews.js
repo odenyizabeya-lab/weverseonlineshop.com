@@ -106,7 +106,7 @@ const OPENERS = [
   "just viewed this one and wow",
   "saw this house and had to stop scrolling",
   "went to see it over the weekend and fell for it",
-  "pics really don't do this place justice",
+  "the video really doesn't do this place justice",
   "drove past and had to look it up",
   "viewed a few houses this month, this one stood out",
   "couldn't stop thinking about this listing",
@@ -120,9 +120,11 @@ const OPENERS = [
   "the curb appeal got me first ngl",
   "my agent sent this one and it was the best of the lot",
   "been house hunting for months, this finally felt right",
-  "the listing looked good, in person it's even better",
+  "the video looked good, somehow it's even better",
   "saw it once and booked a second viewing",
-  "this place looked lovely from the photos alone",
+  "this place looked lovely on the video alone",
+  "watched the walkthrough video and was sold",
+  "the video tour made me watch it twice",
 ];
 
 const DETAILS = [
@@ -169,21 +171,46 @@ const DETAILS = [
 ];
 
 const CLOSERS = [
-  "already picturing us here",
+  "proper dream home vibes",
   "best one we've seen by far",
-  "told the family straight away",
-  "this is the one for us",
+  "genuinely the nicest on the street",
+  "told the whole family about it",
   "so glad we found it",
   "can't stop thinking about it tbh",
-  "putting in an offer this week",
-  "worth every penny honestly",
-  "proper dream home vibes",
-  "booking a second viewing already",
-  "our search might finally be over",
-  "showing my mum this weekend",
-  "feels like home already",
+  "this one's a real beauty",
+  "absolutely loved everything about it",
   "nothing else has come close",
   "made our shortlist instantly",
+  "what a gorgeous family home",
+  "everything about it just works",
+  "showed my mum and she loved it too",
+  "top of our list by a mile",
+  "an absolute gem honestly",
+];
+
+// Every comment ends by wishing they could afford the house, in slightly
+// different words so it never feels copy-pasted.
+const WISHES = [
+  "i wish i could afford this one",
+  "wish i could afford it honestly",
+  "if only i could afford this",
+  "i wish this was in my price range",
+  "way out of my budget but a girl can dream",
+  "i really wish i could afford it",
+  "so wish i could afford a place like this",
+  "hope i can afford something like this one day",
+  "wish i had the money for this house",
+  "out of my reach but i wish i could afford it",
+  "keep coming back to it, wish i could afford it",
+  "my dream home, just wish i could afford it",
+  "one day i'll afford a house this nice",
+  "beautiful home, only wish i could afford it",
+  "i'd buy it today if i could afford it",
+  "stunning, really wish i could afford it",
+  "can't afford it yet but a girl can dream",
+  "i wish i could afford this, it's perfect",
+  "someone buy it before i cry, wish i could afford it",
+  "saving up and still wishing i could afford this",
 ];
 
 // Short, house-flavoured lines so the comments stay about the property itself.
@@ -291,6 +318,8 @@ export function generateSeedReviews(listing, opts = {}) {
       text = `${catPool[i % catPool.length]}. ${closer}`;
     }
     if (i % 5 === 0) text = `${opener}, ${d2}. ${closer}`;
+    const wish = WISHES[(h + i * 29) % WISHES.length];
+    text = `${text}. ${wish}`;
     if (i % 3 === 2) text += ` ${EMOJIS[(h + i * 13) % EMOJIS.length]}`;
 
     const city = CITIES[poolIndex(h, i, 337, CITIES.length)];
