@@ -15,6 +15,9 @@ import { invalidateSiteContent, DEFAULT_SITE_CONTENT } from './site-content.js';
 import { MARKETPLACE_CATEGORIES, MARKETPLACE_AUTOMOTIVE, normalizeToMarketplaceCategory } from './categories.js';
 import { looksLikePdf } from './pdf-pages.js';
 import { renderSocialMedia } from './social-admin.js';
+import { renderIntegrationsSettings } from './integrations-settings.js';
+import { normalizeItems, buildListingPayload, validateItem } from './dynamic-form.js';
+import { safePublishShowroom as safeShowroomWrite, describeWriteError as describeShowroomWriteError, genPropertyId } from './showroom-write.js';
 
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -34,6 +37,7 @@ const NAV = [
   { group: 'Main', items: [
     { id: 'dashboard',   label: 'Dashboard',         icon: 'layout-dashboard' },
     { id: 'products',    label: 'Products',           icon: 'package' },
+    { id: 'video-scanner', label: 'AI Video Scanner',  icon: 'video' },
     { id: 'content-settings', label: 'Content Settings', icon: 'file-cog' },
     { id: 'properties',  label: 'Properties',         icon: 'home' },
     { id: 'catalog',     label: 'Catalog Manager',    icon: 'boxes' },
@@ -47,6 +51,7 @@ const NAV = [
   ]},
 { group: 'Marketing', items: [
     { id: 'social', label: 'Social Media Automation', icon: 'share-2' },
+    { id: 'integrations', label: 'API & Integrations Settings', icon: 'key-round' },
   ]},
 { group: 'Configuration', items: [
     { id: 'payment-settings', label: 'Payment Settings',  icon: 'credit-card' },
@@ -69,6 +74,7 @@ const NAV = [
 const PAGE_TITLES = {
   dashboard: 'Dashboard', products: 'Products Manager', properties: 'Properties Manager',
   catalog: 'Catalog Manager',
+  'video-scanner': 'AI Video Scanner',
   orders: 'Orders Manager', customers: 'Customers Manager', reviews: 'Reviews Manager',
 messages: 'Messages & Support', coupons: 'Coupons Manager', ads: 'Advertisement Manager',
   content: 'Content Manager',
@@ -81,6 +87,7 @@ messages: 'Messages & Support', coupons: 'Coupons Manager', ads: 'Advertisement 
   security: 'Security', activity: 'Activity Logs', backup: 'Backup & Restore',
   settings: 'Settings', publish: 'Publish & Deploy',
   social: 'Social Media Automation', 'social-settings': 'Social Media Integrations',
+  integrations: 'API & Integrations Settings',
 };
 
 const SORTED_CURRENCIES = [...ALL_CURRENCIES].sort();
@@ -235,6 +242,7 @@ function renderSidebar() {
 
 // â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 window.navigate = function(section) {
+  if (section === 'video-scanner') { window.location.href = '/admin-video-scanner.html'; return; }
   state.section = section;
   const title = PAGE_TITLES[section] || section;
   const ptEl = document.getElementById('page-title');
@@ -259,6 +267,7 @@ window.navigate = function(section) {
     'payment-settings': renderPaymentSettings,
     backup: renderBackup, settings: renderSettings, publish: renderPublish,
     social: () => renderSocialMedia('overview'), 'social-settings': () => renderSocialMedia('platforms'),
+    integrations: () => renderIntegrationsSettings(),
   };
   const fn = renderers[section] || (() => { const c = document.getElementById('content'); if (c) c.innerHTML = emptyState('construction', 'Coming Soon', `${title} is being built.`); });
   fn();
@@ -1365,6 +1374,160 @@ window.runProductVideoScan = async function(pid, file) {
   }
 };
 
+// ---- AI-generated listing form (from an existing product's video scan) -------
+// The scan's `items[]` ARE the listing form: real editable inputs pre-filled by
+// the AI. Save persists them onto the product; Publish also makes it live.
+const AI_INP_CLS = 'w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-violet-400 outline-none';
+
+function aiScanFieldControl(itemIdx, f) {
+  const attrs = `data-ai-field="1" data-item="${itemIdx}" data-key="${esc(f.key)}" data-ftype="${esc(f.type)}"`;
+  const id = `ai_${itemIdx}_${esc(f.key)}`;
+  const label = `<label for="${id}" class="block text-[11px] uppercase tracking-wide font-bold text-gray-400 mb-1">${esc(f.label)}${f.required ? ' <span class="text-rose-400">*</span>' : ''}</label>`;
+  const val = f.value;
+  let control;
+  if (f.type === 'textarea') {
+    control = `<textarea ${attrs} id="${id}" rows="3" class="${AI_INP_CLS}">${esc(val)}</textarea>`;
+  } else if (f.type === 'select') {
+    const opts = ['', ...(f.options || [])].map((o) => `<option value="${esc(o)}" ${String(val) === String(o) ? 'selected' : ''}>${esc(o || '— Select —')}</option>`).join('');
+    control = `<select ${attrs} id="${id}" class="${AI_INP_CLS}">${opts}</select>`;
+  } else if (f.type === 'boolean') {
+    control = `<label class="inline-flex items-center gap-2 text-sm text-gray-200"><input ${attrs} id="${id}" type="checkbox" ${val ? 'checked' : ''} class="w-5 h-5 accent-violet-500"> Yes</label>`;
+  } else if (f.type === 'multiselect') {
+    const v = Array.isArray(val) ? val.join(', ') : (val || '');
+    control = `<input ${attrs} id="${id}" type="text" value="${esc(v)}" placeholder="comma, separated" class="${AI_INP_CLS}">`;
+  } else if (f.type === 'number' || f.type === 'price') {
+    control = `<input ${attrs} id="${id}" type="number" step="any" value="${esc(val)}" class="${AI_INP_CLS}">`;
+  } else if (f.type === 'date') {
+    control = `<input ${attrs} id="${id}" type="date" value="${esc(val)}" class="${AI_INP_CLS}">`;
+  } else if (f.type === 'email') {
+    control = `<input ${attrs} id="${id}" type="email" value="${esc(val)}" class="${AI_INP_CLS}">`;
+  } else if (f.type === 'url') {
+    control = `<input ${attrs} id="${id}" type="url" value="${esc(val)}" class="${AI_INP_CLS}">`;
+  } else {
+    control = `<input ${attrs} id="${id}" type="text" value="${esc(val)}" class="${AI_INP_CLS}">`;
+  }
+  return `<div>${label}${control}${f.help ? `<p class="text-[10px] text-gray-600 mt-1">${esc(f.help)}</p>` : ''}</div>`;
+}
+
+function aiScanFormHtml(items) {
+  return `
+    <div class="mt-4">
+      <div class="flex items-center gap-2 mb-2">
+        <i data-lucide="list-checks" class="w-4 h-4 text-violet-300"></i>
+        <p class="text-sm font-black text-white">Scanned Listing Form</p>
+        <span class="text-[11px] text-gray-500">AI-generated fields — edit anything before saving.</span>
+      </div>
+      <div class="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+        ${items.map((it, i) => `
+          <div class="rounded-2xl bg-white/5 border border-white/10 p-4 space-y-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="badge bg-violet-500/15 text-violet-200 border-violet-500/30">${esc(it.listing_type || 'product')}</span>
+              ${it.category ? `<span class="badge bg-fuchsia-500/10 text-fuchsia-300 border-fuchsia-500/20">${esc(it.category)}</span>` : ''}
+              <span class="text-sm font-bold text-white truncate">${esc(it.title || `Item ${i + 1}`)}</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              ${(it.fields || []).filter((f) => !f.removed).map((f) => aiScanFieldControl(i, f)).join('')}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function collectAiScanValues(items) {
+  const values = items.map(() => ({}));
+  document.querySelectorAll('[data-ai-field]').forEach((el) => {
+    const i = Number(el.getAttribute('data-item'));
+    const key = el.getAttribute('data-key');
+    if (!values[i] || !key) return;
+    values[i][key] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  return values;
+}
+
+// When the AI form leaves a field blank, DON'T overwrite the listing's existing
+// value with null/[]/"product" defaults — only write what was actually scanned.
+function preserveExistingOnEmpty(payload, product) {
+  const scalars = ['listing_type', 'category', 'subcategory', 'description', 'brand', 'color', 'size', 'condition', 'warranty', 'sku', 'stock_quantity', 'country', 'state', 'city', 'town', 'product_location'];
+  for (const k of scalars) {
+    if (!(k in payload)) continue;
+    const v = payload[k];
+    const empty = v == null || v === '';
+    if (empty && product[k] != null && product[k] !== '') { delete payload[k]; continue; }
+    if (k === 'listing_type' && v === 'product' && product.listing_type && product.listing_type !== 'product') { delete payload[k]; }
+  }
+  for (const k of ['features', 'highlights', 'seo_keywords', 'tags']) {
+    if (Array.isArray(payload[k]) && payload[k].length === 0 && Array.isArray(product[k]) && product[k].length) delete payload[k];
+  }
+  return payload;
+}
+
+async function refreshAfterAiSave(pid) {
+  try {
+    if (window._productsData) {
+      const { data } = await supabase.from('showroom_listings').select('*').eq('property_id', pid).maybeSingle();
+      const idx = window._productsData.findIndex((i) => i.property_id === pid);
+      if (idx >= 0 && data) window._productsData[idx] = data;
+    }
+    if (typeof renderProducts === 'function' && document.getElementById('products-grid')) renderProducts();
+  } catch { /* non-fatal */ }
+}
+
+// Save/Publish the scanned form. `publish` = make the listing live.
+window.saveAiScanForm = async function (pid, publish) {
+  const items = window._aiScanFormItems || [];
+  if (!items.length) return showToast('No scanned form to save.', 'error');
+  const product = (window._productsData || []).find((i) => i.property_id === pid)
+    || (await supabase.from('showroom_listings').select('*').eq('property_id', pid).maybeSingle()).data;
+  if (!product) return showToast('Product not found', 'error');
+
+  const values = collectAiScanValues(items);
+  for (let i = 0; i < items.length; i++) {
+    const check = validateItem(items[i], { requirePrice: !!publish });
+    if (!check.ok && publish) {
+      return showToast('Missing required: ' + check.errors.map((e) => e.label).join(', '), 'error');
+    }
+  }
+
+  const btn = document.getElementById('aiSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = publish ? 'Publishing…' : 'Saving…'; }
+
+  try {
+    for (let i = 0; i < items.length; i++) {
+      const isPrimary = i === 0;
+      const targetId = isPrimary ? pid : genPropertyId();
+      const baseSpecs = isPrimary ? { ...(product.specifications || {}) } : {};
+      const payload = buildListingPayload(items[i], values[i], {
+        propertyId: targetId,
+        images: isPrimary ? (Array.isArray(product.images) ? product.images : []) : [],
+        videoUrl: isPrimary ? (product.video_url || productPrimaryVideo(product) || null) : null,
+        isActive: publish ? true : (isPrimary ? !!product.is_active : false),
+        isFeatured: isPrimary ? !!product.is_featured : false,
+        approvalStatus: publish ? 'published' : (isPrimary ? (product.approval_status || 'draft') : 'draft'),
+        currency: (isPrimary && product.currency) || 'USD',
+        report: product.ai_video_scan || null,
+      });
+      if (isPrimary) {
+        payload.specifications = { ...baseSpecs, ...(payload.specifications || {}) };
+        payload.published_at = publish ? new Date().toISOString() : (product.published_at || null);
+        payload.listing_status = product.listing_status || 'sale';
+        payload.availability_status = product.availability_status || 'In Stock';
+        preserveExistingOnEmpty(payload, product);
+      }
+      const { error } = await safeShowroomWrite(payload);
+      if (error) {
+        if (btn) { btn.disabled = false; btn.textContent = publish ? 'Publish' : 'Save'; }
+        return showToast(describeShowroomWriteError(error, publish ? 'Publish' : 'Save'), 'error');
+      }
+    }
+    await refreshAfterAiSave(pid);
+    closeModal();
+    showToast(publish ? 'Published — the listing is now live.' : 'Saved. Your edits are stored.', 'success');
+  } catch (err) {
+    if (btn) { btn.disabled = false; btn.textContent = publish ? 'Publish' : 'Save'; }
+    showToast(err.message || 'Save failed.', 'error');
+  }
+};
+
 function scanResultModalHtml(product, elapsed, saved) {
   const r = product?.ai_video_scan || {};
   const ok = r.status === 'ok';
@@ -1375,6 +1538,19 @@ function scanResultModalHtml(product, elapsed, saved) {
   const obs = Array.isArray(r.observations) ? r.observations : [];
   const secs = Array.isArray(r.sections) ? r.sections : [];
   const warn = Array.isArray(r.warnings) ? r.warnings : [];
+  const rawItems = Array.isArray(r.items) ? r.items : [];
+  const formItems = rawItems.length ? normalizeItems(r, { fallbackLabel: r.label }) : [];
+  window._aiScanFormItems = formItems;
+  const formSection = formItems.length
+    ? aiScanFormHtml(formItems)
+    : '<div class="mt-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 p-4 text-sm text-amber-200">This scan has no generated form. Re-scan the video to build an editable listing form.</div>';
+  const actionButtons = formItems.length
+    ? `
+          <button id="aiSaveBtn" onclick="saveAiScanForm('${product.property_id}', false)" class="btn-press px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-sm font-bold transition">Save</button>
+          <button onclick="saveAiScanForm('${product.property_id}', true)" class="btn-press flex-1 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white text-sm font-black transition shadow-lg shadow-emerald-600/20">Publish</button>
+          <button onclick="closeModal()" class="btn-press px-4 py-3 rounded-2xl bg-white/10 text-gray-200 text-sm font-bold">Close</button>`
+    : `
+          <button onclick="closeModal()" class="btn-press px-4 py-3 rounded-2xl bg-white/10 text-gray-200 text-sm font-bold">Close</button>`;
   return `
     <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
       <div class="modal-box wide">
@@ -1399,9 +1575,9 @@ function scanResultModalHtml(product, elapsed, saved) {
           ${r.audio_notes ? `<div class="rounded-2xl bg-white/5 border border-white/10 p-4"><p class="text-xs text-gray-400 uppercase tracking-wide font-bold mb-1">Audio</p><p class="text-sm text-gray-300">${esc(r.audio_notes)}</p></div>` : ''}
           ${warn.length ? `<div class="rounded-2xl bg-red-500/10 border border-red-500/20 p-4"><p class="text-xs text-gray-400 uppercase tracking-wide font-bold mb-1">Warnings</p><ul class="list-disc list-inside text-sm text-red-200 space-y-1">${warn.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
         </div>
-        <div class="mt-5 flex gap-2">
-          <button onclick="closeModal();editProduct('${product.property_id}')" class="btn-press flex-1 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold">Edit Product</button>
-          <button onclick="closeModal()" class="btn-press px-4 py-3 rounded-2xl bg-white/10 text-gray-200 text-sm font-bold">Close</button>
+        ${formSection}
+        <div class="mt-5 flex flex-wrap gap-2 items-center">
+          ${actionButtons}
         </div>
       </div>
     </div>`;
@@ -1480,7 +1656,7 @@ function productCard(product) {
       <button onclick="event.stopPropagation();${publishFn}" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold ${publishClass} transition">${publishLabel}</button>
       <button onclick="event.stopPropagation();duplicateProduct('${product.property_id}')" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold bg-white/10 text-gray-200 hover:bg-white/20 transition">Duplicate</button>
       <button onclick="event.stopPropagation();archiveProduct('${product.property_id}')" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold bg-red-500/15 text-red-200 hover:bg-red-500/25 transition">Archive</button>
-      <button onclick="event.stopPropagation();shareProduct('${product.property_id}')" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold bg-violet-500/15 text-violet-200 hover:bg-violet-500/25 transition">Share</button>
+      <button onclick="event.stopPropagation();shareProductFromAdmin('${product.property_id}')" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold bg-violet-500/15 text-violet-200 hover:bg-violet-500/25 transition">Share</button>
       <button onclick="event.stopPropagation();deleteProduct('${product.property_id}')" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold bg-rose-600/15 text-rose-200 hover:bg-rose-600/25 transition">Delete</button>
       <button onclick="event.stopPropagation();openProductMoreActions('${product.property_id}')" class="btn-press px-4 py-3.5 rounded-2xl text-sm font-bold bg-gray-600/20 text-gray-200 hover:bg-gray-600/35 transition">More</button>
     </div>
@@ -2010,7 +2186,7 @@ window.previewProduct = async function(pid) {
             </div>
             <div class="pt-2 flex gap-2">
               <button onclick="editProduct('${data.property_id}');closeModal();" class="btn-press px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl">Edit</button>
-              <button onclick="shareProduct('${data.property_id}')" class="btn-press px-3 py-2 bg-violet-600/70 hover:bg-violet-500 text-white text-xs font-bold rounded-xl">Share</button>
+              <button onclick="shareProductFromAdmin('${data.property_id}')" class="btn-press px-3 py-2 bg-violet-600/70 hover:bg-violet-500 text-white text-xs font-bold rounded-xl">Share</button>
             </div>
           </div>
         </div>
@@ -2105,11 +2281,15 @@ window.saveQuickEditProduct = async function(e, pid) {
 window.publishProduct = function(pid) { return toggleProductActive(pid, true); };
 window.unpublishProduct = function(pid) { return toggleProductActive(pid, false); };
 
-window.shareProduct = async function(pid) {
+// Named ...FromAdmin so it can never collide with share.js's window.shareProduct
+// (that one expects a listing object; this one takes a pid). If the full share
+// sheet is loaded on this page, delegate to it so both paths behave the same.
+window.shareProductFromAdmin = async function(pid) {
   const url = `${window.location.origin}/product/${encodeURIComponent(pid)}`;
   const item = (window._productsData || []).find(p => p.property_id === pid)
     || (window._propertiesData || []).find(p => p.property_id === pid)
     || getLocalShowroomListingById(pid);
+  if (item && typeof window.openShareSheet === 'function') { window.openShareSheet(item); return; }
   const title = (item && String(item.title || '').trim()) || 'Product on Weverse Online Shop';
   const shareText = item && Number(item.price || 0) > 0
     ? `${title} — ${formatPriceForShare(item)}\n${url}`
