@@ -468,6 +468,7 @@ async function testCategory(category, sb) {
 async function handleIntegrations(req, res, cors) {
   await verifyAdmin(req.headers.authorization);
   const sb = getServiceClient();
+  await hydrateEnv(sb);
   const r = route(req);
 
   if (r === '/api/social/integrations' && req.method === 'GET') {
