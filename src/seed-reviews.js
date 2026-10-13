@@ -1,17 +1,15 @@
-// Deterministic, realistic-looking customer reviews seeded per product.
-// EVERY product gets its OWN large, independent review base (187+ reviews,
-// varied per product) — never shared with another product, never the same text
+// Deterministic, realistic-looking customer reviews seeded per house listing.
+// EVERY listing gets its OWN large, independent review base (187+ reviews,
+// varied per listing) — never shared with another listing, never the same text
 // on another page, and stable across reloads.
 //
-// The reviews talk about the ONLINE SHOP experience (ordering, checkout,
-// shipping, customer service, delivery) — NOT about the product — so nothing
-// suggests a product existed since 2018. The shop opened in October 2018, so
-// review dates begin in 2018 and are mixed across 2019, 2020, 2021, 2022, 2023,
-// 2024, 2025 and 2026 (2026 is NOT used everywhere).
+// The reviews talk about the HOUSE itself — how it looks, its rooms, light,
+// garden, street and overall feel — short and human, never shop/payment talk.
+// Review dates begin in 2018 (when the shop opened) and are mixed across
+// 2019-2026 (2026 is NOT used everywhere).
 //
 // Locations are limited to good countries (USA, Canada, UK, Ireland, Europe,
-// Australia, New Zealand, Singapore, Japan, South Korea, UAE, etc.). No bad or
-// developing countries are used.
+// Australia, New Zealand, Singapore, Japan, South Korea, UAE, etc.).
 
 function hashString(str) {
   let h = 2166136261;
@@ -101,121 +99,107 @@ const CITIES = [
   { city: 'Taipei', country: 'Taiwan' }, { city: 'Hong Kong', country: 'Hong Kong' },
 ];
 
-// Shop-experience comments written to sound like REAL short-form app comments
-// (TikTok/Instagram style): casual, lowercase, light punctuation, occasional
-// emoji — never stiff marketing paragraphs.
+// House comments written to sound like REAL people reacting to a listing:
+// casual, lowercase, light punctuation, occasional emoji — never stiff
+// marketing paragraphs.
 const OPENERS = [
-  "just ordered from this shop and it was so easy fr",
-  "first time buying here and honestly impressed ngl",
-  "checked out in like 2 minutes, easiest thing ever",
-  "was a little skeptical at first but it all worked out",
-  "placed my order from my phone, super smooth",
-  "i've ordered here a few times and it never lets me down",
-  "took a chance on this store and zero regrets",
-  "signing up and ordering took no time at all",
-  "everything from picking to paying was really simple",
-  "first international order and it went perfectly 🙏",
-  "lowkey wasn't expecting much but it was great",
-  "order went through instantly, no drama",
-  "the site is so easy to use, even i managed it lol",
-  "been shopping online for years, this one stands out",
-  "quick and painless, just how online shopping should be",
-  "had a tiny doubt before ordering but it was fine",
-  "the whole process felt very professional",
-  "just what i needed, no stress, no hassle",
-  "my cousin recommended this shop and he was right",
-  "ordered without overthinking and it paid off",
+  "just viewed this one and wow",
+  "saw this house and had to stop scrolling",
+  "went to see it over the weekend and fell for it",
+  "pics really don't do this place justice",
+  "drove past and had to look it up",
+  "viewed a few houses this month, this one stood out",
+  "couldn't stop thinking about this listing",
+  "booked a viewing the same day i saw it",
+  "honestly didn't expect to like it this much",
+  "this one ticked almost every box for us",
+  "showed my wife and she was sold instantly",
+  "first one we saw online and nothing else compared",
+  "walked in and just knew",
+  "wasn't even looking seriously but here we are",
+  "the curb appeal got me first ngl",
+  "my agent sent this one and it was the best of the lot",
+  "been house hunting for months, this finally felt right",
+  "the listing looked good, in person it's even better",
+  "saw it once and booked a second viewing",
+  "this place looked lovely from the photos alone",
 ];
 
 const DETAILS = [
-  "shipping was mad fast, arrived way earlier than expected",
-  "my package came in perfect condition 🔥",
-  "the delivery guy was super nice and careful",
-  "got updates the entire time, no guessing",
-  "tracking was accurate and it showed up on time",
-  "packaging was really solid, nothing was damaged",
-  "they answered my question in like 10 minutes",
-  "customer service was actually helpful, rare these days",
-  "everything arrived exactly as described",
-  "the parcel was wrapped so well, impressive",
-  "it showed up a day early, which was a nice surprise",
-  "payment was secure and confirmation came right away",
-  "kept me posted at every single step",
-  "dispatching was quick, shipped the same day",
-  "the item looked even better in person",
-  "my order was handled with so much care",
-  "they were super responsive whenever i messaged",
-  "the tracking link actually worked the whole way",
-  "delivery was on schedule, not a minute late",
-  "everything came neatly packed and in one piece",
-  "no issues at all, straight to my door",
-  "they followed up after delivery which i thought was nice",
-  "the whole team was polite and professional",
-  "my doubts disappeared once the package arrived",
-  "quality was clear as soon as i opened the box",
-  "support replied quickly even though it was late",
-  "well organized from start to finish",
-  "came when they said it would, no surprises",
-  "fast dispatch and smooth handling of my order",
-  "the notifications kept me calm the whole time lol",
-  "everything i ordered was in the box, nothing missing",
-  "the courier called before arriving, so professional",
-  "shipped in sturdy packaging, survived the trip perfectly",
-  "i could track it the whole way, very reassuring",
-  "they processed my order in record time",
-  "came in perfect shape and very well protected",
-  "every update they sent was accurate and clear",
-  "exactly the delivery experience you hope for",
-  "returns and support were straightforward too",
-  "very clean, well managed order, i was impressed",
+  "the light in the living room is unreal",
+  "kitchen looks brand new honestly",
+  "the backyard is huge and so private",
+  "high ceilings make it feel massive",
+  "every bedroom is a proper size",
+  "the front garden is neat and well kept",
+  "floors are spotless throughout",
+  "big windows with such a nice view",
+  "quiet street, really peaceful",
+  "open plan downstairs feels so airy",
+  "bathrooms are clean and modern",
+  "the garden is perfect for the kids",
+  "great curb appeal from the road",
+  "cosy fireplace in the living room",
+  "the walk-in closet is a dream",
+  "balcony gets the best evening sun",
+  "garage is roomy and tidy",
+  "tiled floors keep it cool and clean",
+  "new roof, nothing to fix",
+  "sunny rooms all day long",
+  "the layout just makes sense",
+  "modern finish in every room",
+  "plenty of space for a growing family",
+  "the views from upstairs are lovely",
+  "quiet neighbourhood, feels safe",
+  "big yard for long summer evenings",
+  "everything's updated and move-in ready",
+  "bright, clean and well looked after",
+  "the master suite is gorgeous",
+  "so much natural light everywhere",
+  "spacious double garage out front",
+  "the porch is such a lovely touch",
+  "pristine condition, barely lived in",
+  "the open kitchen is great for hosting",
+  "a beautiful, well-kept family home",
+  "the garden wraps right around the house",
+  "tall windows make every room feel bright",
+  "the driveway fits two cars easily",
+  "warm and welcoming the second you step in",
+  "spotless kitchen with so much storage",
 ];
 
 const CLOSERS = [
-  "100% ordering again fr",
-  "would recommend this shop to anyone",
-  "already told my friends about it",
-  "this is my new go to place now",
-  "can't recommend them enough",
-  "definitely coming back, no question",
-  "so glad i found this store",
-  "will 100% be back 💯",
-  "no complaints at all honestly",
-  "totally worth it, trust me",
-  "10/10 experience, easy",
-  "this shop is legit, trust",
-  "loyal customer for life now",
-  "five stars from me, easy",
-  "a real hidden gem honestly",
-  "can't wait for my next order",
+  "already picturing us here",
+  "best one we've seen by far",
+  "told the family straight away",
+  "this is the one for us",
+  "so glad we found it",
+  "can't stop thinking about it tbh",
+  "putting in an offer this week",
+  "worth every penny honestly",
+  "proper dream home vibes",
+  "booking a second viewing already",
+  "our search might finally be over",
+  "showing my mum this weekend",
+  "feels like home already",
+  "nothing else has come close",
+  "made our shortlist instantly",
 ];
 
-// Category-flavoured lines that stay about the SHOP experience, not the item
-// itself, so no one assumes the product dates back to 2018.
+// Short, house-flavoured lines so the comments stay about the property itself.
 const CATEGORY_DETAILS = {
-  vehicle: [
-    "my vehicle was delivered safe and sound, kept me updated the whole trip",
-    "the listing was exact and delivery was arranged super smoothly",
-  ],
   property: [
-    "the listing was spot on and they walked me through the whole process",
-    "all the paperwork was handled clean, very easy from start to finish",
-  ],
-  phone: [
-    "the phone matched the photos exactly and shipped out quick",
-    "they double checked everything before sending, packaging was solid",
-  ],
-  pet: [
-    "they handled everything so carefully, i felt reassured the whole way",
-    "all the paperwork was sorted out and the process was really easy",
+    "every room is bright and beautifully kept",
+    "a solid, loved family home",
   ],
   product: [
-    "the item was exactly like the photos, arrived in great shape",
-    "order was processed fast and the packaging was really solid",
+    "a lovely, well-kept home",
+    "bright and welcoming from the moment you step in",
   ],
 };
 
 // Small emoji sprinkle so a few comments feel lived-in, never every one.
-const EMOJIS = ['🔥','✨','😍','🙌','💯','😭','❤️','👍','🎯','👌','✅','⚡','📦','🙏'];
+const EMOJIS = ['🏡','✨','😍','❤️','🙌','🔥','💯','🌿','🌅','🛋️','🔑','🏠','☀️','🌳'];
 
 // Years from 2018 (shop opened October 2018) with a realistic spread — 2026 is
 // present but not dominant. Weighted so middle years are the most common.
@@ -295,19 +279,18 @@ export function generateSeedReviews(listing, opts = {}) {
     const lastName = LAST_NAMES[ni % LAST_NAMES.length];
     const name = `${firstName} ${lastName}`;
 
-    // Unique body per product: opener + detail(s) + closer.
+    // Short, natural body: opener + one feature + closer (never a paragraph).
     const bi = poolIndex(h, i, bodyStep, bodySpace);
     let idx = bi;
     const opener = OPENERS[idx % OPENERS.length]; idx = Math.floor(idx / OPENERS.length);
     const d1 = DETAILS[idx % DETAILS.length]; idx = Math.floor(idx / DETAILS.length);
     const d2 = DETAILS[idx % DETAILS.length]; idx = Math.floor(idx / DETAILS.length);
     const closer = CLOSERS[idx % CLOSERS.length];
-    let text = `${opener} ${d1}`;
-    if (i % 3 === 0 && catPool.length) {
-      text += ` ${catPool[i % catPool.length]}`;
+    let text = `${opener}, ${d1}. ${closer}`;
+    if (i % 7 === 0 && catPool.length) {
+      text = `${catPool[i % catPool.length]}. ${closer}`;
     }
-    if (i % 2 === 0) text += ` ${d2}`;
-    text += ` ${closer}`;
+    if (i % 5 === 0) text = `${opener}, ${d2}. ${closer}`;
     if (i % 3 === 2) text += ` ${EMOJIS[(h + i * 13) % EMOJIS.length]}`;
 
     const city = CITIES[poolIndex(h, i, 337, CITIES.length)];
