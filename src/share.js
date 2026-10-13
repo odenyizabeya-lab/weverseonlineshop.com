@@ -281,14 +281,17 @@ const WEB_URLS = {
   facebook_lite: (m) => `https://m.facebook.com/sharer.php?u=${encodeURIComponent(m.url)}`,
 };
 
-function nativeThenWeb(meta, web) {
-  const run = async () => {
-    if (await shareLinkNative(meta)) return;
-    if (web) { openWindow(web(meta)); return; }
-    await copyText(meta.caption);
-    showShareToast('Link copied — paste it into the app');
-  };
-  return run();
+// The fallback chain used by every platform button.
+//   meta — product info;  web — a social WEBSITE url (only ever passed on desktop)
+// Order: native OS share sheet → (desktop only) classic web URL → copy the link.
+// There is deliberately NO social-website redirect on mobile: on a phone this
+// either opens the installed app via the OS sheet or copies the link, so the
+// customer is never bounced to facebook.com / instagram.com etc.
+async function linkOrCopy(meta, web) {
+  if (await shareLinkNative(meta)) return; // native OS share sheet (all apps)
+  if (web) { openWindow(web(meta)); return; } // desktop only
+  await copyText(meta.caption);
+  showShareToast('Link copied — paste it into the app');
 }
 
 // Fire an app's custom scheme. If the app is not installed (the page never
@@ -326,26 +329,35 @@ async function runAction(action, meta) {
   }
 
   const scheme = APP_SCHEMES[action];
-  const web = WEB_URLS[action];
   const hasMedia = !!primaryMediaSource(meta._listing || {});
+  const canNativeShare = typeof navigator.share === 'function';
 
   // BIG-MEDIA FIRST: when the product has a real image/video and the device can
   // share files, hand the actual FILE to the OS share sheet — no matter which app
   // button was tapped. This posts full-size media in WhatsApp, Telegram,
   // Facebook, Facebook Lite, Instagram, Stories, TikTok, Messenger and every
   // other installed app, never a small link card.
-  if (hasMedia && typeof navigator.share === 'function') {
+  if (hasMedia && canNativeShare) {
     if (await shareMediaFile(meta._listing)) return;
     // File share unsupported/rejected → continue to the link/app fallbacks.
   }
 
-  if (isMobile() && scheme) {
-    // Direct app link (small link card) — only reached when there is no media.
-    launchScheme(scheme(meta), () => { nativeThenWeb(meta, web); });
+  if (isMobile()) {
+    // MOBILE: Facebook, Facebook Lite, Instagram, Stories, TikTok and "other
+    // apps" have no share deep link — they only work through the OS share sheet,
+    // which is what linkOrCopy() opens. WhatsApp / Telegram / X / Messenger have
+    // a direct app link, so we try that first and fall back to the OS sheet.
+    // Either way a social WEBSITE is never opened on a phone.
+    if (scheme) {
+      launchScheme(scheme(meta), () => { linkOrCopy(meta); });
+      return;
+    }
+    await linkOrCopy(meta);
     return;
   }
-  // Native link sheet first, then the web share URL as a last resort.
-  await nativeThenWeb(meta, web);
+
+  // DESKTOP: the OS share sheet where supported, then the classic web URL.
+  await linkOrCopy(meta, WEB_URLS[action]);
 }
 
 const ICONS = {
