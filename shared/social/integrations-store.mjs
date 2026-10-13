@@ -224,12 +224,11 @@ export async function hydrateEnv(sb) {
   }
   // Reset managed keys to their original (deployment) state so credentials
   // deleted from the dashboard do not persist in a long-lived isolate.
+  // NOTE: `delete process.env[k]` is a no-op in workerd, so reset to the
+  // baseline value or an empty string instead.
   for (const k of MANAGED_KEYS) {
     const b = envBaseline[k];
-    try {
-      if (b === undefined) delete process.env[k];
-      else process.env[k] = b;
-    } catch { /* read-only env in some runtimes */ }
+    try { process.env[k] = b === undefined ? '' : b; } catch { /* read-only env in some runtimes */ }
   }
 
   let applied = 0;
